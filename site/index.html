@@ -5,138 +5,113 @@
 <meta charset="utf-8">
 <title>Items</title>
 <style>
-body { background:#111; color:#eee; font-family:sans-serif; }
-a { color:#6cf; text-decoration:none; }
-.card img { width:64px; image-rendering:pixelated; }
-ul { list-style:none; padding:0; }
-li { margin:4px 0; }
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  font-family: sans-serif;
+  background: #111;
+  color: #eee;
+}
+
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 220px;
+  height: 100vh;
+  background: #1a1a1a;
+  padding: 12px;
+  border-right: 1px solid #333;
+  overflow-y: auto;
+}
+
+.breadcrumb {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 10px;
+  line-height: 1;   /* ←これ重要 */
+}
+.breadcrumb a {
+  display: inline;   /* ←これ超重要 */
+  color: #888;
+  text-decoration: none;
+}
+
+.content {
+  flex: 1;
+  padding: 16px;
+  margin-left: 220px;
+}
+
+a {
+  color: #ccc;
+  text-decoration: none;
+  display: block;
+  padding: 6px 8px;
+  border-radius: 6px;
+}
+
+a:hover {
+  background: #2a2a2a;
+}
+
+.section-title {
+  margin-top: 14px;
+  font-size: 12px;
+  color: #777;
+}
 </style>
 </head>
 <body>
+
+<div class="sidebar">
+
+  <h3>Wiki</h3>
+
+  <a href="./index.html">🏠 Home</a>
+  <a href="./index.html">📦 Items</a>
+  <a href="./index.html">👹 Mobs</a>
+
+  <div class="section-title">Categories</div>
+
+  <a href="./index.html#Weapon">⚔ Weapon</a>
+  <a href="./index.html#Armor">🛡 Armor</a>
+  <a href="./index.html#Consumable">🍖 Consumable</a>
+  <a href="./index.html#Material">🪵 Material</a>
+
+  <div class="section-title">Search</div>
+
+  <input id="search" placeholder="Search..." style="
+  width:100%;
+  padding:5px 8px;
+  margin-top:6px;
+  border-radius:6px;
+  border:1px solid #2a2a2a;
+  background:#0f0f0f;
+  color:#ddd;
+  font-size:13px;
+  outline:none;
+  ">
+
+</div>
+    <div class="content">
+<div class="breadcrumb">
+  <a href="index.html" style="color:#888">Home</a> <span style="opacity:0.5">›</span> <a href="index.html" style="color:#888">Items</a>
+</div>
 <h1>Items</h1>
 <h2 id="Ammo" style="width:100%;margin-top:24px;border-bottom:1px solid #444;padding-bottom:4px">
   Ammo
 </h2>
 <div style="display:flex;flex-wrap:wrap">
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/ArrowBronze.html" style="color:white;text-decoration:none">
-    <img src="../icons/ArrowBronze.png" width="64"><br>
-    <div style="font-size:12px">青銅の矢</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/ArrowCarapace.html" style="color:white;text-decoration:none">
-    <img src="../icons/ArrowCarapace.png" width="64"><br>
-    <div style="font-size:12px">甲皮の矢</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/ArrowCharred.html" style="color:white;text-decoration:none">
-    <img src="../icons/ArrowCharred.png" width="64"><br>
-    <div style="font-size:12px">焦げた矢</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/ArrowFire.html" style="color:white;text-decoration:none">
-    <img src="../icons/ArrowFire.png" width="64"><br>
-    <div style="font-size:12px">火の矢</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/ArrowFlint.html" style="color:white;text-decoration:none">
-    <img src="../icons/ArrowFlint.png" width="64"><br>
-    <div style="font-size:12px">火打石の矢</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/ArrowFrost.html" style="color:white;text-decoration:none">
-    <img src="../icons/ArrowFrost.png" width="64"><br>
-    <div style="font-size:12px">霜の矢</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/ArrowIron.html" style="color:white;text-decoration:none">
-    <img src="../icons/ArrowIron.png" width="64"><br>
-    <div style="font-size:12px">鉄の矢</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/ArrowNeedle.html" style="color:white;text-decoration:none">
-    <img src="../icons/ArrowNeedle.png" width="64"><br>
-    <div style="font-size:12px">針の矢</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/ArrowObsidian.html" style="color:white;text-decoration:none">
-    <img src="../icons/ArrowObsidian.png" width="64"><br>
-    <div style="font-size:12px">黒曜石の矢</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/ArrowPoison.html" style="color:white;text-decoration:none">
-    <img src="../icons/ArrowPoison.png" width="64"><br>
-    <div style="font-size:12px">毒の矢</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/ArrowSilver.html" style="color:white;text-decoration:none">
-    <img src="../icons/ArrowSilver.png" width="64"><br>
-    <div style="font-size:12px">銀の矢</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/ArrowWood.html" style="color:white;text-decoration:none">
-    <img src="../icons/ArrowWood.png" width="64"><br>
-    <div style="font-size:12px">木の矢</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/BoltBlackmetal.html" style="color:white;text-decoration:none">
-    <img src="../icons/BoltBlackmetal.png" width="64"><br>
-    <div style="font-size:12px">黒金属のボルト</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/BoltBone.html" style="color:white;text-decoration:none">
-    <img src="../icons/BoltBone.png" width="64"><br>
-    <div style="font-size:12px">骨のボルト</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/BoltCarapace.html" style="color:white;text-decoration:none">
-    <img src="../icons/BoltCarapace.png" width="64"><br>
-    <div style="font-size:12px">甲皮のボルト</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/BoltCharred.html" style="color:white;text-decoration:none">
-    <img src="../icons/BoltCharred.png" width="64"><br>
-    <div style="font-size:12px">焦げた太い矢</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/BoltIron.html" style="color:white;text-decoration:none">
-    <img src="../icons/BoltIron.png" width="64"><br>
-    <div style="font-size:12px">鉄のボルト</div>
-  </a>
-</div>
 
 <div style="width:110px;text-align:center;margin:6px">
   <a href="items/FishingBait.html" style="color:white;text-decoration:none">
@@ -200,11 +175,137 @@ li { margin:4px 0; }
     <div style="font-size:12px">臭い釣り餌</div>
   </a>
 </div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/ArrowWood.html" style="color:white;text-decoration:none">
+    <img src="../icons/ArrowWood.png" width="64"><br>
+    <div style="font-size:12px">木の矢</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/ArrowFlint.html" style="color:white;text-decoration:none">
+    <img src="../icons/ArrowFlint.png" width="64"><br>
+    <div style="font-size:12px">火打石の矢</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/ArrowBronze.html" style="color:white;text-decoration:none">
+    <img src="../icons/ArrowBronze.png" width="64"><br>
+    <div style="font-size:12px">青銅の矢</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/BoltBone.html" style="color:white;text-decoration:none">
+    <img src="../icons/BoltBone.png" width="64"><br>
+    <div style="font-size:12px">骨のボルト</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/ArrowFire.html" style="color:white;text-decoration:none">
+    <img src="../icons/ArrowFire.png" width="64"><br>
+    <div style="font-size:12px">火の矢</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/ArrowIron.html" style="color:white;text-decoration:none">
+    <img src="../icons/ArrowIron.png" width="64"><br>
+    <div style="font-size:12px">鉄の矢</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/BoltIron.html" style="color:white;text-decoration:none">
+    <img src="../icons/BoltIron.png" width="64"><br>
+    <div style="font-size:12px">鉄のボルト</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/ArrowObsidian.html" style="color:white;text-decoration:none">
+    <img src="../icons/ArrowObsidian.png" width="64"><br>
+    <div style="font-size:12px">黒曜石の矢</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/ArrowNeedle.html" style="color:white;text-decoration:none">
+    <img src="../icons/ArrowNeedle.png" width="64"><br>
+    <div style="font-size:12px">針の矢</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/BoltBlackmetal.html" style="color:white;text-decoration:none">
+    <img src="../icons/BoltBlackmetal.png" width="64"><br>
+    <div style="font-size:12px">黒金属のボルト</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/ArrowCarapace.html" style="color:white;text-decoration:none">
+    <img src="../icons/ArrowCarapace.png" width="64"><br>
+    <div style="font-size:12px">甲皮の矢</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/ArrowSilver.html" style="color:white;text-decoration:none">
+    <img src="../icons/ArrowSilver.png" width="64"><br>
+    <div style="font-size:12px">銀の矢</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/BoltCarapace.html" style="color:white;text-decoration:none">
+    <img src="../icons/BoltCarapace.png" width="64"><br>
+    <div style="font-size:12px">甲皮のボルト</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/ArrowFrost.html" style="color:white;text-decoration:none">
+    <img src="../icons/ArrowFrost.png" width="64"><br>
+    <div style="font-size:12px">霜の矢</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/ArrowPoison.html" style="color:white;text-decoration:none">
+    <img src="../icons/ArrowPoison.png" width="64"><br>
+    <div style="font-size:12px">毒の矢</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/ArrowCharred.html" style="color:white;text-decoration:none">
+    <img src="../icons/ArrowCharred.png" width="64"><br>
+    <div style="font-size:12px">焦げた矢</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/BoltCharred.html" style="color:white;text-decoration:none">
+    <img src="../icons/BoltCharred.png" width="64"><br>
+    <div style="font-size:12px">焦げた太い矢</div>
+  </a>
+</div>
 </div>
 <h2 id="AmmoNonEquipable" style="width:100%;margin-top:24px;border-bottom:1px solid #444;padding-bottom:4px">
   AmmoNonEquipable
 </h2>
 <div style="display:flex;flex-wrap:wrap">
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/TurretBoltWood.html" style="color:white;text-decoration:none">
+    <img src="../icons/TurretBoltWood.png" width="64"><br>
+    <div style="font-size:12px">木の矢弾</div>
+  </a>
+</div>
 
 <div style="width:110px;text-align:center;margin:6px">
   <a href="items/TurretBolt.html" style="color:white;text-decoration:none">
@@ -226,13 +327,6 @@ li { margin:4px 0; }
     <div style="font-size:12px">炎金の矢弾</div>
   </a>
 </div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/TurretBoltWood.html" style="color:white;text-decoration:none">
-    <img src="../icons/TurretBoltWood.png" width="64"><br>
-    <div style="font-size:12px">木の矢弾</div>
-  </a>
-</div>
 </div>
 <h2 id="Bow" style="width:100%;margin-top:24px;border-bottom:1px solid #444;padding-bottom:4px">
   Bow
@@ -243,6 +337,34 @@ li { margin:4px 0; }
   <a href="items/Bow.html" style="color:white;text-decoration:none">
     <img src="../icons/Bow.png" width="64"><br>
     <div style="font-size:12px">粗雑な弓</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/BowFineWood.html" style="color:white;text-decoration:none">
+    <img src="../icons/BowFineWood.png" width="64"><br>
+    <div style="font-size:12px">上質な木の弓</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/BowHuntsman.html" style="color:white;text-decoration:none">
+    <img src="../icons/BowHuntsman.png" width="64"><br>
+    <div style="font-size:12px">狩人の弓</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/BowDraugrFang.html" style="color:white;text-decoration:none">
+    <img src="../icons/BowDraugrFang.png" width="64"><br>
+    <div style="font-size:12px">ドラウグルの牙</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/BowSpineSnap.html" style="color:white;text-decoration:none">
+    <img src="../icons/BowSpineSnap.png" width="64"><br>
+    <div style="font-size:12px">背骨折りの弓</div>
   </a>
 </div>
 
@@ -271,34 +393,6 @@ li { margin:4px 0; }
   <a href="items/BowAshlandsStorm.html" style="color:white;text-decoration:none">
     <img src="../icons/BowAshlandsStorm.png" width="64"><br>
     <div style="font-size:12px">嵐の牙</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/BowDraugrFang.html" style="color:white;text-decoration:none">
-    <img src="../icons/BowDraugrFang.png" width="64"><br>
-    <div style="font-size:12px">ドラウグルの牙</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/BowFineWood.html" style="color:white;text-decoration:none">
-    <img src="../icons/BowFineWood.png" width="64"><br>
-    <div style="font-size:12px">上質な木の弓</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/BowHuntsman.html" style="color:white;text-decoration:none">
-    <img src="../icons/BowHuntsman.png" width="64"><br>
-    <div style="font-size:12px">狩人の弓</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/BowSpineSnap.html" style="color:white;text-decoration:none">
-    <img src="../icons/BowSpineSnap.png" width="64"><br>
-    <div style="font-size:12px">背骨折りの弓</div>
   </a>
 </div>
 
@@ -341,41 +435,6 @@ li { margin:4px 0; }
   Chest
 </h2>
 <div style="display:flex;flex-wrap:wrap">
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/ArmorAshlandsMediumChest.html" style="color:white;text-decoration:none">
-    <img src="../icons/ArmorAshlandsMediumChest.png" width="64"><br>
-    <div style="font-size:12px">アスクの胸当て</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/ArmorBerserkerChest.html" style="color:white;text-decoration:none">
-    <img src="../icons/ArmorBerserkerChest.png" width="64"><br>
-    <div style="font-size:12px">熊の模様</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/ArmorBerserkerUndeadChest.html" style="color:white;text-decoration:none">
-    <img src="../icons/ArmorBerserkerUndeadChest.png" width="64"><br>
-    <div style="font-size:12px">ヴァイルボーンケージ</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/ArmorBronzeChest.html" style="color:white;text-decoration:none">
-    <img src="../icons/ArmorBronzeChest.png" width="64"><br>
-    <div style="font-size:12px">青銅板のキュイラス</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/ArmorCarapaceChest.html" style="color:white;text-decoration:none">
-    <img src="../icons/ArmorCarapaceChest.png" width="64"><br>
-    <div style="font-size:12px">甲皮の胸当て</div>
-  </a>
-</div>
 
 <div style="width:110px;text-align:center;margin:6px">
   <a href="items/ArmorDress1.html" style="color:white;text-decoration:none">
@@ -448,20 +507,6 @@ li { margin:4px 0; }
 </div>
 
 <div style="width:110px;text-align:center;margin:6px">
-  <a href="items/ArmorFenringChest.html" style="color:white;text-decoration:none">
-    <img src="../icons/ArmorFenringChest.png" width="64"><br>
-    <div style="font-size:12px">フェンリルのコート</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/ArmorFlametalChest.html" style="color:white;text-decoration:none">
-    <img src="../icons/ArmorFlametalChest.png" width="64"><br>
-    <div style="font-size:12px">炎金の胸当て</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
   <a href="items/ArmorHarvester1.html" style="color:white;text-decoration:none">
     <img src="../icons/ArmorHarvester1.png" width="64"><br>
     <div style="font-size:12px">収穫のチュニック</div>
@@ -476,58 +521,9 @@ li { margin:4px 0; }
 </div>
 
 <div style="width:110px;text-align:center;margin:6px">
-  <a href="items/ArmorIronChest.html" style="color:white;text-decoration:none">
-    <img src="../icons/ArmorIronChest.png" width="64"><br>
-    <div style="font-size:12px">鉄のスケイルメイル</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/ArmorLeatherChest.html" style="color:white;text-decoration:none">
-    <img src="../icons/ArmorLeatherChest.png" width="64"><br>
-    <div style="font-size:12px">革のチュニック</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/ArmorMageChest.html" style="color:white;text-decoration:none">
-    <img src="../icons/ArmorMageChest.png" width="64"><br>
-    <div style="font-size:12px">エイトル織りのローブ</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/ArmorMageChest_Ashlands.html" style="color:white;text-decoration:none">
-    <img src="../icons/ArmorMageChest_Ashlands.png" width="64"><br>
-    <div style="font-size:12px">エンブラのローブ</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/ArmorPaddedCuirass.html" style="color:white;text-decoration:none">
-    <img src="../icons/ArmorPaddedCuirass.png" width="64"><br>
-    <div style="font-size:12px">詰め物付きキュイラス</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
   <a href="items/ArmorRagsChest.html" style="color:white;text-decoration:none">
     <img src="../icons/ArmorRagsChest.png" width="64"><br>
     <div style="font-size:12px">ボロ布のチュニック</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/ArmorRootChest.html" style="color:white;text-decoration:none">
-    <img src="../icons/ArmorRootChest.png" width="64"><br>
-    <div style="font-size:12px">木の根のハルネスク</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/ArmorTrollLeatherChest.html" style="color:white;text-decoration:none">
-    <img src="../icons/ArmorTrollLeatherChest.png" width="64"><br>
-    <div style="font-size:12px">トロル革のチュニック</div>
   </a>
 </div>
 
@@ -602,9 +598,107 @@ li { margin:4px 0; }
 </div>
 
 <div style="width:110px;text-align:center;margin:6px">
+  <a href="items/ArmorLeatherChest.html" style="color:white;text-decoration:none">
+    <img src="../icons/ArmorLeatherChest.png" width="64"><br>
+    <div style="font-size:12px">革のチュニック</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/ArmorTrollLeatherChest.html" style="color:white;text-decoration:none">
+    <img src="../icons/ArmorTrollLeatherChest.png" width="64"><br>
+    <div style="font-size:12px">トロル革のチュニック</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/ArmorBerserkerChest.html" style="color:white;text-decoration:none">
+    <img src="../icons/ArmorBerserkerChest.png" width="64"><br>
+    <div style="font-size:12px">熊の模様</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/ArmorBronzeChest.html" style="color:white;text-decoration:none">
+    <img src="../icons/ArmorBronzeChest.png" width="64"><br>
+    <div style="font-size:12px">青銅板のキュイラス</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/ArmorRootChest.html" style="color:white;text-decoration:none">
+    <img src="../icons/ArmorRootChest.png" width="64"><br>
+    <div style="font-size:12px">木の根のハルネスク</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/ArmorFenringChest.html" style="color:white;text-decoration:none">
+    <img src="../icons/ArmorFenringChest.png" width="64"><br>
+    <div style="font-size:12px">フェンリルのコート</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/ArmorIronChest.html" style="color:white;text-decoration:none">
+    <img src="../icons/ArmorIronChest.png" width="64"><br>
+    <div style="font-size:12px">鉄のスケイルメイル</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/ArmorMageChest.html" style="color:white;text-decoration:none">
+    <img src="../icons/ArmorMageChest.png" width="64"><br>
+    <div style="font-size:12px">エイトル織りのローブ</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/ArmorBerserkerUndeadChest.html" style="color:white;text-decoration:none">
+    <img src="../icons/ArmorBerserkerUndeadChest.png" width="64"><br>
+    <div style="font-size:12px">ヴァイルボーンケージ</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/ArmorMageChest_Ashlands.html" style="color:white;text-decoration:none">
+    <img src="../icons/ArmorMageChest_Ashlands.png" width="64"><br>
+    <div style="font-size:12px">エンブラのローブ</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
   <a href="items/ArmorWolfChest.html" style="color:white;text-decoration:none">
     <img src="../icons/ArmorWolfChest.png" width="64"><br>
     <div style="font-size:12px">狼の胸当て</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/ArmorPaddedCuirass.html" style="color:white;text-decoration:none">
+    <img src="../icons/ArmorPaddedCuirass.png" width="64"><br>
+    <div style="font-size:12px">詰め物付きキュイラス</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/ArmorAshlandsMediumChest.html" style="color:white;text-decoration:none">
+    <img src="../icons/ArmorAshlandsMediumChest.png" width="64"><br>
+    <div style="font-size:12px">アスクの胸当て</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/ArmorCarapaceChest.html" style="color:white;text-decoration:none">
+    <img src="../icons/ArmorCarapaceChest.png" width="64"><br>
+    <div style="font-size:12px">甲皮の胸当て</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/ArmorFlametalChest.html" style="color:white;text-decoration:none">
+    <img src="../icons/ArmorFlametalChest.png" width="64"><br>
+    <div style="font-size:12px">炎金の胸当て</div>
   </a>
 </div>
 </div>
@@ -1436,79 +1530,9 @@ li { margin:4px 0; }
 <div style="display:flex;flex-wrap:wrap">
 
 <div style="width:110px;text-align:center;margin:6px">
-  <a href="items/HelmetAshlandsMediumHood.html" style="color:white;text-decoration:none">
-    <img src="../icons/HelmetAshlandsMediumHood.png" width="64"><br>
-    <div style="font-size:12px">アスクのフード</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/HelmetBerserkerHood.html" style="color:white;text-decoration:none">
-    <img src="../icons/HelmetBerserkerHood.png" width="64"><br>
-    <div style="font-size:12px">熊の頭飾り</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/HelmetBerserkerUndead.html" style="color:white;text-decoration:none">
-    <img src="../icons/HelmetBerserkerUndead.png" width="64"><br>
-    <div style="font-size:12px">ヴァイルボーンヴィサージュ</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/HelmetBronze.html" style="color:white;text-decoration:none">
-    <img src="../icons/HelmetBronze.png" width="64"><br>
-    <div style="font-size:12px">青銅の兜</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/HelmetCarapace.html" style="color:white;text-decoration:none">
-    <img src="../icons/HelmetCarapace.png" width="64"><br>
-    <div style="font-size:12px">甲皮の兜</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
   <a href="items/HelmetCelebration.html" style="color:white;text-decoration:none">
     <img src="../icons/HelmetCelebration.png" width="64"><br>
     <div style="font-size:12px">祝いの帽子</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/HelmetDrake.html" style="color:white;text-decoration:none">
-    <img src="../icons/HelmetDrake.png" width="64"><br>
-    <div style="font-size:12px">ドレイクの兜</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/HelmetDverger.html" style="color:white;text-decoration:none">
-    <img src="../icons/HelmetDverger.png" width="64"><br>
-    <div style="font-size:12px">ドヴェルガーのサークレット</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/HelmetFenring.html" style="color:white;text-decoration:none">
-    <img src="../icons/HelmetFenring.png" width="64"><br>
-    <div style="font-size:12px">フェンリルのフード</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/HelmetFishingHat.html" style="color:white;text-decoration:none">
-    <img src="../icons/HelmetFishingHat.png" width="64"><br>
-    <div style="font-size:12px">魚釣りの帽子</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/HelmetFlametal.html" style="color:white;text-decoration:none">
-    <img src="../icons/HelmetFlametal.png" width="64"><br>
-    <div style="font-size:12px">炎金の兜</div>
   </a>
 </div>
 
@@ -1583,34 +1607,6 @@ li { margin:4px 0; }
 </div>
 
 <div style="width:110px;text-align:center;margin:6px">
-  <a href="items/HelmetIron.html" style="color:white;text-decoration:none">
-    <img src="../icons/HelmetIron.png" width="64"><br>
-    <div style="font-size:12px">鉄の兜</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/HelmetLeather.html" style="color:white;text-decoration:none">
-    <img src="../icons/HelmetLeather.png" width="64"><br>
-    <div style="font-size:12px">革の兜</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/HelmetMage.html" style="color:white;text-decoration:none">
-    <img src="../icons/HelmetMage.png" width="64"><br>
-    <div style="font-size:12px">エイトル織りのフード</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/HelmetMage_Ashlands.html" style="color:white;text-decoration:none">
-    <img src="../icons/HelmetMage_Ashlands.png" width="64"><br>
-    <div style="font-size:12px">エンブラの頭巾</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
   <a href="items/HelmetMidsummerCrown.html" style="color:white;text-decoration:none">
     <img src="../icons/HelmetMidsummerCrown.png" width="64"><br>
     <div style="font-size:12px">夏至の冠</div>
@@ -1625,23 +1621,9 @@ li { margin:4px 0; }
 </div>
 
 <div style="width:110px;text-align:center;margin:6px">
-  <a href="items/HelmetPadded.html" style="color:white;text-decoration:none">
-    <img src="../icons/HelmetPadded.png" width="64"><br>
-    <div style="font-size:12px">詰め物付き兜</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
   <a href="items/HelmetPointyHat.html" style="color:white;text-decoration:none">
     <img src="../icons/HelmetPointyHat.png" width="64"><br>
     <div style="font-size:12px">とんがり帽子</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/HelmetRoot.html" style="color:white;text-decoration:none">
-    <img src="../icons/HelmetRoot.png" width="64"><br>
-    <div style="font-size:12px">木の根の仮面</div>
   </a>
 </div>
 
@@ -1660,6 +1642,27 @@ li { margin:4px 0; }
 </div>
 
 <div style="width:110px;text-align:center;margin:6px">
+  <a href="items/HelmetYule.html" style="color:white;text-decoration:none">
+    <img src="../icons/HelmetYule.png" width="64"><br>
+    <div style="font-size:12px">ユール帽</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/HelmetDverger.html" style="color:white;text-decoration:none">
+    <img src="../icons/HelmetDverger.png" width="64"><br>
+    <div style="font-size:12px">ドヴェルガーのサークレット</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/HelmetLeather.html" style="color:white;text-decoration:none">
+    <img src="../icons/HelmetLeather.png" width="64"><br>
+    <div style="font-size:12px">革の兜</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
   <a href="items/HelmetTrollLeather.html" style="color:white;text-decoration:none">
     <img src="../icons/HelmetTrollLeather.png" width="64"><br>
     <div style="font-size:12px">トロル革の兜</div>
@@ -1667,9 +1670,100 @@ li { margin:4px 0; }
 </div>
 
 <div style="width:110px;text-align:center;margin:6px">
-  <a href="items/HelmetYule.html" style="color:white;text-decoration:none">
-    <img src="../icons/HelmetYule.png" width="64"><br>
-    <div style="font-size:12px">ユール帽</div>
+  <a href="items/HelmetBerserkerHood.html" style="color:white;text-decoration:none">
+    <img src="../icons/HelmetBerserkerHood.png" width="64"><br>
+    <div style="font-size:12px">熊の頭飾り</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/HelmetBronze.html" style="color:white;text-decoration:none">
+    <img src="../icons/HelmetBronze.png" width="64"><br>
+    <div style="font-size:12px">青銅の兜</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/HelmetFishingHat.html" style="color:white;text-decoration:none">
+    <img src="../icons/HelmetFishingHat.png" width="64"><br>
+    <div style="font-size:12px">魚釣りの帽子</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/HelmetRoot.html" style="color:white;text-decoration:none">
+    <img src="../icons/HelmetRoot.png" width="64"><br>
+    <div style="font-size:12px">木の根の仮面</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/HelmetFenring.html" style="color:white;text-decoration:none">
+    <img src="../icons/HelmetFenring.png" width="64"><br>
+    <div style="font-size:12px">フェンリルのフード</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/HelmetBerserkerUndead.html" style="color:white;text-decoration:none">
+    <img src="../icons/HelmetBerserkerUndead.png" width="64"><br>
+    <div style="font-size:12px">ヴァイルボーンヴィサージュ</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/HelmetIron.html" style="color:white;text-decoration:none">
+    <img src="../icons/HelmetIron.png" width="64"><br>
+    <div style="font-size:12px">鉄の兜</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/HelmetMage.html" style="color:white;text-decoration:none">
+    <img src="../icons/HelmetMage.png" width="64"><br>
+    <div style="font-size:12px">エイトル織りのフード</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/HelmetMage_Ashlands.html" style="color:white;text-decoration:none">
+    <img src="../icons/HelmetMage_Ashlands.png" width="64"><br>
+    <div style="font-size:12px">エンブラの頭巾</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/HelmetDrake.html" style="color:white;text-decoration:none">
+    <img src="../icons/HelmetDrake.png" width="64"><br>
+    <div style="font-size:12px">ドレイクの兜</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/HelmetPadded.html" style="color:white;text-decoration:none">
+    <img src="../icons/HelmetPadded.png" width="64"><br>
+    <div style="font-size:12px">詰め物付き兜</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/HelmetAshlandsMediumHood.html" style="color:white;text-decoration:none">
+    <img src="../icons/HelmetAshlandsMediumHood.png" width="64"><br>
+    <div style="font-size:12px">アスクのフード</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/HelmetCarapace.html" style="color:white;text-decoration:none">
+    <img src="../icons/HelmetCarapace.png" width="64"><br>
+    <div style="font-size:12px">甲皮の兜</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/HelmetFlametal.html" style="color:white;text-decoration:none">
+    <img src="../icons/HelmetFlametal.png" width="64"><br>
+    <div style="font-size:12px">炎金の兜</div>
   </a>
 </div>
 </div>
@@ -1679,58 +1773,9 @@ li { margin:4px 0; }
 <div style="display:flex;flex-wrap:wrap">
 
 <div style="width:110px;text-align:center;margin:6px">
-  <a href="items/ArmorAshlandsMediumlegs.html" style="color:white;text-decoration:none">
-    <img src="../icons/ArmorAshlandsMediumlegs.png" width="64"><br>
-    <div style="font-size:12px">アスクのズボン</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/ArmorBerserkerLegs.html" style="color:white;text-decoration:none">
-    <img src="../icons/ArmorBerserkerLegs.png" width="64"><br>
-    <div style="font-size:12px">熊の腰みの</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/ArmorBerserkerUndeadLegs.html" style="color:white;text-decoration:none">
-    <img src="../icons/ArmorBerserkerUndeadLegs.png" width="64"><br>
-    <div style="font-size:12px">ヴァイルボーンドレープ</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/ArmorBronzeLegs.html" style="color:white;text-decoration:none">
-    <img src="../icons/ArmorBronzeLegs.png" width="64"><br>
-    <div style="font-size:12px">青銅板のレギンス</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/ArmorCarapaceLegs.html" style="color:white;text-decoration:none">
-    <img src="../icons/ArmorCarapaceLegs.png" width="64"><br>
-    <div style="font-size:12px">甲皮のすね当て</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/ArmorFenringLegs.html" style="color:white;text-decoration:none">
-    <img src="../icons/ArmorFenringLegs.png" width="64"><br>
-    <div style="font-size:12px">フェンリルのレギンス</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/ArmorFlametalLegs.html" style="color:white;text-decoration:none">
-    <img src="../icons/ArmorFlametalLegs.png" width="64"><br>
-    <div style="font-size:12px">炎金のすね当て</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/ArmorIronLegs.html" style="color:white;text-decoration:none">
-    <img src="../icons/ArmorIronLegs.png" width="64"><br>
-    <div style="font-size:12px">鉄のすね当て</div>
+  <a href="items/ArmorRagsLegs.html" style="color:white;text-decoration:none">
+    <img src="../icons/ArmorRagsLegs.png" width="64"><br>
+    <div style="font-size:12px">ボロ布のズボン</div>
   </a>
 </div>
 
@@ -1742,30 +1787,23 @@ li { margin:4px 0; }
 </div>
 
 <div style="width:110px;text-align:center;margin:6px">
-  <a href="items/ArmorMageLegs.html" style="color:white;text-decoration:none">
-    <img src="../icons/ArmorMageLegs.png" width="64"><br>
-    <div style="font-size:12px">エイトル織りのズボン</div>
+  <a href="items/ArmorTrollLeatherLegs.html" style="color:white;text-decoration:none">
+    <img src="../icons/ArmorTrollLeatherLegs.png" width="64"><br>
+    <div style="font-size:12px">トロル革のズボン</div>
   </a>
 </div>
 
 <div style="width:110px;text-align:center;margin:6px">
-  <a href="items/ArmorMageLegs_Ashlands.html" style="color:white;text-decoration:none">
-    <img src="../icons/ArmorMageLegs_Ashlands.png" width="64"><br>
-    <div style="font-size:12px">エンブラのズボン</div>
+  <a href="items/ArmorBerserkerLegs.html" style="color:white;text-decoration:none">
+    <img src="../icons/ArmorBerserkerLegs.png" width="64"><br>
+    <div style="font-size:12px">熊の腰みの</div>
   </a>
 </div>
 
 <div style="width:110px;text-align:center;margin:6px">
-  <a href="items/ArmorPaddedGreaves.html" style="color:white;text-decoration:none">
-    <img src="../icons/ArmorPaddedGreaves.png" width="64"><br>
-    <div style="font-size:12px">詰め物付きすね当て</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/ArmorRagsLegs.html" style="color:white;text-decoration:none">
-    <img src="../icons/ArmorRagsLegs.png" width="64"><br>
-    <div style="font-size:12px">ボロ布のズボン</div>
+  <a href="items/ArmorBronzeLegs.html" style="color:white;text-decoration:none">
+    <img src="../icons/ArmorBronzeLegs.png" width="64"><br>
+    <div style="font-size:12px">青銅板のレギンス</div>
   </a>
 </div>
 
@@ -1777,9 +1815,37 @@ li { margin:4px 0; }
 </div>
 
 <div style="width:110px;text-align:center;margin:6px">
-  <a href="items/ArmorTrollLeatherLegs.html" style="color:white;text-decoration:none">
-    <img src="../icons/ArmorTrollLeatherLegs.png" width="64"><br>
-    <div style="font-size:12px">トロル革のズボン</div>
+  <a href="items/ArmorFenringLegs.html" style="color:white;text-decoration:none">
+    <img src="../icons/ArmorFenringLegs.png" width="64"><br>
+    <div style="font-size:12px">フェンリルのレギンス</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/ArmorIronLegs.html" style="color:white;text-decoration:none">
+    <img src="../icons/ArmorIronLegs.png" width="64"><br>
+    <div style="font-size:12px">鉄のすね当て</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/ArmorMageLegs.html" style="color:white;text-decoration:none">
+    <img src="../icons/ArmorMageLegs.png" width="64"><br>
+    <div style="font-size:12px">エイトル織りのズボン</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/ArmorBerserkerUndeadLegs.html" style="color:white;text-decoration:none">
+    <img src="../icons/ArmorBerserkerUndeadLegs.png" width="64"><br>
+    <div style="font-size:12px">ヴァイルボーンドレープ</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/ArmorMageLegs_Ashlands.html" style="color:white;text-decoration:none">
+    <img src="../icons/ArmorMageLegs_Ashlands.png" width="64"><br>
+    <div style="font-size:12px">エンブラのズボン</div>
   </a>
 </div>
 
@@ -1787,6 +1853,34 @@ li { margin:4px 0; }
   <a href="items/ArmorWolfLegs.html" style="color:white;text-decoration:none">
     <img src="../icons/ArmorWolfLegs.png" width="64"><br>
     <div style="font-size:12px">狼の脚の防具</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/ArmorPaddedGreaves.html" style="color:white;text-decoration:none">
+    <img src="../icons/ArmorPaddedGreaves.png" width="64"><br>
+    <div style="font-size:12px">詰め物付きすね当て</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/ArmorAshlandsMediumlegs.html" style="color:white;text-decoration:none">
+    <img src="../icons/ArmorAshlandsMediumlegs.png" width="64"><br>
+    <div style="font-size:12px">アスクのズボン</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/ArmorCarapaceLegs.html" style="color:white;text-decoration:none">
+    <img src="../icons/ArmorCarapaceLegs.png" width="64"><br>
+    <div style="font-size:12px">甲皮のすね当て</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/ArmorFlametalLegs.html" style="color:white;text-decoration:none">
+    <img src="../icons/ArmorFlametalLegs.png" width="64"><br>
+    <div style="font-size:12px">炎金のすね当て</div>
   </a>
 </div>
 </div>
@@ -2594,16 +2688,16 @@ li { margin:4px 0; }
 </div>
 
 <div style="width:110px;text-align:center;margin:6px">
-  <a href="items/Ironpit.html" style="color:white;text-decoration:none">
-    <img src="../icons/Ironpit.png" width="64"><br>
-    <div style="font-size:12px">鉄火鉢</div>
+  <a href="items/IronScrap.html" style="color:white;text-decoration:none">
+    <img src="../icons/IronScrap.png" width="64"><br>
+    <div style="font-size:12px">クズ鉄</div>
   </a>
 </div>
 
 <div style="width:110px;text-align:center;margin:6px">
-  <a href="items/IronScrap.html" style="color:white;text-decoration:none">
-    <img src="../icons/IronScrap.png" width="64"><br>
-    <div style="font-size:12px">クズ鉄</div>
+  <a href="items/Ironpit.html" style="color:white;text-decoration:none">
+    <img src="../icons/Ironpit.png" width="64"><br>
+    <div style="font-size:12px">鉄火鉢</div>
   </a>
 </div>
 
@@ -3210,16 +3304,16 @@ li { margin:4px 0; }
 </div>
 
 <div style="width:110px;text-align:center;margin:6px">
-  <a href="items/VineberrySeeds.html" style="color:white;text-decoration:none">
-    <img src="../icons/VineberrySeeds.png" width="64"><br>
-    <div style="font-size:12px">灰取りカズラの種</div>
+  <a href="items/VineGreenSeeds.html" style="color:white;text-decoration:none">
+    <img src="../icons/VineGreenSeeds.png" width="64"><br>
+    <div style="font-size:12px">ツタ植物の種。</div>
   </a>
 </div>
 
 <div style="width:110px;text-align:center;margin:6px">
-  <a href="items/VineGreenSeeds.html" style="color:white;text-decoration:none">
-    <img src="../icons/VineGreenSeeds.png" width="64"><br>
-    <div style="font-size:12px">ツタ植物の種。</div>
+  <a href="items/VineberrySeeds.html" style="color:white;text-decoration:none">
+    <img src="../icons/VineberrySeeds.png" width="64"><br>
+    <div style="font-size:12px">灰取りカズラの種</div>
   </a>
 </div>
 
@@ -3348,27 +3442,6 @@ li { margin:4px 0; }
 </div>
 
 <div style="width:110px;text-align:center;margin:6px">
-  <a href="items/chest_hildir1.html" style="color:white;text-decoration:none">
-    <img src="../icons/chest_hildir1.png" width="64"><br>
-    <div style="font-size:12px">ヒルディルの真鍮のチェスト</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/chest_hildir2.html" style="color:white;text-decoration:none">
-    <img src="../icons/chest_hildir2.png" width="64"><br>
-    <div style="font-size:12px">ヒルディルの銀のチェスト</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/chest_hildir3.html" style="color:white;text-decoration:none">
-    <img src="../icons/chest_hildir3.png" width="64"><br>
-    <div style="font-size:12px">ヒルディルの青銅のチェスト</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
   <a href="items/ChickenEgg.html" style="color:white;text-decoration:none">
     <img src="../icons/ChickenEgg.png" width="64"><br>
     <div style="font-size:12px">卵</div>
@@ -3465,6 +3538,27 @@ li { margin:4px 0; }
     <div style="font-size:12px">引き裂かれた霊体</div>
   </a>
 </div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/chest_hildir1.html" style="color:white;text-decoration:none">
+    <img src="../icons/chest_hildir1.png" width="64"><br>
+    <div style="font-size:12px">ヒルディルの真鍮のチェスト</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/chest_hildir2.html" style="color:white;text-decoration:none">
+    <img src="../icons/chest_hildir2.png" width="64"><br>
+    <div style="font-size:12px">ヒルディルの銀のチェスト</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/chest_hildir3.html" style="color:white;text-decoration:none">
+    <img src="../icons/chest_hildir3.png" width="64"><br>
+    <div style="font-size:12px">ヒルディルの青銅のチェスト</div>
+  </a>
+</div>
 </div>
 <h2 id="OneHandedWeapon" style="width:100%;margin-top:24px;border-bottom:1px solid #444;padding-bottom:4px">
   OneHandedWeapon
@@ -3472,44 +3566,58 @@ li { margin:4px 0; }
 <div style="display:flex;flex-wrap:wrap">
 
 <div style="width:110px;text-align:center;margin:6px">
-  <a href="items/AxeBlackMetal.html" style="color:white;text-decoration:none">
-    <img src="../icons/AxeBlackMetal.png" width="64"><br>
-    <div style="font-size:12px">黒金属の斧</div>
+  <a href="items/BombLava.html" style="color:white;text-decoration:none">
+    <img src="../icons/BombLava.png" width="64"><br>
+    <div style="font-size:12px">火山弾</div>
   </a>
 </div>
 
 <div style="width:110px;text-align:center;margin:6px">
-  <a href="items/AxeBronze.html" style="color:white;text-decoration:none">
-    <img src="../icons/AxeBronze.png" width="64"><br>
-    <div style="font-size:12px">青銅の斧</div>
+  <a href="items/Tankard.html" style="color:white;text-decoration:none">
+    <img src="../icons/Tankard.png" width="64"><br>
+    <div style="font-size:12px">タンカード</div>
   </a>
 </div>
 
 <div style="width:110px;text-align:center;margin:6px">
-  <a href="items/AxeFlint.html" style="color:white;text-decoration:none">
-    <img src="../icons/AxeFlint.png" width="64"><br>
-    <div style="font-size:12px">火打石の斧</div>
+  <a href="items/Tankard_dvergr.html" style="color:white;text-decoration:none">
+    <img src="../icons/Tankard_dvergr.png" width="64"><br>
+    <div style="font-size:12px">ドヴェルグのジョッキ</div>
   </a>
 </div>
 
 <div style="width:110px;text-align:center;margin:6px">
-  <a href="items/AxeIron.html" style="color:white;text-decoration:none">
-    <img src="../icons/AxeIron.png" width="64"><br>
-    <div style="font-size:12px">鉄の斧</div>
+  <a href="items/TankardAnniversary.html" style="color:white;text-decoration:none">
+    <img src="../icons/TankardAnniversary.png" width="64"><br>
+    <div style="font-size:12px">祝いの角杯</div>
   </a>
 </div>
 
 <div style="width:110px;text-align:center;margin:6px">
-  <a href="items/AxeJotunBane.html" style="color:white;text-decoration:none">
-    <img src="../icons/AxeJotunBane.png" width="64"><br>
-    <div style="font-size:12px">ヨトゥン殺し</div>
+  <a href="items/TankardOdin.html" style="color:white;text-decoration:none">
+    <img src="../icons/TankardOdin.png" width="64"><br>
+    <div style="font-size:12px">オーディンの蜂蜜酒の角杯</div>
   </a>
 </div>
 
 <div style="width:110px;text-align:center;margin:6px">
-  <a href="items/AxeStone.html" style="color:white;text-decoration:none">
-    <img src="../icons/AxeStone.png" width="64"><br>
-    <div style="font-size:12px">石の斧</div>
+  <a href="items/MaceWood.html" style="color:white;text-decoration:none">
+    <img src="../icons/MaceWood.png" width="64"><br>
+    <div style="font-size:12px">木のメイス</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/SpearWood.html" style="color:white;text-decoration:none">
+    <img src="../icons/SpearWood.png" width="64"><br>
+    <div style="font-size:12px">木の槍</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/SwordWood.html" style="color:white;text-decoration:none">
+    <img src="../icons/SwordWood.png" width="64"><br>
+    <div style="font-size:12px">木の剣</div>
   </a>
 </div>
 
@@ -3517,6 +3625,13 @@ li { margin:4px 0; }
   <a href="items/AxeWood.html" style="color:white;text-decoration:none">
     <img src="../icons/AxeWood.png" width="64"><br>
     <div style="font-size:12px">木の斧</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/KnifeWood.html" style="color:white;text-decoration:none">
+    <img src="../icons/KnifeWood.png" width="64"><br>
+    <div style="font-size:12px">木のナイフ</div>
   </a>
 </div>
 
@@ -3563,13 +3678,6 @@ li { margin:4px 0; }
 </div>
 
 <div style="width:110px;text-align:center;margin:6px">
-  <a href="items/BombLava.html" style="color:white;text-decoration:none">
-    <img src="../icons/BombLava.png" width="64"><br>
-    <div style="font-size:12px">火山弾</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
   <a href="items/BombOoze.html" style="color:white;text-decoration:none">
     <img src="../icons/BombOoze.png" width="64"><br>
     <div style="font-size:12px">悪臭玉</div>
@@ -3584,51 +3692,9 @@ li { margin:4px 0; }
 </div>
 
 <div style="width:110px;text-align:center;margin:6px">
-  <a href="items/Club.html" style="color:white;text-decoration:none">
-    <img src="../icons/Club.png" width="64"><br>
-    <div style="font-size:12px">棍棒</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/DvergerArbalest_shoot.html" style="color:white;text-decoration:none">
-    <img src="../icons/DvergerArbalest_shoot.png" width="64"><br>
-    <div style="font-size:12px">石弓</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/DvergerArbalest_shootAshlands.html" style="color:white;text-decoration:none">
-    <img src="../icons/DvergerArbalest_shootAshlands.png" width="64"><br>
-    <div style="font-size:12px">石弓</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/KnifeBlackMetal.html" style="color:white;text-decoration:none">
-    <img src="../icons/KnifeBlackMetal.png" width="64"><br>
-    <div style="font-size:12px">黒金属のナイフ</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/KnifeButcher.html" style="color:white;text-decoration:none">
-    <img src="../icons/KnifeButcher.png" width="64"><br>
-    <div style="font-size:12px">屠殺用ナイフ</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/KnifeChitin.html" style="color:white;text-decoration:none">
-    <img src="../icons/KnifeChitin.png" width="64"><br>
-    <div style="font-size:12px">奈落のカミソリ</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/KnifeCopper.html" style="color:white;text-decoration:none">
-    <img src="../icons/KnifeCopper.png" width="64"><br>
-    <div style="font-size:12px">銅のナイフ</div>
+  <a href="items/PlayerUnarmed.html" style="color:white;text-decoration:none">
+    <img src="../icons/PlayerUnarmed.png" width="64"><br>
+    <div style="font-size:12px">Unarmed</div>
   </a>
 </div>
 
@@ -3640,16 +3706,37 @@ li { margin:4px 0; }
 </div>
 
 <div style="width:110px;text-align:center;margin:6px">
-  <a href="items/KnifeSilver.html" style="color:white;text-decoration:none">
-    <img src="../icons/KnifeSilver.png" width="64"><br>
-    <div style="font-size:12px">銀のナイフ</div>
+  <a href="items/SpearChitin.html" style="color:white;text-decoration:none">
+    <img src="../icons/SpearChitin.png" width="64"><br>
+    <div style="font-size:12px">奈落の銛</div>
   </a>
 </div>
 
 <div style="width:110px;text-align:center;margin:6px">
-  <a href="items/KnifeWood.html" style="color:white;text-decoration:none">
-    <img src="../icons/KnifeWood.png" width="64"><br>
-    <div style="font-size:12px">木のナイフ</div>
+  <a href="items/Club.html" style="color:white;text-decoration:none">
+    <img src="../icons/Club.png" width="64"><br>
+    <div style="font-size:12px">棍棒</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/SpearFlint.html" style="color:white;text-decoration:none">
+    <img src="../icons/SpearFlint.png" width="64"><br>
+    <div style="font-size:12px">火打石の槍</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/KnifeCopper.html" style="color:white;text-decoration:none">
+    <img src="../icons/KnifeCopper.png" width="64"><br>
+    <div style="font-size:12px">銅のナイフ</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/AxeStone.html" style="color:white;text-decoration:none">
+    <img src="../icons/AxeStone.png" width="64"><br>
+    <div style="font-size:12px">石の斧</div>
   </a>
 </div>
 
@@ -3661,30 +3748,30 @@ li { margin:4px 0; }
 </div>
 
 <div style="width:110px;text-align:center;margin:6px">
-  <a href="items/MaceEldner.html" style="color:white;text-decoration:none">
-    <img src="../icons/MaceEldner.png" width="64"><br>
-    <div style="font-size:12px">炎金のメイス</div>
+  <a href="items/SpearBronze.html" style="color:white;text-decoration:none">
+    <img src="../icons/SpearBronze.png" width="64"><br>
+    <div style="font-size:12px">青銅の槍</div>
   </a>
 </div>
 
 <div style="width:110px;text-align:center;margin:6px">
-  <a href="items/MaceEldnerBlood.html" style="color:white;text-decoration:none">
-    <img src="../icons/MaceEldnerBlood.png" width="64"><br>
-    <div style="font-size:12px">血濡れのメイス</div>
+  <a href="items/SwordBronze.html" style="color:white;text-decoration:none">
+    <img src="../icons/SwordBronze.png" width="64"><br>
+    <div style="font-size:12px">青銅の剣</div>
   </a>
 </div>
 
 <div style="width:110px;text-align:center;margin:6px">
-  <a href="items/MaceEldnerLightning.html" style="color:white;text-decoration:none">
-    <img src="../icons/MaceEldnerLightning.png" width="64"><br>
-    <div style="font-size:12px">ストームスター</div>
+  <a href="items/KnifeChitin.html" style="color:white;text-decoration:none">
+    <img src="../icons/KnifeChitin.png" width="64"><br>
+    <div style="font-size:12px">奈落のカミソリ</div>
   </a>
 </div>
 
 <div style="width:110px;text-align:center;margin:6px">
-  <a href="items/MaceEldnerNature.html" style="color:white;text-decoration:none">
-    <img src="../icons/MaceEldnerNature.png" width="64"><br>
-    <div style="font-size:12px">クロッセン</div>
+  <a href="items/AxeFlint.html" style="color:white;text-decoration:none">
+    <img src="../icons/AxeFlint.png" width="64"><br>
+    <div style="font-size:12px">火打石の斧</div>
   </a>
 </div>
 
@@ -3692,6 +3779,55 @@ li { margin:4px 0; }
   <a href="items/MaceIron.html" style="color:white;text-decoration:none">
     <img src="../icons/MaceIron.png" width="64"><br>
     <div style="font-size:12px">鉄のメイス</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/SpearElderbark.html" style="color:white;text-decoration:none">
+    <img src="../icons/SpearElderbark.png" width="64"><br>
+    <div style="font-size:12px">古代の樹皮の槍</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/SwordIron.html" style="color:white;text-decoration:none">
+    <img src="../icons/SwordIron.png" width="64"><br>
+    <div style="font-size:12px">鉄の剣</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/KnifeSilver.html" style="color:white;text-decoration:none">
+    <img src="../icons/KnifeSilver.png" width="64"><br>
+    <div style="font-size:12px">銀のナイフ</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/KnifeBlackMetal.html" style="color:white;text-decoration:none">
+    <img src="../icons/KnifeBlackMetal.png" width="64"><br>
+    <div style="font-size:12px">黒金属のナイフ</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/SpearWolfFang.html" style="color:white;text-decoration:none">
+    <img src="../icons/SpearWolfFang.png" width="64"><br>
+    <div style="font-size:12px">牙の槍</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/AxeBronze.html" style="color:white;text-decoration:none">
+    <img src="../icons/AxeBronze.png" width="64"><br>
+    <div style="font-size:12px">青銅の斧</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/SwordIronFire.html" style="color:white;text-decoration:none">
+    <img src="../icons/SwordIronFire.png" width="64"><br>
+    <div style="font-size:12px">ダーンウィン</div>
   </a>
 </div>
 
@@ -3710,23 +3846,30 @@ li { margin:4px 0; }
 </div>
 
 <div style="width:110px;text-align:center;margin:6px">
-  <a href="items/MaceWood.html" style="color:white;text-decoration:none">
-    <img src="../icons/MaceWood.png" width="64"><br>
-    <div style="font-size:12px">木のメイス</div>
+  <a href="items/SwordBlackmetal.html" style="color:white;text-decoration:none">
+    <img src="../icons/SwordBlackmetal.png" width="64"><br>
+    <div style="font-size:12px">黒金属の剣</div>
   </a>
 </div>
 
 <div style="width:110px;text-align:center;margin:6px">
-  <a href="items/PlayerUnarmed.html" style="color:white;text-decoration:none">
-    <img src="../icons/PlayerUnarmed.png" width="64"><br>
-    <div style="font-size:12px">Unarmed</div>
+  <a href="items/SwordSilver.html" style="color:white;text-decoration:none">
+    <img src="../icons/SwordSilver.png" width="64"><br>
+    <div style="font-size:12px">銀の剣</div>
   </a>
 </div>
 
 <div style="width:110px;text-align:center;margin:6px">
-  <a href="items/SpearBronze.html" style="color:white;text-decoration:none">
-    <img src="../icons/SpearBronze.png" width="64"><br>
-    <div style="font-size:12px">青銅の槍</div>
+  <a href="items/AxeIron.html" style="color:white;text-decoration:none">
+    <img src="../icons/AxeIron.png" width="64"><br>
+    <div style="font-size:12px">鉄の斧</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/DvergerArbalest_shoot.html" style="color:white;text-decoration:none">
+    <img src="../icons/DvergerArbalest_shoot.png" width="64"><br>
+    <div style="font-size:12px">石弓</div>
   </a>
 </div>
 
@@ -3738,23 +3881,23 @@ li { margin:4px 0; }
 </div>
 
 <div style="width:110px;text-align:center;margin:6px">
-  <a href="items/SpearChitin.html" style="color:white;text-decoration:none">
-    <img src="../icons/SpearChitin.png" width="64"><br>
-    <div style="font-size:12px">奈落の銛</div>
+  <a href="items/SwordMistwalker.html" style="color:white;text-decoration:none">
+    <img src="../icons/SwordMistwalker.png" width="64"><br>
+    <div style="font-size:12px">ミストウォーカー</div>
   </a>
 </div>
 
 <div style="width:110px;text-align:center;margin:6px">
-  <a href="items/SpearElderbark.html" style="color:white;text-decoration:none">
-    <img src="../icons/SpearElderbark.png" width="64"><br>
-    <div style="font-size:12px">古代の樹皮の槍</div>
+  <a href="items/MaceEldner.html" style="color:white;text-decoration:none">
+    <img src="../icons/MaceEldner.png" width="64"><br>
+    <div style="font-size:12px">炎金のメイス</div>
   </a>
 </div>
 
 <div style="width:110px;text-align:center;margin:6px">
-  <a href="items/SpearFlint.html" style="color:white;text-decoration:none">
-    <img src="../icons/SpearFlint.png" width="64"><br>
-    <div style="font-size:12px">火打石の槍</div>
+  <a href="items/MaceEldnerBlood.html" style="color:white;text-decoration:none">
+    <img src="../icons/MaceEldnerBlood.png" width="64"><br>
+    <div style="font-size:12px">血濡れのメイス</div>
   </a>
 </div>
 
@@ -3773,83 +3916,6 @@ li { margin:4px 0; }
 </div>
 
 <div style="width:110px;text-align:center;margin:6px">
-  <a href="items/SpearSplitner_Lightning.html" style="color:white;text-decoration:none">
-    <img src="../icons/SpearSplitner_Lightning.png" width="64"><br>
-    <div style="font-size:12px">雷鳴のスプリトニール</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/SpearSplitner_Nature.html" style="color:white;text-decoration:none">
-    <img src="../icons/SpearSplitner_Nature.png" width="64"><br>
-    <div style="font-size:12px">原初のスプリトニール</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/SpearWolfFang.html" style="color:white;text-decoration:none">
-    <img src="../icons/SpearWolfFang.png" width="64"><br>
-    <div style="font-size:12px">牙の槍</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/SpearWood.html" style="color:white;text-decoration:none">
-    <img src="../icons/SpearWood.png" width="64"><br>
-    <div style="font-size:12px">木の槍</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/SwordBlackmetal.html" style="color:white;text-decoration:none">
-    <img src="../icons/SwordBlackmetal.png" width="64"><br>
-    <div style="font-size:12px">黒金属の剣</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/SwordBronze.html" style="color:white;text-decoration:none">
-    <img src="../icons/SwordBronze.png" width="64"><br>
-    <div style="font-size:12px">青銅の剣</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/SwordCheat.html" style="color:white;text-decoration:none">
-    <img src="../icons/SwordCheat.png" width="64"><br>
-    <div style="font-size:12px">Cheat sword</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/SwordDyrnwyn.html" style="color:white;text-decoration:none">
-    <img src="../icons/SwordDyrnwyn.png" width="64"><br>
-    <div style="font-size:12px">ダーンウィン</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/SwordIron.html" style="color:white;text-decoration:none">
-    <img src="../icons/SwordIron.png" width="64"><br>
-    <div style="font-size:12px">鉄の剣</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/SwordIronFire.html" style="color:white;text-decoration:none">
-    <img src="../icons/SwordIronFire.png" width="64"><br>
-    <div style="font-size:12px">ダーンウィン</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/SwordMistwalker.html" style="color:white;text-decoration:none">
-    <img src="../icons/SwordMistwalker.png" width="64"><br>
-    <div style="font-size:12px">ミストウォーカー</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
   <a href="items/SwordNiedhogg.html" style="color:white;text-decoration:none">
     <img src="../icons/SwordNiedhogg.png" width="64"><br>
     <div style="font-size:12px">ニーズヘッグ</div>
@@ -3860,6 +3926,34 @@ li { margin:4px 0; }
   <a href="items/SwordNiedhoggBlood.html" style="color:white;text-decoration:none">
     <img src="../icons/SwordNiedhoggBlood.png" width="64"><br>
     <div style="font-size:12px">血濡れのニーズヘッグ</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/MaceEldnerLightning.html" style="color:white;text-decoration:none">
+    <img src="../icons/MaceEldnerLightning.png" width="64"><br>
+    <div style="font-size:12px">ストームスター</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/MaceEldnerNature.html" style="color:white;text-decoration:none">
+    <img src="../icons/MaceEldnerNature.png" width="64"><br>
+    <div style="font-size:12px">クロッセン</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/SpearSplitner_Lightning.html" style="color:white;text-decoration:none">
+    <img src="../icons/SpearSplitner_Lightning.png" width="64"><br>
+    <div style="font-size:12px">雷鳴のスプリトニール</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/SpearSplitner_Nature.html" style="color:white;text-decoration:none">
+    <img src="../icons/SpearSplitner_Nature.png" width="64"><br>
+    <div style="font-size:12px">原初のスプリトニール</div>
   </a>
 </div>
 
@@ -3878,44 +3972,44 @@ li { margin:4px 0; }
 </div>
 
 <div style="width:110px;text-align:center;margin:6px">
-  <a href="items/SwordSilver.html" style="color:white;text-decoration:none">
-    <img src="../icons/SwordSilver.png" width="64"><br>
-    <div style="font-size:12px">銀の剣</div>
+  <a href="items/SwordDyrnwyn.html" style="color:white;text-decoration:none">
+    <img src="../icons/SwordDyrnwyn.png" width="64"><br>
+    <div style="font-size:12px">ダーンウィン</div>
   </a>
 </div>
 
 <div style="width:110px;text-align:center;margin:6px">
-  <a href="items/SwordWood.html" style="color:white;text-decoration:none">
-    <img src="../icons/SwordWood.png" width="64"><br>
-    <div style="font-size:12px">木の剣</div>
+  <a href="items/AxeBlackMetal.html" style="color:white;text-decoration:none">
+    <img src="../icons/AxeBlackMetal.png" width="64"><br>
+    <div style="font-size:12px">黒金属の斧</div>
   </a>
 </div>
 
 <div style="width:110px;text-align:center;margin:6px">
-  <a href="items/Tankard.html" style="color:white;text-decoration:none">
-    <img src="../icons/Tankard.png" width="64"><br>
-    <div style="font-size:12px">タンカード</div>
+  <a href="items/AxeJotunBane.html" style="color:white;text-decoration:none">
+    <img src="../icons/AxeJotunBane.png" width="64"><br>
+    <div style="font-size:12px">ヨトゥン殺し</div>
   </a>
 </div>
 
 <div style="width:110px;text-align:center;margin:6px">
-  <a href="items/Tankard_dvergr.html" style="color:white;text-decoration:none">
-    <img src="../icons/Tankard_dvergr.png" width="64"><br>
-    <div style="font-size:12px">ドヴェルグのジョッキ</div>
+  <a href="items/DvergerArbalest_shootAshlands.html" style="color:white;text-decoration:none">
+    <img src="../icons/DvergerArbalest_shootAshlands.png" width="64"><br>
+    <div style="font-size:12px">石弓</div>
   </a>
 </div>
 
 <div style="width:110px;text-align:center;margin:6px">
-  <a href="items/TankardAnniversary.html" style="color:white;text-decoration:none">
-    <img src="../icons/TankardAnniversary.png" width="64"><br>
-    <div style="font-size:12px">祝いの角杯</div>
+  <a href="items/KnifeButcher.html" style="color:white;text-decoration:none">
+    <img src="../icons/KnifeButcher.png" width="64"><br>
+    <div style="font-size:12px">屠殺用ナイフ</div>
   </a>
 </div>
 
 <div style="width:110px;text-align:center;margin:6px">
-  <a href="items/TankardOdin.html" style="color:white;text-decoration:none">
-    <img src="../icons/TankardOdin.png" width="64"><br>
-    <div style="font-size:12px">オーディンの蜂蜜酒の角杯</div>
+  <a href="items/SwordCheat.html" style="color:white;text-decoration:none">
+    <img src="../icons/SwordCheat.png" width="64"><br>
+    <div style="font-size:12px">Cheat sword</div>
   </a>
 </div>
 </div>
@@ -3925,30 +4019,16 @@ li { margin:4px 0; }
 <div style="display:flex;flex-wrap:wrap">
 
 <div style="width:110px;text-align:center;margin:6px">
-  <a href="items/ShieldBanded.html" style="color:white;text-decoration:none">
-    <img src="../icons/ShieldBanded.png" width="64"><br>
-    <div style="font-size:12px">バンド付きの盾</div>
+  <a href="items/ShieldWood.html" style="color:white;text-decoration:none">
+    <img src="../icons/ShieldWood.png" width="64"><br>
+    <div style="font-size:12px">木の盾</div>
   </a>
 </div>
 
 <div style="width:110px;text-align:center;margin:6px">
-  <a href="items/ShieldBlackmetal.html" style="color:white;text-decoration:none">
-    <img src="../icons/ShieldBlackmetal.png" width="64"><br>
-    <div style="font-size:12px">黒い金属の盾</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/ShieldBlackmetalTower.html" style="color:white;text-decoration:none">
-    <img src="../icons/ShieldBlackmetalTower.png" width="64"><br>
-    <div style="font-size:12px">黒い金属のタワーシールド</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/ShieldBoneTower.html" style="color:white;text-decoration:none">
-    <img src="../icons/ShieldBoneTower.png" width="64"><br>
-    <div style="font-size:12px">骨のタワーシールド</div>
+  <a href="items/ShieldWoodTower.html" style="color:white;text-decoration:none">
+    <img src="../icons/ShieldWoodTower.png" width="64"><br>
+    <div style="font-size:12px">木のタワーシールド</div>
   </a>
 </div>
 
@@ -3960,37 +4040,16 @@ li { margin:4px 0; }
 </div>
 
 <div style="width:110px;text-align:center;margin:6px">
-  <a href="items/ShieldCarapace.html" style="color:white;text-decoration:none">
-    <img src="../icons/ShieldCarapace.png" width="64"><br>
-    <div style="font-size:12px">甲皮の盾</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/ShieldCarapaceBuckler.html" style="color:white;text-decoration:none">
-    <img src="../icons/ShieldCarapaceBuckler.png" width="64"><br>
-    <div style="font-size:12px">甲皮のバックラー</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/ShieldFlametal.html" style="color:white;text-decoration:none">
-    <img src="../icons/ShieldFlametal.png" width="64"><br>
-    <div style="font-size:12px">炎金の盾</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/ShieldFlametalTower.html" style="color:white;text-decoration:none">
-    <img src="../icons/ShieldFlametalTower.png" width="64"><br>
-    <div style="font-size:12px">炎金のタワーシールド</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
   <a href="items/ShieldIronBuckler.html" style="color:white;text-decoration:none">
     <img src="../icons/ShieldIronBuckler.png" width="64"><br>
     <div style="font-size:12px">鉄のバックラー</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/ShieldBoneTower.html" style="color:white;text-decoration:none">
+    <img src="../icons/ShieldBoneTower.png" width="64"><br>
+    <div style="font-size:12px">骨のタワーシールド</div>
   </a>
 </div>
 
@@ -4002,16 +4061,16 @@ li { margin:4px 0; }
 </div>
 
 <div style="width:110px;text-align:center;margin:6px">
-  <a href="items/ShieldIronTower.html" style="color:white;text-decoration:none">
-    <img src="../icons/ShieldIronTower.png" width="64"><br>
-    <div style="font-size:12px">鉄のタワーシールド</div>
+  <a href="items/ShieldBanded.html" style="color:white;text-decoration:none">
+    <img src="../icons/ShieldBanded.png" width="64"><br>
+    <div style="font-size:12px">バンド付きの盾</div>
   </a>
 </div>
 
 <div style="width:110px;text-align:center;margin:6px">
-  <a href="items/ShieldKnight.html" style="color:white;text-decoration:none">
-    <img src="../icons/ShieldKnight.png" width="64"><br>
-    <div style="font-size:12px">騎士の盾 未使用</div>
+  <a href="items/ShieldIronTower.html" style="color:white;text-decoration:none">
+    <img src="../icons/ShieldIronTower.png" width="64"><br>
+    <div style="font-size:12px">鉄のタワーシールド</div>
   </a>
 </div>
 
@@ -4030,16 +4089,51 @@ li { margin:4px 0; }
 </div>
 
 <div style="width:110px;text-align:center;margin:6px">
-  <a href="items/ShieldWood.html" style="color:white;text-decoration:none">
-    <img src="../icons/ShieldWood.png" width="64"><br>
-    <div style="font-size:12px">木の盾</div>
+  <a href="items/ShieldBlackmetal.html" style="color:white;text-decoration:none">
+    <img src="../icons/ShieldBlackmetal.png" width="64"><br>
+    <div style="font-size:12px">黒い金属の盾</div>
   </a>
 </div>
 
 <div style="width:110px;text-align:center;margin:6px">
-  <a href="items/ShieldWoodTower.html" style="color:white;text-decoration:none">
-    <img src="../icons/ShieldWoodTower.png" width="64"><br>
-    <div style="font-size:12px">木のタワーシールド</div>
+  <a href="items/ShieldCarapaceBuckler.html" style="color:white;text-decoration:none">
+    <img src="../icons/ShieldCarapaceBuckler.png" width="64"><br>
+    <div style="font-size:12px">甲皮のバックラー</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/ShieldCarapace.html" style="color:white;text-decoration:none">
+    <img src="../icons/ShieldCarapace.png" width="64"><br>
+    <div style="font-size:12px">甲皮の盾</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/ShieldBlackmetalTower.html" style="color:white;text-decoration:none">
+    <img src="../icons/ShieldBlackmetalTower.png" width="64"><br>
+    <div style="font-size:12px">黒い金属のタワーシールド</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/ShieldFlametal.html" style="color:white;text-decoration:none">
+    <img src="../icons/ShieldFlametal.png" width="64"><br>
+    <div style="font-size:12px">炎金の盾</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/ShieldKnight.html" style="color:white;text-decoration:none">
+    <img src="../icons/ShieldKnight.png" width="64"><br>
+    <div style="font-size:12px">騎士の盾 未使用</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/ShieldFlametalTower.html" style="color:white;text-decoration:none">
+    <img src="../icons/ShieldFlametalTower.png" width="64"><br>
+    <div style="font-size:12px">炎金のタワーシールド</div>
   </a>
 </div>
 </div>
@@ -4047,13 +4141,6 @@ li { margin:4px 0; }
   Shoulder
 </h2>
 <div style="display:flex;flex-wrap:wrap">
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/CapeAsh.html" style="color:white;text-decoration:none">
-    <img src="../icons/CapeAsh.png" width="64"><br>
-    <div style="font-size:12px">灰のマント</div>
-  </a>
-</div>
 
 <div style="width:110px;text-align:center;margin:6px">
   <a href="items/CapeAsksvin.html" style="color:white;text-decoration:none">
@@ -4115,6 +4202,13 @@ li { margin:4px 0; }
   <a href="items/CapeWolf.html" style="color:white;text-decoration:none">
     <img src="../icons/CapeWolf.png" width="64"><br>
     <div style="font-size:12px">狼の毛皮のケープ</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/CapeAsh.html" style="color:white;text-decoration:none">
+    <img src="../icons/CapeAsh.png" width="64"><br>
+    <div style="font-size:12px">灰のマント</div>
   </a>
 </div>
 </div>
@@ -4601,6 +4695,13 @@ li { margin:4px 0; }
 </div>
 
 <div style="width:110px;text-align:center;margin:6px">
+  <a href="items/TrophySGolem.html" style="color:white;text-decoration:none">
+    <img src="../icons/TrophySGolem.png" width="64"><br>
+    <div style="font-size:12px">ストーンゴーレムのトロフィー</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
   <a href="items/TrophySeeker.html" style="color:white;text-decoration:none">
     <img src="../icons/TrophySeeker.png" width="64"><br>
     <div style="font-size:12px">シーカーのトロフィー</div>
@@ -4625,13 +4726,6 @@ li { margin:4px 0; }
   <a href="items/TrophySerpent.html" style="color:white;text-decoration:none">
     <img src="../icons/TrophySerpent.png" width="64"><br>
     <div style="font-size:12px">蛇のトロフィー</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/TrophySGolem.html" style="color:white;text-decoration:none">
-    <img src="../icons/TrophySGolem.png" width="64"><br>
-    <div style="font-size:12px">ストーンゴーレムのトロフィー</div>
   </a>
 </div>
 
@@ -4711,254 +4805,9 @@ li { margin:4px 0; }
 <div style="display:flex;flex-wrap:wrap">
 
 <div style="width:110px;text-align:center;margin:6px">
-  <a href="items/AtgeirBlackmetal.html" style="color:white;text-decoration:none">
-    <img src="../icons/AtgeirBlackmetal.png" width="64"><br>
-    <div style="font-size:12px">黒金属のアトゲイル</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/AtgeirBronze.html" style="color:white;text-decoration:none">
-    <img src="../icons/AtgeirBronze.png" width="64"><br>
-    <div style="font-size:12px">青銅のアトゲイル</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/AtgeirHimminAfl.html" style="color:white;text-decoration:none">
-    <img src="../icons/AtgeirHimminAfl.png" width="64"><br>
-    <div style="font-size:12px">ヒミンアフル</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/AtgeirIron.html" style="color:white;text-decoration:none">
-    <img src="../icons/AtgeirIron.png" width="64"><br>
-    <div style="font-size:12px">鉄のアトゲイル</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/AtgeirWood.html" style="color:white;text-decoration:none">
-    <img src="../icons/AtgeirWood.png" width="64"><br>
-    <div style="font-size:12px">木のアトゲイル</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/AxeBerzerkr.html" style="color:white;text-decoration:none">
-    <img src="../icons/AxeBerzerkr.png" width="64"><br>
-    <div style="font-size:12px">ベルセルクルアクス</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/AxeBerzerkrBlood.html" style="color:white;text-decoration:none">
-    <img src="../icons/AxeBerzerkrBlood.png" width="64"><br>
-    <div style="font-size:12px">血濡れのベルセルクルアクス</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/AxeBerzerkrLightning.html" style="color:white;text-decoration:none">
-    <img src="../icons/AxeBerzerkrLightning.png" width="64"><br>
-    <div style="font-size:12px">雷鳴のベルセルクルアクス</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/AxeBerzerkrNature.html" style="color:white;text-decoration:none">
-    <img src="../icons/AxeBerzerkrNature.png" width="64"><br>
-    <div style="font-size:12px">原初のベルセルクルアクス</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/AxeEarly.html" style="color:white;text-decoration:none">
-    <img src="../icons/AxeEarly.png" width="64"><br>
-    <div style="font-size:12px">アーリーアックス</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/Battleaxe.html" style="color:white;text-decoration:none">
-    <img src="../icons/Battleaxe.png" width="64"><br>
-    <div style="font-size:12px">戦斧</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/BattleaxeBlackmetal.html" style="color:white;text-decoration:none">
-    <img src="../icons/BattleaxeBlackmetal.png" width="64"><br>
-    <div style="font-size:12px">黒い金属のバトルアックス</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/BattleaxeCrystal.html" style="color:white;text-decoration:none">
-    <img src="../icons/BattleaxeCrystal.png" width="64"><br>
-    <div style="font-size:12px">クリスタルの戦斧</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/BattleaxeSkullSplittur.html" style="color:white;text-decoration:none">
-    <img src="../icons/BattleaxeSkullSplittur.png" width="64"><br>
-    <div style="font-size:12px">スカルスプリッター</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/BattleaxeWood.html" style="color:white;text-decoration:none">
-    <img src="../icons/BattleaxeWood.png" width="64"><br>
-    <div style="font-size:12px">木のバトルアックス</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/FishingRod.html" style="color:white;text-decoration:none">
-    <img src="../icons/FishingRod.png" width="64"><br>
-    <div style="font-size:12px">釣り竿</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/FistBjornClaw.html" style="color:white;text-decoration:none">
-    <img src="../icons/FistBjornClaw.png" width="64"><br>
-    <div style="font-size:12px">熊の両手</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/FistBjornUndeadClaw.html" style="color:white;text-decoration:none">
-    <img src="../icons/FistBjornUndeadClaw.png" width="64"><br>
-    <div style="font-size:12px">ヴァイルボーンモールクロー</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/FistFenrirClaw.html" style="color:white;text-decoration:none">
-    <img src="../icons/FistFenrirClaw.png" width="64"><br>
-    <div style="font-size:12px">肉裂き</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/KnifeSkollAndHati.html" style="color:white;text-decoration:none">
-    <img src="../icons/KnifeSkollAndHati.png" width="64"><br>
-    <div style="font-size:12px">スコルとハティ</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/PickaxeAntler.html" style="color:white;text-decoration:none">
-    <img src="../icons/PickaxeAntler.png" width="64"><br>
-    <div style="font-size:12px">枝角のつるはし</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/PickaxeBlackMetal.html" style="color:white;text-decoration:none">
-    <img src="../icons/PickaxeBlackMetal.png" width="64"><br>
-    <div style="font-size:12px">黒金属のつるはし</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/PickaxeBronze.html" style="color:white;text-decoration:none">
-    <img src="../icons/PickaxeBronze.png" width="64"><br>
-    <div style="font-size:12px">青銅のつるはし</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/PickaxeIron.html" style="color:white;text-decoration:none">
-    <img src="../icons/PickaxeIron.png" width="64"><br>
-    <div style="font-size:12px">鉄のつるはし</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/PickaxeStone.html" style="color:white;text-decoration:none">
-    <img src="../icons/PickaxeStone.png" width="64"><br>
-    <div style="font-size:12px">石のつるはし</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
   <a href="items/Scythe.html" style="color:white;text-decoration:none">
     <img src="../icons/Scythe.png" width="64"><br>
     <div style="font-size:12px">大鎌</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/SledgeCheat.html" style="color:white;text-decoration:none">
-    <img src="../icons/SledgeCheat.png" width="64"><br>
-    <div style="font-size:12px">Cheat sledge</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/SledgeDemolisher.html" style="color:white;text-decoration:none">
-    <img src="../icons/SledgeDemolisher.png" width="64"><br>
-    <div style="font-size:12px">デモリッシャー</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/SledgeIron.html" style="color:white;text-decoration:none">
-    <img src="../icons/SledgeIron.png" width="64"><br>
-    <div style="font-size:12px">鉄の大ハンマー</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/SledgeStagbreaker.html" style="color:white;text-decoration:none">
-    <img src="../icons/SledgeStagbreaker.png" width="64"><br>
-    <div style="font-size:12px">鹿砕き</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/SledgeWood.html" style="color:white;text-decoration:none">
-    <img src="../icons/SledgeWood.png" width="64"><br>
-    <div style="font-size:12px">木のハンマー</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/StaffClusterbomb.html" style="color:white;text-decoration:none">
-    <img src="../icons/StaffClusterbomb.png" width="64"><br>
-    <div style="font-size:12px">破砕の杖</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/StaffFireball.html" style="color:white;text-decoration:none">
-    <img src="../icons/StaffFireball.png" width="64"><br>
-    <div style="font-size:12px">残り火の杖</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/StaffGreenRoots.html" style="color:white;text-decoration:none">
-    <img src="../icons/StaffGreenRoots.png" width="64"><br>
-    <div style="font-size:12px">風の杖</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/StaffIceShards.html" style="color:white;text-decoration:none">
-    <img src="../icons/StaffIceShards.png" width="64"><br>
-    <div style="font-size:12px">霜の杖</div>
-  </a>
-</div>
-
-<div style="width:110px;text-align:center;margin:6px">
-  <a href="items/StaffLightning.html" style="color:white;text-decoration:none">
-    <img src="../icons/StaffLightning.png" width="64"><br>
-    <div style="font-size:12px">赤雷の杖</div>
   </a>
 </div>
 
@@ -4977,9 +4826,212 @@ li { margin:4px 0; }
 </div>
 
 <div style="width:110px;text-align:center;margin:6px">
+  <a href="items/AtgeirWood.html" style="color:white;text-decoration:none">
+    <img src="../icons/AtgeirWood.png" width="64"><br>
+    <div style="font-size:12px">木のアトゲイル</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/SledgeWood.html" style="color:white;text-decoration:none">
+    <img src="../icons/SledgeWood.png" width="64"><br>
+    <div style="font-size:12px">木のハンマー</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/THSwordWood.html" style="color:white;text-decoration:none">
+    <img src="../icons/THSwordWood.png" width="64"><br>
+    <div style="font-size:12px">木の大剣</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/BattleaxeWood.html" style="color:white;text-decoration:none">
+    <img src="../icons/BattleaxeWood.png" width="64"><br>
+    <div style="font-size:12px">木のバトルアックス</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/FishingRod.html" style="color:white;text-decoration:none">
+    <img src="../icons/FishingRod.png" width="64"><br>
+    <div style="font-size:12px">釣り竿</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/StaffLightning.html" style="color:white;text-decoration:none">
+    <img src="../icons/StaffLightning.png" width="64"><br>
+    <div style="font-size:12px">赤雷の杖</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/StaffClusterbomb.html" style="color:white;text-decoration:none">
+    <img src="../icons/StaffClusterbomb.png" width="64"><br>
+    <div style="font-size:12px">破砕の杖</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/FistBjornClaw.html" style="color:white;text-decoration:none">
+    <img src="../icons/FistBjornClaw.png" width="64"><br>
+    <div style="font-size:12px">熊の両手</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/SledgeStagbreaker.html" style="color:white;text-decoration:none">
+    <img src="../icons/SledgeStagbreaker.png" width="64"><br>
+    <div style="font-size:12px">鹿砕き</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/PickaxeStone.html" style="color:white;text-decoration:none">
+    <img src="../icons/PickaxeStone.png" width="64"><br>
+    <div style="font-size:12px">石のつるはし</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/StaffIceShards.html" style="color:white;text-decoration:none">
+    <img src="../icons/StaffIceShards.png" width="64"><br>
+    <div style="font-size:12px">霜の杖</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/PickaxeAntler.html" style="color:white;text-decoration:none">
+    <img src="../icons/PickaxeAntler.png" width="64"><br>
+    <div style="font-size:12px">枝角のつるはし</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/StaffGreenRoots.html" style="color:white;text-decoration:none">
+    <img src="../icons/StaffGreenRoots.png" width="64"><br>
+    <div style="font-size:12px">風の杖</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/AtgeirBronze.html" style="color:white;text-decoration:none">
+    <img src="../icons/AtgeirBronze.png" width="64"><br>
+    <div style="font-size:12px">青銅のアトゲイル</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/PickaxeBronze.html" style="color:white;text-decoration:none">
+    <img src="../icons/PickaxeBronze.png" width="64"><br>
+    <div style="font-size:12px">青銅のつるはし</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/SledgeIron.html" style="color:white;text-decoration:none">
+    <img src="../icons/SledgeIron.png" width="64"><br>
+    <div style="font-size:12px">鉄の大ハンマー</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/FistFenrirClaw.html" style="color:white;text-decoration:none">
+    <img src="../icons/FistFenrirClaw.png" width="64"><br>
+    <div style="font-size:12px">肉裂き</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/AtgeirIron.html" style="color:white;text-decoration:none">
+    <img src="../icons/AtgeirIron.png" width="64"><br>
+    <div style="font-size:12px">鉄のアトゲイル</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/AxeEarly.html" style="color:white;text-decoration:none">
+    <img src="../icons/AxeEarly.png" width="64"><br>
+    <div style="font-size:12px">アーリーアックス</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/PickaxeIron.html" style="color:white;text-decoration:none">
+    <img src="../icons/PickaxeIron.png" width="64"><br>
+    <div style="font-size:12px">鉄のつるはし</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/FistBjornUndeadClaw.html" style="color:white;text-decoration:none">
+    <img src="../icons/FistBjornUndeadClaw.png" width="64"><br>
+    <div style="font-size:12px">ヴァイルボーンモールクロー</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/KnifeSkollAndHati.html" style="color:white;text-decoration:none">
+    <img src="../icons/KnifeSkollAndHati.png" width="64"><br>
+    <div style="font-size:12px">スコルとハティ</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/PickaxeBlackMetal.html" style="color:white;text-decoration:none">
+    <img src="../icons/PickaxeBlackMetal.png" width="64"><br>
+    <div style="font-size:12px">黒金属のつるはし</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/AtgeirBlackmetal.html" style="color:white;text-decoration:none">
+    <img src="../icons/AtgeirBlackmetal.png" width="64"><br>
+    <div style="font-size:12px">黒金属のアトゲイル</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/Battleaxe.html" style="color:white;text-decoration:none">
+    <img src="../icons/Battleaxe.png" width="64"><br>
+    <div style="font-size:12px">戦斧</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/AtgeirHimminAfl.html" style="color:white;text-decoration:none">
+    <img src="../icons/AtgeirHimminAfl.png" width="64"><br>
+    <div style="font-size:12px">ヒミンアフル</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/SledgeDemolisher.html" style="color:white;text-decoration:none">
+    <img src="../icons/SledgeDemolisher.png" width="64"><br>
+    <div style="font-size:12px">デモリッシャー</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
   <a href="items/THSwordKrom.html" style="color:white;text-decoration:none">
     <img src="../icons/THSwordKrom.png" width="64"><br>
     <div style="font-size:12px">クロム</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/BattleaxeBlackmetal.html" style="color:white;text-decoration:none">
+    <img src="../icons/BattleaxeBlackmetal.png" width="64"><br>
+    <div style="font-size:12px">黒い金属のバトルアックス</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/BattleaxeCrystal.html" style="color:white;text-decoration:none">
+    <img src="../icons/BattleaxeCrystal.png" width="64"><br>
+    <div style="font-size:12px">クリスタルの戦斧</div>
   </a>
 </div>
 
@@ -5012,9 +5064,51 @@ li { margin:4px 0; }
 </div>
 
 <div style="width:110px;text-align:center;margin:6px">
-  <a href="items/THSwordWood.html" style="color:white;text-decoration:none">
-    <img src="../icons/THSwordWood.png" width="64"><br>
-    <div style="font-size:12px">木の大剣</div>
+  <a href="items/BattleaxeSkullSplittur.html" style="color:white;text-decoration:none">
+    <img src="../icons/BattleaxeSkullSplittur.png" width="64"><br>
+    <div style="font-size:12px">スカルスプリッター</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/AxeBerzerkr.html" style="color:white;text-decoration:none">
+    <img src="../icons/AxeBerzerkr.png" width="64"><br>
+    <div style="font-size:12px">ベルセルクルアクス</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/AxeBerzerkrBlood.html" style="color:white;text-decoration:none">
+    <img src="../icons/AxeBerzerkrBlood.png" width="64"><br>
+    <div style="font-size:12px">血濡れのベルセルクルアクス</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/AxeBerzerkrLightning.html" style="color:white;text-decoration:none">
+    <img src="../icons/AxeBerzerkrLightning.png" width="64"><br>
+    <div style="font-size:12px">雷鳴のベルセルクルアクス</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/AxeBerzerkrNature.html" style="color:white;text-decoration:none">
+    <img src="../icons/AxeBerzerkrNature.png" width="64"><br>
+    <div style="font-size:12px">原初のベルセルクルアクス</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/StaffFireball.html" style="color:white;text-decoration:none">
+    <img src="../icons/StaffFireball.png" width="64"><br>
+    <div style="font-size:12px">残り火の杖</div>
+  </a>
+</div>
+
+<div style="width:110px;text-align:center;margin:6px">
+  <a href="items/SledgeCheat.html" style="color:white;text-decoration:none">
+    <img src="../icons/SledgeCheat.png" width="64"><br>
+    <div style="font-size:12px">Cheat sledge</div>
   </a>
 </div>
 </div>
@@ -5062,6 +5156,6 @@ li { margin:4px 0; }
     <div style="font-size:12px">叉骨</div>
   </a>
 </div>
-</div>
+</div></div>
 </body>
 </html>

@@ -2,6 +2,7 @@
 using BepInEx.Logging;
 using HarmonyLib;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,6 +10,7 @@ using System.Xml;
 using UnityEngine;
 using UnityEngine.Windows;
 using static MyFirstPlugin.Patch;
+using static Turret;
 
 namespace MyFirstPlugin;
 
@@ -55,6 +57,12 @@ public class Plugin : BaseUnityPlugin
         while (Localization.instance == null)
         {
             Logger.LogInfo("Waiting for Localization...");
+            yield return new WaitForSeconds(1f);
+        }
+
+        while (Patch.SpawnSystemAwakePatch.CurrentInstance == null)
+        {
+            Logger.LogInfo("Waiting for SpawnSystem...");
             yield return new WaitForSeconds(1f);
         }
 
@@ -173,14 +181,48 @@ public class Plugin : BaseUnityPlugin
                 File.WriteAllBytes(path, cropped.EncodeToPNG());
             }
 
-            list.Add(new
+            var exportData = new Dictionary<string, object>()
             {
-                id = prefab.name,
-                type = data.m_itemType.ToString(),
-                name = Localize(data.m_name),
-                description = Localize(data.m_description),
-                icon = $"icons/{prefab.name}.png"
-            });
+                ["id"] = prefab.name,
+                ["type"] = data.m_itemType.ToString(),
+                ["name"] = Localize(data.m_name),
+                ["description"] = Localize(data.m_description),
+                ["icon"] = $"icons/{prefab.name}.png",
+            };
+            // food
+            if (data.m_food != 0) exportData.Add("food", data.m_food);
+            if (data.m_foodStamina != 0) exportData.Add("foodStamina", data.m_foodStamina);
+            if (data.m_foodEitr != 0) exportData.Add("foodEitr", data.m_foodEitr);
+            if (data.m_foodBurnTime != 0) exportData.Add("foodBurnTime", data.m_foodBurnTime);
+            if (data.m_foodRegen != 0) exportData.Add("foodRegen", data.m_foodRegen);
+            if (data.m_foodEatAnimTime != 0) exportData.Add("foodEatAnimTime", data.m_foodEatAnimTime);
+            if (data.m_isDrink) exportData.Add("isDrink", data.m_isDrink);
+            // armor
+            if (data.m_armor != 0) exportData.Add("armor", data.m_armor);
+            // shield
+            if (data.m_blockPower != 0) exportData.Add("blockPower", data.m_blockPower);
+            if (data.m_blockPowerPerLevel != 0) exportData.Add("blockPowerPerLevel", data.m_blockPowerPerLevel);
+            if (data.m_deflectionForce != 0) exportData.Add("deflectionForce", data.m_deflectionForce);
+            if (data.m_deflectionForcePerLevel != 0) exportData.Add("deflectionForcePerLevel", data.m_deflectionForcePerLevel);
+            if (data.m_timedBlockBonus != 0) exportData.Add("timedBlockBonus", data.m_timedBlockBonus);
+            if (data.m_perfectBlockStaminaRegen != 0) exportData.Add("perfectBlockStaminaRegen", data.m_perfectBlockStaminaRegen);
+            //if (data.m_perfectBlockStaminaRegen != 0) exportData.Add("armor", data.m_perfectBlockStaminaRegen);
+            // ammo
+            if (data.m_ammoType != "") exportData.Add("ammoType", data.m_ammoType);
+            // damage
+            if (data.m_damages.m_damage != 0) exportData.Add("damage", data.m_damages.m_damage);
+            if (data.m_damages.m_blunt != 0) exportData.Add("blunt", data.m_damages.m_blunt);
+            if (data.m_damages.m_slash != 0) exportData.Add("slash", data.m_damages.m_slash);
+            if (data.m_damages.m_pierce != 0) exportData.Add("pierce", data.m_damages.m_pierce);
+            if (data.m_damages.m_chop != 0) exportData.Add("chop", data.m_damages.m_chop);
+            if (data.m_damages.m_pickaxe != 0) exportData.Add("pickaxe", data.m_damages.m_pickaxe);
+            if (data.m_damages.m_fire != 0) exportData.Add("fire", data.m_damages.m_fire);
+            if (data.m_damages.m_frost != 0) exportData.Add("frost", data.m_damages.m_frost);
+            if (data.m_damages.m_lightning != 0) exportData.Add("lightning", data.m_damages.m_lightning);
+            if (data.m_damages.m_poison != 0) exportData.Add("poison", data.m_damages.m_poison);
+            if (data.m_damages.m_spirit != 0) exportData.Add("spirit", data.m_damages.m_spirit);
+
+            list.Add(exportData);
         }
 
         WriteJson("items.json", list);
@@ -190,34 +232,39 @@ public class Plugin : BaseUnityPlugin
         var exportedSpawnList = new List<object>();
         var mobList = new Dictionary<string, object>();
 
-        foreach (var location in ZoneSystem.instance.m_locationLists)
+        var spawnSystem = Patch.SpawnSystemAwakePatch.CurrentInstance;
+        if (spawnSystem != null)
+        {
+            foreach (var spawnList in spawnSystem.m_spawnLists)
+            {
+                foreach (var spawnData in spawnList.m_spawners)
+                {
+                    var biomes = new List<string>();
+                    foreach (Heightmap.Biome biome in Enum.GetValues(typeof(Heightmap.Biome)))
+                        if (spawnData.m_biome.HasFlag(biome)) biomes.Add(biome.ToString());
+
+                    exportedSpawnList.Add(new
+                    {
+                        name = spawnData.m_prefab.name,
+                        biome = biomes,
+                        enabled = spawnData.m_enabled,
+                        min_lvl = spawnData.m_minLevel,
+                        max_lvl = spawnData.m_maxLevel,
+                        spawn_chance = spawnData.m_spawnChance
+                    });
+                }
+            }
+        }
+        else
+        {
+            Logger.LogError("SpawnSystem instance is null");
+        }
+
+        /*foreach (var location in ZoneSystem.instance.m_locationLists)
         {
             var c = location.GetComponent<ZoneSystem.ZoneLocation>();
             if (c == null) continue;
-
-            var spawnSystem = Patch.SpawnSystemAwakePatch.CurrentInstance;
-            if (spawnSystem != null)
-            {
-                foreach (var spawnList in spawnSystem.m_spawnLists)
-                {
-                    foreach (var spawnData in spawnList.m_spawners)
-                    {
-                        exportedSpawnList.Add(new
-                        {
-                            name = spawnData.m_prefab.name,
-                            biome = spawnData.m_biome.ToString(), // Enumを文字列に
-                            enabled = spawnData.m_enabled,
-                            min_lvl = spawnData.m_minLevel,
-                            max_lvl = spawnData.m_maxLevel,
-                            spawn_chance = spawnData.m_spawnChance
-                        });
-                    }
-                }
-            } else
-            {
-                Logger.LogError("SpawnSystem instance is null");
-            }
-        }
+        }*/
         WriteJson("spawnLocations.json", exportedSpawnList);
 
         foreach (var prefab in ZNetScene.instance.m_prefabs)
@@ -267,6 +314,7 @@ public class Plugin : BaseUnityPlugin
         }
 
         var list = new List<object>();
+        var destructibles = new List<object>();
 
         foreach (var recipe in ObjectDB.instance.m_recipes)
         {
@@ -296,7 +344,26 @@ public class Plugin : BaseUnityPlugin
             });
         }
 
-        //
+        foreach (var vegetation in ZoneSystem.instance.m_vegetation)
+        {
+            Logger.LogInfo(vegetation.m_name);
+            Logger.LogInfo(vegetation.m_prefab.name);
+            Logger.LogInfo(vegetation.m_prefab.ToString());
+            Logger.LogInfo(vegetation.m_prefab.GetType());
+
+            // すべてのコンポーネントを取得
+            Component[] components = vegetation.m_prefab.GetComponents<Component>();
+
+            foreach (var comp in components)
+            {
+                // これが「X」の正体（Type型）
+                Type type = comp.GetType();
+
+                Logger.LogInfo($"見つかったコンポーネント: {type.FullName}");
+            }
+        }
+
+        // Smelter
         foreach (var prefab in ZNetScene.instance.m_prefabs)
         {
             var smelter = prefab.GetComponent<Smelter>();
@@ -323,6 +390,7 @@ public class Plugin : BaseUnityPlugin
         }
 
         WriteJson("recipes.json", list);
+        WriteJson("destructibles.json", destructibles);
     }
 
     // ===== ドロップ =====

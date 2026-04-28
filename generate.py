@@ -8,9 +8,56 @@ SITE_DIR = "site"
 
 # ===== load =====
 items = dict()
+
+def get_total_damage(item):
+    return (
+        item.get("damage", 0) +
+        item.get("blunt", 0) +
+        item.get("slash", 0) +
+        item.get("pierce", 0) +
+        item.get("chop", 0) +
+        item.get("pickaxe", 0) +
+        item.get("fire", 0) +
+        item.get("frost", 0) +
+        item.get("lightning", 0) +
+        item.get("poison", 0) +
+        item.get("spirit", 0)
+    )
+
+def sort_key(item):
+    t = item.get("type", "")
+
+    # ammo, weapons
+    if t in ("Ammo", "AmmoNonEquipable", "Bow", "OneHandedWeapon", "TwoHandedWeapon"):
+        return (
+            item["type"],
+            get_total_damage(item)
+        )
+
+    # armors
+    if t in ("Helmet", "Chest", "Legs", "Shoulder"):
+        return (
+            item["type"],
+            item.get("armor", 0)
+        )
+    
+    # shields
+    if t in ("Shield"):
+        return (
+            item["type"],
+            item.get("blockPower", 0)
+        )
+
+    # etc
+    return (
+        item["type"],
+        item.get("id", "")
+    )
+
 with open(os.path.join(BepInExPath, "items.json"), "r", encoding="utf-8") as f:
     items = json.load(f)
-    items = sorted(items, key=lambda x: x['type'])
+    #items = sorted(items, key=lambda x: x['type'])
+    items = sorted(items, key=sort_key)
     items = {i["id"]: i for i in items}
 
 with open(os.path.join(BepInExPath, "recipes.json"), "r", encoding="utf-8") as f:
@@ -47,10 +94,11 @@ def icon_path(item_id):
     return None
 
 def breadcrumb(path):
-    html = '<div style="font-size:13px;color:#888;margin-bottom:10px">'
-    html += " > ".join(path)
-    html += "</div>"
-    return html
+    return f"""
+<div class="breadcrumb">
+  {' <span style="opacity:0.5">›</span> '.join(path)}
+</div>
+"""
 
 def page_template(title, body):
     return f"""
@@ -60,11 +108,70 @@ def page_template(title, body):
 <meta charset="utf-8">
 <title>{title}</title>
 <style>
-body {{ background:#111; color:#eee; font-family:sans-serif; }}
-a {{ color:#6cf; text-decoration:none; }}
-.card img {{ width:64px; image-rendering:pixelated; }}
-ul {{ list-style:none; padding:0; }}
-li {{ margin:4px 0; }}
+
+* {{
+  box-sizing: border-box;
+}}
+
+body {{
+  margin: 0;
+  display: flex;
+  font-family: sans-serif;
+  background: #111;
+  color: #eee;
+}}
+
+.sidebar {{
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 220px;
+  height: 100vh;
+  background: #1a1a1a;
+  padding: 12px;
+  border-right: 1px solid #333;
+  overflow-y: auto;
+}}
+
+.breadcrumb {{
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 10px;
+  line-height: 1;   /* ←これ重要 */
+}}
+.breadcrumb a {{
+  display: inline;   /* ←これ超重要 */
+  color: #888;
+  text-decoration: none;
+}}
+
+.content {{
+  flex: 1;
+  padding: 16px;
+  margin-left: 220px;
+}}
+
+a {{
+  color: #ccc;
+  text-decoration: none;
+  display: block;
+  padding: 6px 8px;
+  border-radius: 6px;
+}}
+
+a:hover {{
+  background: #2a2a2a;
+}}
+
+.section-title {{
+  margin-top: 14px;
+  font-size: 12px;
+  color: #777;
+}}
 </style>
 </head>
 <body>
@@ -72,6 +179,40 @@ li {{ margin:4px 0; }}
 </body>
 </html>
 """
+
+def side_bar(base_path="./"):
+    return f"""
+<div class="sidebar">
+
+  <h3>Wiki</h3>
+
+  <a href="{base_path}index.html">🏠 Home</a>
+  <a href="{base_path}index.html">📦 Items</a>
+  <a href="{base_path}index.html">👹 Mobs</a>
+
+  <div class="section-title">Categories</div>
+
+  <a href="{base_path}index.html#Weapon">⚔ Weapon</a>
+  <a href="{base_path}index.html#Armor">🛡 Armor</a>
+  <a href="{base_path}index.html#Consumable">🍖 Consumable</a>
+  <a href="{base_path}index.html#Material">🪵 Material</a>
+
+  <div class="section-title">Search</div>
+
+  <input id="search" placeholder="Search..." style="
+  width:100%;
+  padding:5px 8px;
+  margin-top:6px;
+  border-radius:6px;
+  border:1px solid #2a2a2a;
+  background:#0f0f0f;
+  color:#ddd;
+  font-size:13px;
+  outline:none;
+  ">
+
+</div>
+    """
 
 def section(title, body):
     return f"""
@@ -129,14 +270,15 @@ for mob in drops:
 for item_id, item in items.items():
     name = item["name"]
 
-    html = ""
+    html = side_bar("../")
+    html += r"""<div class="content">"""
 
     html += breadcrumb([
-    '<a href="../index.html" style="color:#888">Home</a>',
-    '<a href="../index.html#items" style="color:#888">Items</a>',
-    f'<a href="../index.html#{item["type"]}" style="color:#888">{item["type"]}</a>',
-    item["name"]
-])
+        '<a href="../index.html" style="color:#888">Home</a>',
+        '<a href="../index.html" style="color:#888">Items</a>',
+        f'<a href="../index.html#{item["type"]}" style="color:#888">{item["type"]}</a>',
+        item["name"]
+    ])
 
     html += f"""
 <h1 style="margin-bottom:8px">{name}</h1>
@@ -211,12 +353,26 @@ for item_id, item in items.items():
 
     html += section("Dropped by", drops_body or "<div style='color:#777'>None</div>")
 
+    # end of content
+    html += r"""</div>"""
+
     with open(f"{SITE_DIR}/items/{item_id}.html", "w", encoding="utf-8") as f:
         f.write(page_template(name, html))
 
 # ===== mob pages =====
 for mob in drops:
-    html = f"<h1>{mob_name(mob['name'])}</h1><ul>"
+
+    html = side_bar()
+    html += r"""<div class="content">"""
+
+    html += breadcrumb([
+        '<a href="../index.html" style="color:#888">Home</a>',
+        '<a href="../index.html" style="color:#888">Mobs</a>',
+        # maybe biome here
+        mob_name(mob['name'])
+    ])
+
+    html += f"<h1>{mob_name(mob['name'])}</h1><ul>"
 
     for d in mob["drops"]:
         item = d["item"]
@@ -226,11 +382,21 @@ for mob in drops:
 
     html += "</ul>"
 
+    # end of content
+    html += r"""</div>"""
+
     with open(f"{SITE_DIR}/mobs/{mob['name']}.html", "w", encoding="utf-8") as f:
         f.write(page_template(mob["name"], html))
 
 # ===== index =====
-html = "<h1>Items</h1>"
+html = side_bar()
+html += r"""<div class="content">"""
+html += breadcrumb([
+    '<a href="index.html" style="color:#888">Home</a>',
+    '<a href="index.html" style="color:#888">Items</a>'
+])
+
+html += "<h1>Items</h1>"
 
 current_type = None
 
@@ -268,6 +434,9 @@ for item_id, item in items.items():
 # close last block
 if current_type is not None:
     html += "</div>"
+
+# end of content
+html += r"""</div>"""
 
 with open(f"{SITE_DIR}/index.html", "w", encoding="utf-8") as f:
     f.write(page_template("Items", html))

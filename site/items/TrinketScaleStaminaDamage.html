@@ -69,6 +69,120 @@ a:hover {
   font-size: 12px;
   color: #777;
 }
+
+.info-table, .resist-table {
+    border-collapse: collapse;
+    margin: 10px 0;
+}
+
+.info-table th, .info-table td,
+.resist-table th, .resist-table td {
+    border: 1px solid #444;
+    padding: 6px 10px;
+}
+
+.info-table th {
+    background: #222;
+    text-align: left;
+}
+
+.resist-table th {
+    background: #333;
+}
+
+.drop-table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.drop-table th, .drop-table td {
+    border: 1px solid #444;
+    padding: 6px 10px;
+}
+
+.drop-table th {
+    background: #222;
+}
+
+.item-icon {
+    height: 1.8em;
+    vertical-align: middle;
+    margin-right: 6px;
+}
+
+.drop-chance {
+    position: relative;
+    background: #222;
+    height: 14px;
+    border-radius: 4px;
+}
+
+.drop-chance .bar {
+    background: #4caf50;
+    height: 100%;
+    border-radius: 4px;
+}
+
+.drop-chance span {
+    position: absolute;
+    left: 6px;
+    top: -2px;
+    font-size: 12px;
+}
+
+.mob-grid {
+    display: flex;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.mob-card {
+    display: block;
+    background: #1b1b1b;
+    border: 1px solid #333;
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
+    text-decoration: none;
+    color: #ddd;
+    position: relative;
+    transition: 0.2s;
+}
+
+.mob-card:hover {
+    background: #2a2a2a;
+    transform: translateY(-2px);
+}
+
+.mob-icon {
+    height: 64px;
+    margin-bottom: 6px;
+}
+
+.mob-name {
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+.mob-hp {
+    font-size: 0.9em;
+    color: #aaa;
+}
+
+.boss-tag {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    background: #c33;
+    color: white;
+    font-size: 0.7em;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+
 </style>
 </head>
 <body>
@@ -78,15 +192,15 @@ a:hover {
   <h3>Wiki</h3>
 
   <a href="../index.html">🏠 Home</a>
-  <a href="../index.html">📦 Items</a>
-  <a href="../index.html">👹 Mobs</a>
+  <a href="../items/index.html">📦 Items</a>
+  <a href="../mobs/index.html">👹 Mobs</a>
 
   <div class="section-title">Categories</div>
 
-  <a href="../index.html#Weapon">⚔ Weapon</a>
-  <a href="../index.html#Armor">🛡 Armor</a>
-  <a href="../index.html#Consumable">🍖 Consumable</a>
-  <a href="../index.html#Material">🪵 Material</a>
+  <a href="../items/index.html#Weapon">⚔ Weapon</a>
+  <a href="../items/index.html#Armor">🛡 Armor</a>
+  <a href="../items/index.html#Consumable">🍖 Consumable</a>
+  <a href="../items/index.html#Material">🪵 Material</a>
 
   <div class="section-title">Search</div>
 
@@ -105,7 +219,7 @@ a:hover {
 </div>
     <div class="content">
 <div class="breadcrumb">
-  <a href="../index.html" style="color:#888">Home</a> <span style="opacity:0.5">›</span> <a href="../index.html" style="color:#888">Items</a> <span style="opacity:0.5">›</span> <a href="../index.html#Trinket" style="color:#888">Trinket</a> <span style="opacity:0.5">›</span> 鳴り響く枷
+  <a href="../index.html" style="color:#888">Home</a> <span style="opacity:0.5">›</span> <a href="index.html" style="color:#888">Items</a> <span style="opacity:0.5">›</span> <a href="index.html#Trinket" style="color:#888">Trinket</a> <span style="opacity:0.5">›</span> 鳴り響く枷
 </div>
 
 <h1 style="margin-bottom:8px">鳴り響く枷</h1>

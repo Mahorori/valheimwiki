@@ -36,6 +36,9 @@
     <Reference Include="assembly_valheim">
       <HintPath>..\..\..\Program Files (x86)\Steam\steamapps\common\Valheim\valheim_Data\Managed\assembly_valheim.dll</HintPath>
     </Reference>
+    <Reference Include="SoftReferenceableAssets">
+      <HintPath>..\..\..\Program Files (x86)\Steam\steamapps\common\Valheim\valheim_Data\Managed\SoftReferenceableAssets.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.InputSystem">
       <HintPath>..\..\..\Program Files (x86)\Steam\steamapps\common\Valheim\valheim_Data\Managed\Unity.InputSystem.dll</HintPath>
     </Reference>

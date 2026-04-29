@@ -2,13 +2,16 @@
 using BepInEx.Logging;
 using HarmonyLib;
 using Newtonsoft.Json;
+using SoftReferenceableAssets;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Xml;
 using UnityEngine;
 using UnityEngine.Windows;
+using static CharacterDrop;
 using static MyFirstPlugin.Patch;
 using static Turret;
 
@@ -188,6 +191,9 @@ public class Plugin : BaseUnityPlugin
                 ["name"] = Localize(data.m_name),
                 ["description"] = Localize(data.m_description),
                 ["icon"] = $"icons/{prefab.name}.png",
+                ["maxStackSize"] = data.m_maxStackSize,
+                ["maxQuality"] = data.m_maxQuality,
+                ["weight"] = data.m_weight,
             };
             // food
             if (data.m_food != 0) exportData.Add("food", data.m_food);
@@ -207,20 +213,41 @@ public class Plugin : BaseUnityPlugin
             if (data.m_timedBlockBonus != 0) exportData.Add("timedBlockBonus", data.m_timedBlockBonus);
             if (data.m_perfectBlockStaminaRegen != 0) exportData.Add("perfectBlockStaminaRegen", data.m_perfectBlockStaminaRegen);
             //if (data.m_perfectBlockStaminaRegen != 0) exportData.Add("armor", data.m_perfectBlockStaminaRegen);
-            // ammo
+
+            // Weapon
+            if (data.m_skillType != 0) exportData.Add("skillType", data.m_skillType);
+            if (data.m_toolTier != 0) exportData.Add("toolTier", data.m_toolTier);
+
+            Dictionary<string, float> damages = new();
+            if (data.m_damages.m_damage != 0) damages.Add("damage", data.m_damages.m_damage);
+            if (data.m_damages.m_blunt != 0) damages.Add("blunt", data.m_damages.m_blunt);
+            if (data.m_damages.m_slash != 0) damages.Add("slash", data.m_damages.m_slash);
+            if (data.m_damages.m_pierce != 0) damages.Add("pierce", data.m_damages.m_pierce);
+            if (data.m_damages.m_chop != 0) damages.Add("chop", data.m_damages.m_chop);
+            if (data.m_damages.m_pickaxe != 0) damages.Add("pickaxe", data.m_damages.m_pickaxe);
+            if (data.m_damages.m_fire != 0) damages.Add("fire", data.m_damages.m_fire);
+            if (data.m_damages.m_frost != 0) damages.Add("frost", data.m_damages.m_frost);
+            if (data.m_damages.m_lightning != 0) damages.Add("lightning", data.m_damages.m_lightning);
+            if (data.m_damages.m_poison != 0) damages.Add("poison", data.m_damages.m_poison);
+            if (data.m_damages.m_spirit != 0) damages.Add("spirit", data.m_damages.m_spirit);
+            if (damages.Count > 0) exportData.Add("damages", damages);
+
+            Dictionary<string, float> damagesPerLevel = new();
+            if (data.m_damagesPerLevel.m_damage != 0) damagesPerLevel.Add("damage", data.m_damagesPerLevel.m_damage);
+            if (data.m_damagesPerLevel.m_blunt != 0) damagesPerLevel.Add("blunt", data.m_damagesPerLevel.m_blunt);
+            if (data.m_damagesPerLevel.m_slash != 0) damagesPerLevel.Add("slash", data.m_damagesPerLevel.m_slash);
+            if (data.m_damagesPerLevel.m_pierce != 0) damagesPerLevel.Add("pierce", data.m_damagesPerLevel.m_pierce);
+            if (data.m_damagesPerLevel.m_chop != 0) damagesPerLevel.Add("chop", data.m_damagesPerLevel.m_chop);
+            if (data.m_damagesPerLevel.m_pickaxe != 0) damagesPerLevel.Add("pickaxe", data.m_damagesPerLevel.m_pickaxe);
+            if (data.m_damagesPerLevel.m_fire != 0) damagesPerLevel.Add("fire", data.m_damagesPerLevel.m_fire);
+            if (data.m_damagesPerLevel.m_frost != 0) damagesPerLevel.Add("frost", data.m_damagesPerLevel.m_frost);
+            if (data.m_damagesPerLevel.m_lightning != 0) damagesPerLevel.Add("lightning", data.m_damagesPerLevel.m_lightning);
+            if (data.m_damagesPerLevel.m_poison != 0) damagesPerLevel.Add("poison", data.m_damagesPerLevel.m_poison);
+            if (data.m_damagesPerLevel.m_spirit != 0) damagesPerLevel.Add("spirit", data.m_damagesPerLevel.m_spirit);
+            if (damagesPerLevel.Count > 0) exportData.Add("damagesPerLevel", damagesPerLevel);
+
+            // Ammo
             if (data.m_ammoType != "") exportData.Add("ammoType", data.m_ammoType);
-            // damage
-            if (data.m_damages.m_damage != 0) exportData.Add("damage", data.m_damages.m_damage);
-            if (data.m_damages.m_blunt != 0) exportData.Add("blunt", data.m_damages.m_blunt);
-            if (data.m_damages.m_slash != 0) exportData.Add("slash", data.m_damages.m_slash);
-            if (data.m_damages.m_pierce != 0) exportData.Add("pierce", data.m_damages.m_pierce);
-            if (data.m_damages.m_chop != 0) exportData.Add("chop", data.m_damages.m_chop);
-            if (data.m_damages.m_pickaxe != 0) exportData.Add("pickaxe", data.m_damages.m_pickaxe);
-            if (data.m_damages.m_fire != 0) exportData.Add("fire", data.m_damages.m_fire);
-            if (data.m_damages.m_frost != 0) exportData.Add("frost", data.m_damages.m_frost);
-            if (data.m_damages.m_lightning != 0) exportData.Add("lightning", data.m_damages.m_lightning);
-            if (data.m_damages.m_poison != 0) exportData.Add("poison", data.m_damages.m_poison);
-            if (data.m_damages.m_spirit != 0) exportData.Add("spirit", data.m_damages.m_spirit);
 
             list.Add(exportData);
         }
@@ -241,7 +268,10 @@ public class Plugin : BaseUnityPlugin
                 {
                     var biomes = new List<string>();
                     foreach (Heightmap.Biome biome in Enum.GetValues(typeof(Heightmap.Biome)))
+                    {
+                        if (biome == Heightmap.Biome.None) continue;
                         if (spawnData.m_biome.HasFlag(biome)) biomes.Add(biome.ToString());
+                    }
 
                     exportedSpawnList.Add(new
                     {
@@ -304,6 +334,61 @@ public class Plugin : BaseUnityPlugin
         WriteJson("mobs.json", mobList);
     }
 
+
+    DropTable GetDropTable(UnityEngine.Component comp)
+    {
+        if (comp is MineRock rock) return rock.m_dropItems;
+        if (comp is MineRock5 rock5) return rock5.m_dropItems;
+        if (comp is TreeBase tree) return tree.m_dropWhenDestroyed;
+        if (comp is TreeLog treeLog) return treeLog.m_dropWhenDestroyed;
+        if (comp is DropOnDestroyed dropOnDestroyed) return dropOnDestroyed.m_dropWhenDestroyed;
+        if (comp is Pickable pickable) return pickable.m_extraDrops;
+        if (comp is Container container) return container.m_defaultItems;
+
+        // do not log those
+        if (comp.GetType() == typeof(UnityEngine.MeshFilter)) return null;
+        if (comp.GetType() == typeof(UnityEngine.MeshRenderer)) return null;
+        if (comp.GetType() == typeof(UnityEngine.Transform)) return null;
+
+        //Logger.LogInfo($"  GetDropTable {comp.GetType().FullName} returns null.");
+
+        return null;
+    }
+    DropTable GetDropTable(GameObject prefab)
+    {
+        // rock
+        var rock = prefab.GetComponent<MineRock>();
+        if (rock != null) return rock.m_dropItems;
+
+        var rock5 = prefab.GetComponent<MineRock5>();
+        if (rock5 != null) return rock5.m_dropItems;
+
+        // tree
+        var tree = prefab.GetComponent<TreeBase>();
+        if (tree != null) return tree.m_dropWhenDestroyed;
+
+        // tree
+        var treeLog = prefab.GetComponent<TreeLog>();
+        if (treeLog != null) return treeLog.m_dropWhenDestroyed;
+
+        // idk
+        var dropOnDestroyed = prefab.GetComponent<DropOnDestroyed>();
+        if (dropOnDestroyed != null) return dropOnDestroyed.m_dropWhenDestroyed;
+
+        var pickable = prefab.GetComponent<Pickable>();
+        if (pickable != null) return pickable.m_extraDrops;
+
+        var lootSpawner = prefab.GetComponent<LootSpawner>();
+        if (lootSpawner != null) return lootSpawner.m_items;
+
+        foreach (var comp in prefab.GetComponents<UnityEngine.Component>())
+        {
+            Logger.LogInfo(comp.GetType().FullName);
+        }
+
+        return null;
+    }
+
     // ===== レシピ =====
     void DumpRecipes()
     {
@@ -314,7 +399,6 @@ public class Plugin : BaseUnityPlugin
         }
 
         var list = new List<object>();
-        var destructibles = new List<object>();
 
         foreach (var recipe in ObjectDB.instance.m_recipes)
         {
@@ -344,24 +428,7 @@ public class Plugin : BaseUnityPlugin
             });
         }
 
-        foreach (var vegetation in ZoneSystem.instance.m_vegetation)
-        {
-            Logger.LogInfo(vegetation.m_name);
-            Logger.LogInfo(vegetation.m_prefab.name);
-            Logger.LogInfo(vegetation.m_prefab.ToString());
-            Logger.LogInfo(vegetation.m_prefab.GetType());
 
-            // すべてのコンポーネントを取得
-            Component[] components = vegetation.m_prefab.GetComponents<Component>();
-
-            foreach (var comp in components)
-            {
-                // これが「X」の正体（Type型）
-                Type type = comp.GetType();
-
-                Logger.LogInfo($"見つかったコンポーネント: {type.FullName}");
-            }
-        }
 
         // Smelter
         foreach (var prefab in ZNetScene.instance.m_prefabs)
@@ -390,7 +457,6 @@ public class Plugin : BaseUnityPlugin
         }
 
         WriteJson("recipes.json", list);
-        WriteJson("destructibles.json", destructibles);
     }
 
     // ===== ドロップ =====
@@ -419,6 +485,159 @@ public class Plugin : BaseUnityPlugin
         }
 
         WriteJson("drops.json", list);
+
+        // vegetation drops
+        var vegetationDrops = new List<object>();
+        foreach (var vegetation in ZoneSystem.instance.m_vegetation)
+        {
+            var prefab = vegetation.m_prefab;
+            var name = prefab.name;
+
+            var biomes = new List<string>();
+            foreach (Heightmap.Biome biome in Enum.GetValues(typeof(Heightmap.Biome)))
+            {
+                if (biome == Heightmap.Biome.None) continue;
+                if (vegetation.m_biome.HasFlag(biome)) biomes.Add(biome.ToString());
+            }
+
+            // pickable.itemPrefab + extra
+            var pickable = prefab.GetComponent<Pickable>();
+            if (pickable != null)
+            {
+                ItemDrop component = pickable.m_itemPrefab.GetComponent<ItemDrop>();
+                vegetationDrops.Add(new
+                {
+                    name = component.name,
+                    biome = biomes,
+                    stackMin = 1,
+                    stackMax = 1
+                });
+            }
+
+            var dropTable = GetDropTable(prefab);
+            if (dropTable != null)
+            {
+                foreach (var drop in dropTable.m_drops)
+                {
+                    vegetationDrops.Add(new
+                    {
+                        name = drop.m_item.name,
+                        biome = biomes,
+                        stackMin = drop.m_stackMin,
+                        stackMax = drop.m_stackMax
+                    });
+                }
+            }
+            else
+            {
+                //Logger.LogWarning($"{name} does not have DropTable");
+            }
+        }
+        WriteJson("vegetationDrops.json", vegetationDrops);
+
+        // location drops
+        var locationDrops = new List<object>();
+        foreach (var location in ZoneSystem.instance.m_locations)
+        {
+            try
+            {
+                //ZNetScene.instance.GetPrefab(location.m_prefab.GetHashCode());
+                var refPrefab = location.m_prefab;
+                if (!refPrefab.IsLoaded)
+                {
+                    if (refPrefab.IsLoading)
+                    {
+                        refPrefab.WaitForLoadToComplete();
+                    }
+                    else if (refPrefab.Load() != LoadResult.Succeeded)
+                    {
+                        Logger.LogError($"Failed to load asset {location.m_name}");
+                        continue;
+                    }
+                }
+                var prefab = refPrefab.Asset;
+                var name = prefab.name;
+                var log = location.m_biome.HasFlag(Heightmap.Biome.BlackForest);
+
+                var biomes = new List<string>();
+                foreach (Heightmap.Biome biome in Enum.GetValues(typeof(Heightmap.Biome)))
+                {
+                    if (biome == Heightmap.Biome.None) continue;
+                    if (location.m_biome.HasFlag(biome)) biomes.Add(biome.ToString());
+                }
+
+                var items = new List<object>();
+                foreach (var comp in prefab.GetComponentsInChildren<UnityEngine.Component>(true))
+                {
+                    if (log)
+                    {
+                        Logger.LogInfo($"  BlackForest {name} has Component {comp.name} {comp.GetType().FullName}");
+                    }
+
+                    // does Piece drop items?
+                    var piece = comp.GetComponent<Piece>();
+                    if (piece != null)
+                    {
+                    }
+
+                    // still need to figure out what RandomSpawn is
+                    var randomSpawn = comp.GetComponent<RandomSpawn>();
+                    if (randomSpawn != null)
+                    {
+                    }
+
+                    // pickable.itemPrefab + extra
+                    var pickable = comp.GetComponent<Pickable>();
+                    if (pickable != null)
+                    {
+                        ItemDrop component = pickable.m_itemPrefab.GetComponent<ItemDrop>();
+                        items.Add(new
+                        {
+                            id = component.name,
+                            stackMin = 1,
+                            stackMax = 1
+                        });
+                    }
+
+                    var dropTable = GetDropTable(comp);
+                    if (dropTable != null)
+                    {
+                        foreach (var drop in dropTable.m_drops)
+                        {
+                            items.Add(new
+                            {
+                                id = drop.m_item.name,
+                                stackMin = drop.m_stackMin,
+                                stackMax = drop.m_stackMax
+                            });
+                        }
+                    }
+                    else
+                    {
+                        //Logger.LogWarning($"{name} does not have DropTable");
+                    }
+
+                    if (comp is Character)
+                    {
+                        // 敵（スポーン込み）
+                        // We can skip this I think?
+                    }
+                }
+
+                locationDrops.Add(new
+                {
+                    id = name,
+                    name = Localize(name),
+                    biome = biomes,
+                    items = items
+                });
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError("LOCATION DUMP FAILED: " + ex);
+            }
+        }
+        WriteJson("locationDrops.json", locationDrops);
     }
 
     // ===== ユーティリティ =====

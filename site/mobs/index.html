@@ -202,6 +202,13 @@ a:hover {
     padding-bottom: 4px;
 }
 
+.mob-page h4 {
+    margin: 16px 0 6px;
+    color: #aaa;
+    font-size: 14px;
+    font-weight: 600;
+}
+
 /* =========================
    Mob一覧（グリッド）
 ========================= */
@@ -245,6 +252,25 @@ a:hover {
 .mob-hp {
     font-size: 0.9em;
     color: #aaa;
+}
+
+.spawn-tags {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 3px;
+    min-height: 18px;
+    margin-top: 6px;
+}
+
+.spawn-tag {
+    display: inline-block;
+    border: 1px solid #444;
+    border-radius: 4px;
+    padding: 1px 5px;
+    color: #bbb;
+    font-size: 11px;
+    line-height: 1.3;
 }
 
 /* ボスタグ */
@@ -317,6 +343,15 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">ネック</div>
                 <div class="mob-hp">HP: 5.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Day/Night</span></div>
+            </a>
+            
+            <a href="Deer.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">鹿</div>
+                <div class="mob-hp">HP: 10.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Day/Night</span></div>
             </a>
             
             <a href="Boar.html" class="mob-card">
@@ -324,13 +359,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">猪</div>
                 <div class="mob-hp">HP: 10.0</div>
-            </a>
-            
-            <a href="Deer.html" class="mob-card">
-                
-                <div class="mob-icon placeholder"></div>
-                <div class="mob-name">鹿</div>
-                <div class="mob-hp">HP: 10.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Day/Night</span><span class="spawn-tag">Tameable</span></div>
             </a>
             
             <a href="Greyling.html" class="mob-card">
@@ -338,41 +367,15 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">グレイリング</div>
                 <div class="mob-hp">HP: 20.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Day/Night</span></div>
             </a>
-            
-            <a href="Skeleton.html" class="mob-card">
+            </div><h4>Conditional Spawn</h4><div class="mob-grid">
+            <a href="Neck.html" class="mob-card">
                 
                 <div class="mob-icon placeholder"></div>
-                <div class="mob-name">骸骨</div>
-                <div class="mob-hp">HP: 40.0</div>
-            </a>
-            
-            <a href="Greydwarf_Shaman.html" class="mob-card">
-                
-                <div class="mob-icon placeholder"></div>
-                <div class="mob-name">灰色ドワーフシャーマン</div>
-                <div class="mob-hp">HP: 60.0</div>
-            </a>
-            
-            <a href="Draugr.html" class="mob-card">
-                
-                <div class="mob-icon placeholder"></div>
-                <div class="mob-name">ドラウグル</div>
-                <div class="mob-hp">HP: 100.0</div>
-            </a>
-            
-            <a href="Goblin.html" class="mob-card">
-                
-                <div class="mob-icon placeholder"></div>
-                <div class="mob-name">フューリング</div>
-                <div class="mob-hp">HP: 175.0</div>
-            </a>
-            </div><h3>BlackForest</h3><div class="mob-grid">
-            <a href="Deer.html" class="mob-card">
-                
-                <div class="mob-icon placeholder"></div>
-                <div class="mob-name">鹿</div>
-                <div class="mob-hp">HP: 10.0</div>
+                <div class="mob-name">ネック</div>
+                <div class="mob-hp">HP: 5.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Day/Night</span></div>
             </a>
             
             <a href="Greydwarf.html" class="mob-card">
@@ -380,6 +383,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">灰色ドワーフ</div>
                 <div class="mob-hp">HP: 40.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Night</span></div>
             </a>
             
             <a href="Skeleton.html" class="mob-card">
@@ -387,6 +391,15 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">骸骨</div>
                 <div class="mob-hp">HP: 40.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Night</span></div>
+            </a>
+            
+            <a href="Greydwarf_Shaman.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">灰色ドワーフシャーマン</div>
+                <div class="mob-hp">HP: 60.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Night</span></div>
             </a>
             
             <a href="Draugr.html" class="mob-card">
@@ -394,6 +407,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">ドラウグル</div>
                 <div class="mob-hp">HP: 100.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Night</span></div>
             </a>
             
             <a href="Greydwarf_Elite.html" class="mob-card">
@@ -401,6 +415,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">灰色ドワーフブルート</div>
                 <div class="mob-hp">HP: 150.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Night</span></div>
             </a>
             
             <a href="Goblin.html" class="mob-card">
@@ -408,181 +423,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">フューリング</div>
                 <div class="mob-hp">HP: 175.0</div>
-            </a>
-            
-            <a href="Troll.html" class="mob-card">
-                
-                <div class="mob-icon placeholder"></div>
-                <div class="mob-name">トロル</div>
-                <div class="mob-hp">HP: 600.0</div>
-            </a>
-            
-            <a href="Bjorn.html" class="mob-card">
-                
-                <div class="mob-icon placeholder"></div>
-                <div class="mob-name">熊</div>
-                <div class="mob-hp">HP: 800.0</div>
-            </a>
-            </div><h3>Swamp</h3><div class="mob-grid">
-            <a href="Skeleton.html" class="mob-card">
-                
-                <div class="mob-icon placeholder"></div>
-                <div class="mob-name">骸骨</div>
-                <div class="mob-hp">HP: 40.0</div>
-            </a>
-            
-            <a href="Blob.html" class="mob-card">
-                
-                <div class="mob-icon placeholder"></div>
-                <div class="mob-name">スライム</div>
-                <div class="mob-hp">HP: 50.0</div>
-            </a>
-            
-            <a href="Leech.html" class="mob-card">
-                
-                <div class="mob-icon placeholder"></div>
-                <div class="mob-name">蛭</div>
-                <div class="mob-hp">HP: 60.0</div>
-            </a>
-            
-            <a href="Wraith.html" class="mob-card">
-                
-                <div class="mob-icon placeholder"></div>
-                <div class="mob-name">死霊</div>
-                <div class="mob-hp">HP: 100.0</div>
-            </a>
-            
-            <a href="BlobElite.html" class="mob-card">
-                
-                <div class="mob-icon placeholder"></div>
-                <div class="mob-name">スライムのエリート</div>
-                <div class="mob-hp">HP: 150.0</div>
-            </a>
-            
-            <a href="Draugr_Elite.html" class="mob-card">
-                
-                <div class="mob-icon placeholder"></div>
-                <div class="mob-name">ドラウグルのエリート</div>
-                <div class="mob-hp">HP: 200.0</div>
-            </a>
-            
-            <a href="Abomination.html" class="mob-card">
-                
-                <div class="mob-icon placeholder"></div>
-                <div class="mob-name">忌まわしきもの</div>
-                <div class="mob-hp">HP: 800.0</div>
-            </a>
-            </div><h3>Mountain</h3><div class="mob-grid">
-            <a href="Skeleton.html" class="mob-card">
-                
-                <div class="mob-icon placeholder"></div>
-                <div class="mob-name">骸骨</div>
-                <div class="mob-hp">HP: 40.0</div>
-            </a>
-            
-            <a href="Wolf.html" class="mob-card">
-                
-                <div class="mob-icon placeholder"></div>
-                <div class="mob-name">狼</div>
-                <div class="mob-hp">HP: 80.0</div>
-            </a>
-            
-            <a href="Draugr.html" class="mob-card">
-                
-                <div class="mob-icon placeholder"></div>
-                <div class="mob-name">ドラウグル</div>
-                <div class="mob-hp">HP: 100.0</div>
-            </a>
-            
-            <a href="Hatchling.html" class="mob-card">
-                
-                <div class="mob-icon placeholder"></div>
-                <div class="mob-name">ドレイク</div>
-                <div class="mob-hp">HP: 100.0</div>
-            </a>
-            
-            <a href="Goblin.html" class="mob-card">
-                
-                <div class="mob-icon placeholder"></div>
-                <div class="mob-name">フューリング</div>
-                <div class="mob-hp">HP: 175.0</div>
-            </a>
-            
-            <a href="Fenring.html" class="mob-card">
-                
-                <div class="mob-icon placeholder"></div>
-                <div class="mob-name">フェンリング</div>
-                <div class="mob-hp">HP: 300.0</div>
-            </a>
-            
-            <a href="StoneGolem.html" class="mob-card">
-                
-                <div class="mob-icon placeholder"></div>
-                <div class="mob-name">ストーンゴーレム</div>
-                <div class="mob-hp">HP: 800.0</div>
-            </a>
-            </div><h3>Plains</h3><div class="mob-grid">
-            <a href="Deathsquito.html" class="mob-card">
-                
-                <div class="mob-icon placeholder"></div>
-                <div class="mob-name">デスキート</div>
-                <div class="mob-hp">HP: 10.0</div>
-            </a>
-            
-            <a href="Skeleton.html" class="mob-card">
-                
-                <div class="mob-icon placeholder"></div>
-                <div class="mob-name">骸骨</div>
-                <div class="mob-hp">HP: 40.0</div>
-            </a>
-            
-            <a href="Draugr.html" class="mob-card">
-                
-                <div class="mob-icon placeholder"></div>
-                <div class="mob-name">ドラウグル</div>
-                <div class="mob-hp">HP: 100.0</div>
-            </a>
-            
-            <a href="GoblinBrute.html" class="mob-card">
-                
-                <div class="mob-icon placeholder"></div>
-                <div class="mob-name">フューリングバーサーカー</div>
-                <div class="mob-hp">HP: 800.0</div>
-            </a>
-            
-            <a href="Lox.html" class="mob-card">
-                
-                <div class="mob-icon placeholder"></div>
-                <div class="mob-name">ロックス</div>
-                <div class="mob-hp">HP: 1000.0</div>
-            </a>
-            
-            <a href="Unbjorn.html" class="mob-card">
-                
-                <div class="mob-icon placeholder"></div>
-                <div class="mob-name">ヴァイル</div>
-                <div class="mob-hp">HP: 1200.0</div>
-            </a>
-            </div><h3>Mistlands</h3><div class="mob-grid">
-            <a href="Hare.html" class="mob-card">
-                
-                <div class="mob-icon placeholder"></div>
-                <div class="mob-name">野兎</div>
-                <div class="mob-hp">HP: 10.0</div>
-            </a>
-            
-            <a href="SeekerBrood.html" class="mob-card">
-                
-                <div class="mob-icon placeholder"></div>
-                <div class="mob-name">幼シーカー</div>
-                <div class="mob-hp">HP: 20.0</div>
-            </a>
-            
-            <a href="Tick.html" class="mob-card">
-                
-                <div class="mob-icon placeholder"></div>
-                <div class="mob-name">ティック</div>
-                <div class="mob-hp">HP: 50.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Night</span></div>
             </a>
             
             <a href="Seeker.html" class="mob-card">
@@ -590,55 +431,15 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">シーカー</div>
                 <div class="mob-hp">HP: 200.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Night</span></div>
             </a>
             
-            <a href="Dverger.html" class="mob-card">
-                
-                <div class="mob-icon placeholder"></div>
-                <div class="mob-name">ドヴェルグのならず者</div>
-                <div class="mob-hp">HP: 350.0</div>
-            </a>
-            
-            <a href="Gjall.html" class="mob-card">
-                
-                <div class="mob-icon placeholder"></div>
-                <div class="mob-name">グャル</div>
-                <div class="mob-hp">HP: 1500.0</div>
-            </a>
-            
-            <a href="SeekerBrute.html" class="mob-card">
-                
-                <div class="mob-icon placeholder"></div>
-                <div class="mob-name">シーカーの兵士</div>
-                <div class="mob-hp">HP: 1500.0</div>
-            </a>
-            </div><h3>AshLands</h3><div class="mob-grid">
             <a href="Charred_Archer.html" class="mob-card">
                 
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">黒焦げの弓兵</div>
                 <div class="mob-hp">HP: 200.0</div>
-            </a>
-            
-            <a href="Volture.html" class="mob-card">
-                
-                <div class="mob-icon placeholder"></div>
-                <div class="mob-name">火喰いワシ</div>
-                <div class="mob-hp">HP: 200.0</div>
-            </a>
-            
-            <a href="Charred_Twitcher.html" class="mob-card">
-                
-                <div class="mob-icon placeholder"></div>
-                <div class="mob-name">黒焦げのツイッチャー</div>
-                <div class="mob-hp">HP: 220.0</div>
-            </a>
-            
-            <a href="BlobLava.html" class="mob-card">
-                
-                <div class="mob-icon placeholder"></div>
-                <div class="mob-name">暴れ溶岩</div>
-                <div class="mob-hp">HP: 300.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Night</span></div>
             </a>
             
             <a href="Charred_Melee.html" class="mob-card">
@@ -646,6 +447,455 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">黒焦げの戦士</div>
                 <div class="mob-hp">HP: 600.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Night</span></div>
+            </a>
+            </div><h3>BlackForest</h3><div class="mob-grid">
+            <a href="Deer.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">鹿</div>
+                <div class="mob-hp">HP: 10.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Day/Night</span></div>
+            </a>
+            
+            <a href="Greydwarf.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">灰色ドワーフ</div>
+                <div class="mob-hp">HP: 40.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Day/Night</span></div>
+            </a>
+            
+            <a href="Greydwarf_Shaman.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">灰色ドワーフシャーマン</div>
+                <div class="mob-hp">HP: 60.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Night</span></div>
+            </a>
+            
+            <a href="Greydwarf_Elite.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">灰色ドワーフブルート</div>
+                <div class="mob-hp">HP: 150.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Night</span></div>
+            </a>
+            
+            <a href="Troll.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">トロル</div>
+                <div class="mob-hp">HP: 600.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Day/Night</span></div>
+            </a>
+            
+            <a href="Bjorn.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">熊</div>
+                <div class="mob-hp">HP: 800.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Day/Night</span></div>
+            </a>
+            </div><h4>Conditional Spawn</h4><div class="mob-grid">
+            <a href="Skeleton.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">骸骨</div>
+                <div class="mob-hp">HP: 40.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Night</span></div>
+            </a>
+            
+            <a href="Draugr.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">ドラウグル</div>
+                <div class="mob-hp">HP: 100.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Night</span></div>
+            </a>
+            
+            <a href="Goblin.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">フューリング</div>
+                <div class="mob-hp">HP: 175.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Night</span></div>
+            </a>
+            
+            <a href="Seeker.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">シーカー</div>
+                <div class="mob-hp">HP: 200.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Night</span></div>
+            </a>
+            
+            <a href="Charred_Archer.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">黒焦げの弓兵</div>
+                <div class="mob-hp">HP: 200.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Night</span></div>
+            </a>
+            
+            <a href="Charred_Melee.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">黒焦げの戦士</div>
+                <div class="mob-hp">HP: 600.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Night</span></div>
+            </a>
+            </div><h3>Swamp</h3><div class="mob-grid">
+            <a href="Skeleton.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">骸骨</div>
+                <div class="mob-hp">HP: 40.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Day/Night</span></div>
+            </a>
+            
+            <a href="Blob.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">スライム</div>
+                <div class="mob-hp">HP: 50.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Day/Night</span></div>
+            </a>
+            
+            <a href="Leech.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">蛭</div>
+                <div class="mob-hp">HP: 60.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Day/Night</span></div>
+            </a>
+            
+            <a href="Draugr.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">ドラウグル</div>
+                <div class="mob-hp">HP: 100.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Day/Night</span></div>
+            </a>
+            
+            <a href="Wraith.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">死霊</div>
+                <div class="mob-hp">HP: 100.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Night</span></div>
+            </a>
+            
+            <a href="BlobElite.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">スライムのエリート</div>
+                <div class="mob-hp">HP: 150.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Night</span></div>
+            </a>
+            
+            <a href="Draugr_Elite.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">ドラウグルのエリート</div>
+                <div class="mob-hp">HP: 200.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Night</span></div>
+            </a>
+            
+            <a href="Abomination.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">忌まわしきもの</div>
+                <div class="mob-hp">HP: 800.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Day/Night</span></div>
+            </a>
+            </div><h4>Conditional Spawn</h4><div class="mob-grid">
+            <a href="Skeleton.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">骸骨</div>
+                <div class="mob-hp">HP: 40.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Night</span></div>
+            </a>
+            
+            <a href="Seeker.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">シーカー</div>
+                <div class="mob-hp">HP: 200.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Night</span></div>
+            </a>
+            
+            <a href="Charred_Archer.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">黒焦げの弓兵</div>
+                <div class="mob-hp">HP: 200.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Night</span></div>
+            </a>
+            
+            <a href="Charred_Melee.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">黒焦げの戦士</div>
+                <div class="mob-hp">HP: 600.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Night</span></div>
+            </a>
+            </div><h3>Mountain</h3><div class="mob-grid">
+            <a href="Wolf.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">狼</div>
+                <div class="mob-hp">HP: 80.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Day/Night</span><span class="spawn-tag">Tameable</span></div>
+            </a>
+            
+            <a href="Hatchling.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">ドレイク</div>
+                <div class="mob-hp">HP: 100.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Day/Night</span></div>
+            </a>
+            
+            <a href="Fenring.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">フェンリング</div>
+                <div class="mob-hp">HP: 300.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Night</span></div>
+            </a>
+            
+            <a href="StoneGolem.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">ストーンゴーレム</div>
+                <div class="mob-hp">HP: 800.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Day/Night</span></div>
+            </a>
+            </div><h4>Conditional Spawn</h4><div class="mob-grid">
+            <a href="Skeleton.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">骸骨</div>
+                <div class="mob-hp">HP: 40.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Night</span></div>
+            </a>
+            
+            <a href="Draugr.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">ドラウグル</div>
+                <div class="mob-hp">HP: 100.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Night</span></div>
+            </a>
+            
+            <a href="Goblin.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">フューリング</div>
+                <div class="mob-hp">HP: 175.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Night</span></div>
+            </a>
+            
+            <a href="Seeker.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">シーカー</div>
+                <div class="mob-hp">HP: 200.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Night</span></div>
+            </a>
+            
+            <a href="Charred_Archer.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">黒焦げの弓兵</div>
+                <div class="mob-hp">HP: 200.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Night</span></div>
+            </a>
+            
+            <a href="Charred_Melee.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">黒焦げの戦士</div>
+                <div class="mob-hp">HP: 600.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Night</span></div>
+            </a>
+            </div><h3>Plains</h3><div class="mob-grid">
+            <a href="Deathsquito.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">デスキート</div>
+                <div class="mob-hp">HP: 10.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Day/Night</span></div>
+            </a>
+            
+            <a href="Goblin.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">フューリング</div>
+                <div class="mob-hp">HP: 175.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Day/Night</span></div>
+            </a>
+            
+            <a href="GoblinBrute.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">フューリングバーサーカー</div>
+                <div class="mob-hp">HP: 800.0</div>
+                <div class="spawn-tags"></div>
+            </a>
+            
+            <a href="Lox.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">ロックス</div>
+                <div class="mob-hp">HP: 1000.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Day/Night</span><span class="spawn-tag">Tameable</span></div>
+            </a>
+            
+            <a href="Unbjorn.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">ヴァイル</div>
+                <div class="mob-hp">HP: 1200.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Night</span></div>
+            </a>
+            </div><h4>Conditional Spawn</h4><div class="mob-grid">
+            <a href="Skeleton.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">骸骨</div>
+                <div class="mob-hp">HP: 40.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Night</span></div>
+            </a>
+            
+            <a href="Draugr.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">ドラウグル</div>
+                <div class="mob-hp">HP: 100.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Night</span></div>
+            </a>
+            
+            <a href="Seeker.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">シーカー</div>
+                <div class="mob-hp">HP: 200.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Night</span></div>
+            </a>
+            
+            <a href="Charred_Archer.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">黒焦げの弓兵</div>
+                <div class="mob-hp">HP: 200.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Night</span></div>
+            </a>
+            
+            <a href="Charred_Melee.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">黒焦げの戦士</div>
+                <div class="mob-hp">HP: 600.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Night</span></div>
+            </a>
+            </div><h3>Mistlands</h3><div class="mob-grid">
+            <a href="Hare.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">野兎</div>
+                <div class="mob-hp">HP: 10.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Day/Night</span></div>
+            </a>
+            
+            <a href="Seeker.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">シーカー</div>
+                <div class="mob-hp">HP: 200.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Day/Night</span></div>
+            </a>
+            
+            <a href="Dverger.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">ドヴェルグのならず者</div>
+                <div class="mob-hp">HP: 350.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Day</span></div>
+            </a>
+            
+            <a href="Gjall.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">グャル</div>
+                <div class="mob-hp">HP: 1500.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Day/Night</span></div>
+            </a>
+            
+            <a href="SeekerBrute.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">シーカーの兵士</div>
+                <div class="mob-hp">HP: 1500.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Day/Night</span></div>
+            </a>
+            </div><h4>Conditional Spawn</h4><div class="mob-grid">
+            <a href="SeekerBrood.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">幼シーカー</div>
+                <div class="mob-hp">HP: 20.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Night</span></div>
+            </a>
+            
+            <a href="Tick.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">ティック</div>
+                <div class="mob-hp">HP: 50.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Night</span></div>
+            </a>
+            </div><h3>AshLands</h3><div class="mob-grid">
+            <a href="Volture.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">火喰いワシ</div>
+                <div class="mob-hp">HP: 200.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Day/Night</span></div>
+            </a>
+            
+            <a href="Charred_Archer.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">黒焦げの弓兵</div>
+                <div class="mob-hp">HP: 200.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Day/Night</span></div>
+            </a>
+            
+            <a href="Charred_Twitcher.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">黒焦げのツイッチャー</div>
+                <div class="mob-hp">HP: 220.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Day/Night</span></div>
+            </a>
+            
+            <a href="BlobLava.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">暴れ溶岩</div>
+                <div class="mob-hp">HP: 300.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Day/Night</span></div>
+            </a>
+            
+            <a href="Charred_Melee.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">黒焦げの戦士</div>
+                <div class="mob-hp">HP: 600.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Day/Night</span></div>
             </a>
             
             <a href="Asksvin.html" class="mob-card">
@@ -653,6 +903,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">アスクスヴィン</div>
                 <div class="mob-hp">HP: 800.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Day/Night</span><span class="spawn-tag">Tameable</span></div>
             </a>
             
             <a href="DvergerAshlands.html" class="mob-card">
@@ -660,6 +911,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">ドヴェルグのならず者</div>
                 <div class="mob-hp">HP: 1000.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Day</span></div>
             </a>
             
             <a href="BonemawSerpent.html" class="mob-card">
@@ -667,6 +919,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">ボーンモー</div>
                 <div class="mob-hp">HP: 1100.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Day/Night</span></div>
             </a>
             
             <a href="FallenValkyrie.html" class="mob-card">
@@ -674,6 +927,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">堕ちたヴァルキリー</div>
                 <div class="mob-hp">HP: 1500.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Day/Night</span></div>
             </a>
             
             <a href="Morgen_NonSleeping.html" class="mob-card">
@@ -681,6 +935,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">モルゲン</div>
                 <div class="mob-hp">HP: 1600.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Day/Night</span></div>
             </a>
             </div><h3>Ocean</h3><div class="mob-grid">
             <a href="Serpent.html" class="mob-card">
@@ -688,6 +943,15 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">蛇</div>
                 <div class="mob-hp">HP: 400.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Night</span></div>
+            </a>
+            </div><h4>Conditional Spawn</h4><div class="mob-grid">
+            <a href="Serpent.html" class="mob-card">
+                
+                <div class="mob-icon placeholder"></div>
+                <div class="mob-name">蛇</div>
+                <div class="mob-hp">HP: 400.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Day/Night</span></div>
             </a>
             </div><h3>Unknown</h3><div class="mob-grid">
             <a href="Mistile.html" class="mob-card">
@@ -695,6 +959,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">ミスティル</div>
                 <div class="mob-hp">HP: 1.0</div>
+                <div class="spawn-tags"></div>
             </a>
             
             <a href="Bat.html" class="mob-card">
@@ -702,6 +967,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">コウモリ</div>
                 <div class="mob-hp">HP: 10.0</div>
+                <div class="spawn-tags"></div>
             </a>
             
             <a href="Boar_piggy.html" class="mob-card">
@@ -709,6 +975,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">猪の子</div>
                 <div class="mob-hp">HP: 10.0</div>
+                <div class="spawn-tags"></div>
             </a>
             
             <a href="Chicken.html" class="mob-card">
@@ -716,6 +983,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">鶏</div>
                 <div class="mob-hp">HP: 10.0</div>
+                <div class="spawn-tags"></div>
             </a>
             
             <a href="Hen.html" class="mob-card">
@@ -723,6 +991,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">雌鶏</div>
                 <div class="mob-hp">HP: 10.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Tameable</span></div>
             </a>
             
             <a href="Wolf_cub.html" class="mob-card">
@@ -730,6 +999,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">狼の子</div>
                 <div class="mob-hp">HP: 10.0</div>
+                <div class="spawn-tags"></div>
             </a>
             
             <a href="Surtling.html" class="mob-card">
@@ -737,6 +1007,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">スルトリング</div>
                 <div class="mob-hp">HP: 20.0</div>
+                <div class="spawn-tags"></div>
             </a>
             
             <a href="TentaRoot.html" class="mob-card">
@@ -744,6 +1015,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">Root</div>
                 <div class="mob-hp">HP: 20.0</div>
+                <div class="spawn-tags"></div>
             </a>
             
             <a href="Skeleton_NoArcher.html" class="mob-card">
@@ -751,6 +1023,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">骸骨</div>
                 <div class="mob-hp">HP: 40.0</div>
+                <div class="spawn-tags"></div>
             </a>
             
             <a href="BlobFrost.html" class="mob-card">
@@ -758,6 +1031,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">フロストブロッブ</div>
                 <div class="mob-hp">HP: 50.0</div>
+                <div class="spawn-tags"></div>
             </a>
             
             <a href="Charred_Archer_Fader.html" class="mob-card">
@@ -765,6 +1039,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">喚び出された黒焦げの戦士</div>
                 <div class="mob-hp">HP: 50.0</div>
+                <div class="spawn-tags"></div>
             </a>
             
             <a href="Charred_Melee_Fader.html" class="mob-card">
@@ -772,6 +1047,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">喚び出された黒焦げの戦士</div>
                 <div class="mob-hp">HP: 50.0</div>
+                <div class="spawn-tags"></div>
             </a>
             
             <a href="Charred_Twitcher_Summoned.html" class="mob-card">
@@ -779,6 +1055,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">喚び出されたツイッチャー</div>
                 <div class="mob-hp">HP: 50.0</div>
+                <div class="spawn-tags"></div>
             </a>
             
             <a href="Ulv.html" class="mob-card">
@@ -786,6 +1063,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">ウルヴ</div>
                 <div class="mob-hp">HP: 50.0</div>
+                <div class="spawn-tags"></div>
             </a>
             
             <a href="Ghost.html" class="mob-card">
@@ -793,6 +1071,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">幽霊</div>
                 <div class="mob-hp">HP: 60.0</div>
+                <div class="spawn-tags"></div>
             </a>
             
             <a href="Leech_cave.html" class="mob-card">
@@ -800,6 +1079,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">蛭</div>
                 <div class="mob-hp">HP: 60.0</div>
+                <div class="spawn-tags"></div>
             </a>
             
             <a href="BlobTar.html" class="mob-card">
@@ -807,6 +1087,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">グロウス</div>
                 <div class="mob-hp">HP: 100.0</div>
+                <div class="spawn-tags"></div>
             </a>
             
             <a href="Draugr_Ranged.html" class="mob-card">
@@ -814,6 +1095,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">ドラウグル</div>
                 <div class="mob-hp">HP: 100.0</div>
+                <div class="spawn-tags"></div>
             </a>
             
             <a href="DvergerTest.html" class="mob-card">
@@ -821,6 +1103,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">[enemy_dverger]</div>
                 <div class="mob-hp">HP: 100.0</div>
+                <div class="spawn-tags"></div>
             </a>
             
             <a href="GoblinShaman.html" class="mob-card">
@@ -828,6 +1111,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">フューリングシャーマン</div>
                 <div class="mob-hp">HP: 100.0</div>
+                <div class="spawn-tags"></div>
             </a>
             
             <a href="Lox_Calf.html" class="mob-card">
@@ -835,6 +1119,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">子ロックス</div>
                 <div class="mob-hp">HP: 100.0</div>
+                <div class="spawn-tags"></div>
             </a>
             
             <a href="Player.html" class="mob-card">
@@ -842,6 +1127,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">Human</div>
                 <div class="mob-hp">HP: 100.0</div>
+                <div class="spawn-tags"></div>
             </a>
             
             <a href="Skeleton_Poison.html" class="mob-card">
@@ -849,6 +1135,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">腐敗した残骸</div>
                 <div class="mob-hp">HP: 100.0</div>
+                <div class="spawn-tags"></div>
             </a>
             
             <a href="GoblinArcher.html" class="mob-card">
@@ -856,6 +1143,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">フューリング</div>
                 <div class="mob-hp">HP: 175.0</div>
+                <div class="spawn-tags"></div>
             </a>
             
             <a href="Fenring_Cultist.html" class="mob-card">
@@ -863,6 +1151,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">邪教徒</div>
                 <div class="mob-hp">HP: 200.0</div>
+                <div class="spawn-tags"></div>
             </a>
             
             <a href="staff_greenroots_tentaroot.html" class="mob-card">
@@ -870,6 +1159,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">喚び出された木の根</div>
                 <div class="mob-hp">HP: 250.0</div>
+                <div class="spawn-tags"></div>
             </a>
             
             <a href="DvergerMage.html" class="mob-card">
@@ -877,6 +1167,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">ドヴェルグの魔術師</div>
                 <div class="mob-hp">HP: 350.0</div>
+                <div class="spawn-tags"></div>
             </a>
             
             <a href="DvergerMageFire.html" class="mob-card">
@@ -884,6 +1175,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">ドヴェルグの魔術師</div>
                 <div class="mob-hp">HP: 350.0</div>
+                <div class="spawn-tags"></div>
             </a>
             
             <a href="DvergerMageIce.html" class="mob-card">
@@ -891,6 +1183,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">ドヴェルグの魔術師</div>
                 <div class="mob-hp">HP: 350.0</div>
+                <div class="spawn-tags"></div>
             </a>
             
             <a href="DvergerMageSupport.html" class="mob-card">
@@ -898,6 +1191,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">ドヴェルグの魔術師</div>
                 <div class="mob-hp">HP: 350.0</div>
+                <div class="spawn-tags"></div>
             </a>
             
             <a href="Asksvin_hatchling.html" class="mob-card">
@@ -905,6 +1199,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">アスクスヴィンの幼体</div>
                 <div class="mob-hp">HP: 400.0</div>
+                <div class="spawn-tags"></div>
             </a>
             
             <a href="Skeleton_Friendly.html" class="mob-card">
@@ -912,6 +1207,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">スケレット</div>
                 <div class="mob-hp">HP: 400.0</div>
+                <div class="spawn-tags"><span class="spawn-tag">Tameable</span></div>
             </a>
             
             <a href="Charred_Mage.html" class="mob-card">
@@ -919,6 +1215,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">黒焦げの魔術師</div>
                 <div class="mob-hp">HP: 600.0</div>
+                <div class="spawn-tags"></div>
             </a>
             
             <a href="Skeleton_Hildir_nochest.html" class="mob-card">
@@ -926,6 +1223,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name"><color=orange>ブレンナ</color></div>
                 <div class="mob-hp">HP: 600.0</div>
+                <div class="spawn-tags"></div>
             </a>
             
             <a href="BogWitchKvastur.html" class="mob-card">
@@ -933,6 +1231,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">クヴァシル</div>
                 <div class="mob-hp">HP: 700.0</div>
+                <div class="spawn-tags"></div>
             </a>
             
             <a href="GoblinBrute_Hildir.html" class="mob-card">
@@ -940,6 +1239,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name"><color=orange>スングル</color></div>
                 <div class="mob-hp">HP: 800.0</div>
+                <div class="spawn-tags"></div>
             </a>
             
             <a href="Goblin_Gem.html" class="mob-card">
@@ -947,6 +1247,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">ジェムフューリング</div>
                 <div class="mob-hp">HP: 1000.0</div>
+                <div class="spawn-tags"></div>
             </a>
             
             <a href="GoblinShaman_Hildir_nochest.html" class="mob-card">
@@ -954,6 +1255,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name"><color=orange>ジル</color></div>
                 <div class="mob-hp">HP: 1200.0</div>
+                <div class="spawn-tags"></div>
             </a>
             
             <a href="Skeleton_Hildir.html" class="mob-card">
@@ -961,6 +1263,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name"><color=orange>ブレンナ</color></div>
                 <div class="mob-hp">HP: 1200.0</div>
+                <div class="spawn-tags"></div>
             </a>
             
             <a href="Morgen.html" class="mob-card">
@@ -968,6 +1271,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">モルゲン</div>
                 <div class="mob-hp">HP: 1600.0</div>
+                <div class="spawn-tags"></div>
             </a>
             
             <a href="Fenring_Cultist_Hildir_nochest.html" class="mob-card">
@@ -975,6 +1279,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name"><color=orange>ゲイルハーファ</color></div>
                 <div class="mob-hp">HP: 1850.0</div>
+                <div class="spawn-tags"></div>
             </a>
             
             <a href="Troll_Summoned.html" class="mob-card">
@@ -982,6 +1287,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">喚び出されたトロル</div>
                 <div class="mob-hp">HP: 2000.0</div>
+                <div class="spawn-tags"></div>
             </a>
             
             <a href="GoblinBruteBros_nochest.html" class="mob-card">
@@ -989,6 +1295,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name"><color=orange>ジルとスングル</color></div>
                 <div class="mob-hp">HP: 2100.0</div>
+                <div class="spawn-tags"></div>
             </a>
             
             <a href="GoblinShaman_Hildir.html" class="mob-card">
@@ -996,6 +1303,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name"><color=orange>ジル</color></div>
                 <div class="mob-hp">HP: 2400.0</div>
+                <div class="spawn-tags"></div>
             </a>
             
             <a href="Charred_Melee_Dyrnwyn.html" class="mob-card">
@@ -1003,6 +1311,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">レト公</div>
                 <div class="mob-hp">HP: 2500.0</div>
+                <div class="spawn-tags"></div>
             </a>
             
             <a href="piece_TrainingDummy.html" class="mob-card">
@@ -1010,6 +1319,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">バトルブラザー</div>
                 <div class="mob-hp">HP: 2500.0</div>
+                <div class="spawn-tags"></div>
             </a>
             
             <a href="Fenring_Cultist_Hildir.html" class="mob-card">
@@ -1017,6 +1327,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name"><color=orange>ゲイルハーファ</color></div>
                 <div class="mob-hp">HP: 3700.0</div>
+                <div class="spawn-tags"></div>
             </a>
             
             <a href="GoblinBruteBros.html" class="mob-card">
@@ -1024,6 +1335,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name"><color=orange>ジルとスングル</color></div>
                 <div class="mob-hp">HP: 4200.0</div>
+                <div class="spawn-tags"></div>
             </a>
             
             <a href="TrainingDummy.html" class="mob-card">
@@ -1031,6 +1343,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">TrainingDummy</div>
                 <div class="mob-hp">HP: 40000.0</div>
+                <div class="spawn-tags"></div>
             </a>
             </div><h2>Bosses</h2><h3>Unknown</h3><div class="mob-grid">
             <a href="Eikthyr.html" class="mob-card">
@@ -1038,6 +1351,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">エイクスュル</div>
                 <div class="mob-hp">HP: 500.0</div>
+                <div class="spawn-tags"></div>
             </a>
             
             <a href="gd_king.html" class="mob-card">
@@ -1045,6 +1359,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">長老</div>
                 <div class="mob-hp">HP: 2500.0</div>
+                <div class="spawn-tags"></div>
             </a>
             
             <a href="Bonemass.html" class="mob-card">
@@ -1052,6 +1367,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">大骨</div>
                 <div class="mob-hp">HP: 5000.0</div>
+                <div class="spawn-tags"></div>
             </a>
             
             <a href="TheHive.html" class="mob-card">
@@ -1059,6 +1375,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">[enemy_thehive]</div>
                 <div class="mob-hp">HP: 5000.0</div>
+                <div class="spawn-tags"></div>
             </a>
             
             <a href="Dragon.html" class="mob-card">
@@ -1066,6 +1383,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">モデル</div>
                 <div class="mob-hp">HP: 7500.0</div>
+                <div class="spawn-tags"></div>
             </a>
             
             <a href="GoblinKing.html" class="mob-card">
@@ -1073,6 +1391,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">ヤグルス</div>
                 <div class="mob-hp">HP: 10000.0</div>
+                <div class="spawn-tags"></div>
             </a>
             
             <a href="Hive.html" class="mob-card">
@@ -1080,6 +1399,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">[enemy_hive]</div>
                 <div class="mob-hp">HP: 10000.0</div>
+                <div class="spawn-tags"></div>
             </a>
             
             <a href="SeekerQueen.html" class="mob-card">
@@ -1087,6 +1407,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">クイーン</div>
                 <div class="mob-hp">HP: 12500.0</div>
+                <div class="spawn-tags"></div>
             </a>
             
             <a href="Fader.html" class="mob-card">
@@ -1094,6 +1415,7 @@ a:hover {
                 <div class="mob-icon placeholder"></div>
                 <div class="mob-name">フェーダー</div>
                 <div class="mob-hp">HP: 25000.0</div>
+                <div class="spawn-tags"></div>
             </a>
             </div></div>
 </body>

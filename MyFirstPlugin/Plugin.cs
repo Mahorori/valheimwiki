@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Windows;
 using static CharacterDrop;
 using static MyFirstPlugin.Patch;
@@ -22,7 +23,7 @@ public class Plugin : BaseUnityPlugin
 {
     internal static new ManualLogSource Logger;
     public static Harmony harmony = new Harmony("valheim.dumper");
-    private MobImageRenderer _renderer;
+    //private MobImageRenderer _renderer;
 
     void Start()
     {
@@ -34,7 +35,7 @@ public class Plugin : BaseUnityPlugin
         // F10キーでダンプ開始
         if (UnityEngine.Input.GetKeyDown(KeyCode.F10))
         {
-            StartCoroutine(_renderer.DumpAllMobImagesCoroutine());
+            //StartCoroutine(_renderer.DumpAllMobImagesCoroutine());
         }
     }
 
@@ -46,7 +47,7 @@ public class Plugin : BaseUnityPlugin
 
         harmony.PatchAll();
 
-        _renderer = gameObject.AddComponent<MobImageRenderer>();
+        //_renderer = gameObject.AddComponent<MobImageRenderer>();
     }
 
     System.Collections.IEnumerator WaitAndDump()
@@ -98,6 +99,7 @@ public class Plugin : BaseUnityPlugin
             Logger.LogError("DUMP FAILED: " + e);
         }
     }
+
     static Dictionary<Texture2D, Texture2D> readableCache = new();
 
     public static Texture2D GetReadable(Texture2D source)
@@ -149,6 +151,25 @@ public class Plugin : BaseUnityPlugin
         return readable;
     }
 
+    public void SaveIcon(Sprite icon, string path)
+    {
+        if (icon != null)
+        {
+            var readable = GetReadable(icon.texture);
+
+            Rect r = icon.textureRect; // ← ここ変更
+
+            Texture2D cropped = new Texture2D((int)r.width, (int)r.height, TextureFormat.RGBA32, false);
+
+            cropped.SetPixels(
+                readable.GetPixels((int)r.x, (int)r.y, (int)r.width, (int)r.height)
+            );
+            cropped.Apply();
+
+            File.WriteAllBytes(path, cropped.EncodeToPNG());
+        }
+    }
+
     // ===== アイテム =====
     void DumpItems()
     {
@@ -194,17 +215,68 @@ public class Plugin : BaseUnityPlugin
                 ["maxStackSize"] = data.m_maxStackSize,
                 ["maxQuality"] = data.m_maxQuality,
                 ["weight"] = data.m_weight,
+                ["teleportable"] = data.m_teleportable, // maybe useful
             };
+
+            var buildPieces = new List<object>();
+            if (data.m_buildPieces)
+            {
+                foreach (var piece in data.m_buildPieces.m_pieces)
+                {
+                    var p = piece.GetComponent<Piece>();
+                    if (p == null) continue;
+
+                    var requirements = new Dictionary<string, object>();
+                    if (p.m_craftingStation) requirements.Add("craftingStation", Localize(p.m_craftingStation.m_name));
+
+                    var resources = new List<object>();
+                    foreach (var r in p.m_resources)
+                    {
+                        if (r == null) continue;
+                        if (r.m_resItem == null) continue;
+
+                        resources.Add(new
+                        {
+                            item = r.m_resItem.name,
+                            amount = r.m_amount,
+                            amountPerLevel = r.m_amountPerLevel
+                        });
+                    }
+                    requirements.Add("resources", resources);
+
+                    buildPieces.Add(new
+                    {
+                        // Basic stuffs
+                        name = Localize(p.m_name),
+                        description = p.m_description,
+                        category = p.m_category.ToString(),
+
+                        // Comfort
+                        comfort = p.m_comfort,
+                        comfortGroup = p.m_comfortGroup.ToString(),
+
+                        // Requirements
+                        requirements = requirements
+                    });
+                }
+
+                exportData.Add("buildPieces", buildPieces);
+            }
+            
             // food
-            if (data.m_food != 0) exportData.Add("food", data.m_food);
-            if (data.m_foodStamina != 0) exportData.Add("foodStamina", data.m_foodStamina);
-            if (data.m_foodEitr != 0) exportData.Add("foodEitr", data.m_foodEitr);
-            if (data.m_foodBurnTime != 0) exportData.Add("foodBurnTime", data.m_foodBurnTime);
-            if (data.m_foodRegen != 0) exportData.Add("foodRegen", data.m_foodRegen);
-            if (data.m_foodEatAnimTime != 0) exportData.Add("foodEatAnimTime", data.m_foodEatAnimTime);
-            if (data.m_isDrink) exportData.Add("isDrink", data.m_isDrink);
+            if (data.m_food > 0f) exportData.Add("food", data.m_food);
+            if (data.m_foodStamina > 0f) exportData.Add("foodStamina", data.m_foodStamina);
+            if (data.m_foodEitr > 0f) exportData.Add("foodEitr", data.m_foodEitr);
+            if (data.m_food > 0f || data.m_foodStamina > 0f || data.m_foodEitr > 0f || data.m_isDrink)
+            {
+                exportData.Add("isDrink", data.m_isDrink);
+                exportData.Add("foodBurnTime", data.m_foodBurnTime);
+                exportData.Add("foodRegen", data.m_foodRegen);
+                exportData.Add("foodEatAnimTime", data.m_foodEatAnimTime);
+            }
             // armor
             if (data.m_armor != 0) exportData.Add("armor", data.m_armor);
+            if (data.m_armorPerLevel != 0) exportData.Add("armorPerLevel", data.m_armorPerLevel);
             // shield
             if (data.m_blockPower != 0) exportData.Add("blockPower", data.m_blockPower);
             if (data.m_blockPowerPerLevel != 0) exportData.Add("blockPowerPerLevel", data.m_blockPowerPerLevel);
@@ -215,8 +287,11 @@ public class Plugin : BaseUnityPlugin
             //if (data.m_perfectBlockStaminaRegen != 0) exportData.Add("armor", data.m_perfectBlockStaminaRegen);
 
             // Weapon
-            if (data.m_skillType != 0) exportData.Add("skillType", data.m_skillType);
-            if (data.m_toolTier != 0) exportData.Add("toolTier", data.m_toolTier);
+            if (itemDrop.m_itemData.IsWeapon())
+            {
+                exportData.Add("skillType", data.m_skillType.ToString());
+                exportData.Add("toolTier", data.m_toolTier);
+            }
 
             Dictionary<string, float> damages = new();
             if (data.m_damages.m_damage != 0) damages.Add("damage", data.m_damages.m_damage);
@@ -247,7 +322,11 @@ public class Plugin : BaseUnityPlugin
             if (damagesPerLevel.Count > 0) exportData.Add("damagesPerLevel", damagesPerLevel);
 
             // Ammo
-            if (data.m_ammoType != "") exportData.Add("ammoType", data.m_ammoType);
+            if (data.m_ammoType != "") exportData.Add("ammoType", Localize(data.m_ammoType));
+
+            // Durability
+            if (data.m_useDurability) exportData.Add("maxDurability", data.m_maxDurability);
+            if (data.m_useDurability) exportData.Add("durabilityPerLevel", data.m_durabilityPerLevel);
 
             list.Add(exportData);
         }
@@ -277,10 +356,16 @@ public class Plugin : BaseUnityPlugin
                     {
                         name = spawnData.m_prefab.name,
                         biome = biomes,
+                        maxSpawned = spawnData.m_maxSpawned,
+                        spawnInterval = spawnData.m_spawnInterval,
+                        spawnChance = spawnData.m_spawnChance,
+                        requiredGlobalKey = spawnData.m_requiredGlobalKey,
+                        requiredEnvironments = spawnData.m_requiredEnvironments,
+                        spawnAtNight = spawnData.m_spawnAtNight,
+                        spawnAtDay = spawnData.m_spawnAtDay,
                         enabled = spawnData.m_enabled,
                         min_lvl = spawnData.m_minLevel,
                         max_lvl = spawnData.m_maxLevel,
-                        spawn_chance = spawnData.m_spawnChance
                     });
                 }
             }
@@ -416,16 +501,29 @@ public class Plugin : BaseUnityPlugin
                 resources.Add(new
                 {
                     item = r.m_resItem.name,
-                    count = r.m_amount
+                    amount = r.m_amount,
+                    amountPerLevel = r.m_amountPerLevel
                 });
             }
 
-            list.Add(new
+            var exportData = new Dictionary<string, object>()
             {
-                result = recipe.m_item.name,
-                amount = recipe.m_amount,
-                requirements = resources
-            });
+                ["result"] = recipe.m_item.name,
+                ["amount"] = recipe.m_amount,
+                ["requirements"] = resources
+            };
+            if (recipe.m_craftingStation)
+            {
+                var iconDir = Path.Combine(Paths.BepInExRootPath, "icons/craftingStation");
+                Directory.CreateDirectory(iconDir);
+
+                SaveIcon(recipe.m_craftingStation.m_icon, Path.Combine(iconDir, Localize(recipe.m_craftingStation.m_name) + ".png"));
+                exportData.Add("craftingStation", Localize(recipe.m_craftingStation.m_name));
+            }
+            if (recipe.m_repairStation) exportData.Add("repairStation", Localize(recipe.m_repairStation.m_name));
+            if (recipe.m_minStationLevel != 0) exportData.Add("minStationLevel", recipe.m_minStationLevel);
+
+            list.Add(exportData);
         }
 
 

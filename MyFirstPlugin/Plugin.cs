@@ -7,6 +7,7 @@ using Newtonsoft.Json.Serialization;
 using SoftReferenceableAssets;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -681,6 +682,9 @@ public class Plugin : BaseUnityPlugin
             {
                 SaveIcon(recipe.m_craftingStation.m_icon, Path.Combine(iconDir, recipe.m_craftingStation.m_name + ".png"));
                 exportData.Add("craftingStation", recipe.m_craftingStation.m_name);
+
+                GameObject craftingStationPrefab = recipe.m_craftingStation.gameObject;
+                exportData.Add("craftingStationId", craftingStationPrefab.name);
             }
             if (recipe.m_repairStation) exportData.Add("repairStation", recipe.m_repairStation.m_name);
             if (recipe.m_minStationLevel != 0) exportData.Add("minStationLevel", recipe.m_minStationLevel);

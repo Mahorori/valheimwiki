@@ -88,10 +88,15 @@ def food_group(item):
         return "Food"
     return "Stamina"
 
-def material_group(item):
-    if item.teleportable is False:
+def material_group(database, item):
+    # if smelter...
+    if database.is_ore(item.id):
         return "Ore"
-    if item.food or item.foodStamina or item.foodEitr:
+    elif database.is_ingot(item.id):
+        return "Ingot"
+    elif item.consumeStatusEffect:
+        return "Consumable"
+    elif item.food or item.foodStamina or item.foodEitr:
         return food_group(item)
     return "Drops"
 
@@ -133,7 +138,7 @@ def skill_type_sort_key(skill_type):
     return (len(preferred), str(skill_type))
 
 def material_group_sort_key(group):
-    preferred = ["Ore", "Food", "Stamina", "Eitr", "Drops"]
+    preferred = ["Ore", "Ingot", "Food", "Stamina", "Eitr", "Consumable", "Drops"]
     if group in preferred:
         return (preferred.index(group), group)
     return (len(preferred), group)
@@ -199,6 +204,7 @@ class DefaultGenerator:
             <a href="{base_path}index.html">🏠 Home</a>
             <a href="{base_path}items/index.html">📦 Items</a>
             <a href="{base_path}mobs/index.html">👹 Mobs</a>
+            <a href="{base_path}traders/index.html">👤 Traders</a>
             <div class="section-title">Categories</div>
             <a href="{base_path}items/index.html#Weapon">⚔ Weapon</a>
             <a href="{base_path}items/index.html#Armor">🛡 Armor</a>
@@ -1236,7 +1242,7 @@ color: #777;
             elif category == 'Material':
                 sub_category_items = defaultdict(list)
                 for item_id, item in category_items:
-                    sub_category_items[material_group(item)].append((item_id, item))
+                    sub_category_items[material_group(self.database, item)].append((item_id, item))
                 sub_category_items_sorted = sorted(sub_category_items.keys(), key=material_group_sort_key)
 
                 # sort food

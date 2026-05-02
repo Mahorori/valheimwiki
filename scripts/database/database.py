@@ -127,6 +127,24 @@ class ValheimDatabase:
             if recipe.get("result") == item_id:
                 return recipe
         return None
+    
+    def is_ore(self, item_id):
+        for recipe in self.recipes:
+            if len(recipe['requirements']) == 1:
+                if recipe['requirements'][0] == item_id:
+                    return recipe['craftingStation'] in ('$piece_smelter', '$piece_blastfurnace')
+        return False
+    
+    def is_ingot(self, item_id):
+        # well...
+        if item_id == 'Bronze':
+            return True
+        for recipe in self.recipes:
+            if recipe['result'] == item_id:
+                if recipe['craftingStation'] in ('$piece_smelter', '$piece_blastfurnace'):
+                    return True
+                return False
+        return False
 
     def get_mob_biomes(self, mob_id):
         for loc in self.spawns:

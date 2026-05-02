@@ -1,20 +1,16 @@
 ﻿using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
+using MyFirstPlugin.Converter;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using SoftReferenceableAssets;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Xml;
+using System.Text;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.Windows;
-using static CharacterDrop;
-using static MyFirstPlugin.Patch;
-using static Turret;
 
 namespace MyFirstPlugin;
 
@@ -24,6 +20,8 @@ public class Plugin : BaseUnityPlugin
     internal static new ManualLogSource Logger;
     public static Harmony harmony = new Harmony("valheim.dumper");
     //private MobImageRenderer _renderer;
+
+    private static String localizationDirectory = Path.Combine(Paths.BepInExRootPath, "localization");
 
     void Start()
     {
@@ -91,6 +89,11 @@ public class Plugin : BaseUnityPlugin
 
             DumpDrops();
             Logger.LogInfo("Drops OK");
+
+            DumpSpawnList();
+            Logger.LogInfo("SpawnList OK");
+
+            DumpLocalize();
 
             Logger.LogInfo("=== DUMP COMPLETE ===");
         }
@@ -170,10 +173,140 @@ public class Plugin : BaseUnityPlugin
         }
     }
 
+    public object DumpStatusEffect(StatusEffect SE)
+    {
+        if (SE is SE_Burning burning)
+        {
+
+        }
+        else if (SE is SE_Cozy cozy)
+        {
+
+        }
+        else if (SE is SE_Demister demister)
+        {
+
+        }
+        else if (SE is SE_Finder finder)
+        {
+
+        }
+        else if (SE is SE_Frost frost)
+        {
+
+        }
+        else if (SE is SE_Harpooned harpooned)
+        {
+
+        }
+        else if (SE is SE_HealthUpgrade healthUpgrade)
+        {
+
+        }
+        else if (SE is SE_Poison poison)
+        {
+
+        }
+        else if (SE is SE_Puke puke)
+        {
+
+        }
+        else if (SE is SE_Rested rested)
+        {
+
+        }
+        else if (SE is SE_Shield shield)
+        {
+
+        }
+        else if (SE is SE_Smoke smoke)
+        {
+
+        }
+        else if (SE is SE_Spawn spawn)
+        {
+
+        }
+        else if (SE is SE_Stats stats)
+        {
+            var mods = new List<object>();
+            if (stats.m_mods.Count > 0)
+            {
+                foreach (HitData.DamageModPair modPair in stats.m_mods)
+                {
+                    mods.Add(new
+                    {
+                        type = modPair.m_type.ToString(),
+                        modifier = modPair.m_modifier.ToString()
+                    });
+                }
+            }
+
+            return new
+            {
+                runStaminaDrainModifier = stats.m_runStaminaDrainModifier,
+                healthUpFront = stats.m_healthUpFront,
+                healthOverTime = stats.m_healthOverTime,
+                healthRegenMultiplier = stats.m_healthRegenMultiplier,
+                staminaUpFront = stats.m_staminaUpFront,
+                staminaOverTime = stats.m_staminaOverTime,
+                staminaRegenMultiplier = stats.m_staminaRegenMultiplier,
+                eitrUpFront = stats.m_eitrUpFront,
+                eitrOverTime = stats.m_eitrOverTime,
+                eitrRegenMultiplier = stats.m_eitrRegenMultiplier,
+                addArmor = stats.m_addArmor,
+                armorMultiplier = stats.m_armorMultiplier,
+                addMaxCarryWeight = stats.m_addMaxCarryWeight,
+
+                noiseModifier = stats.m_noiseModifier,
+                stealthModifier = stats.m_stealthModifier,
+                speedModifier = stats.m_speedModifier,
+                swimSpeedModifier = stats.m_swimSpeedModifier,
+
+                maxMaxFallSpeed = stats.m_maxMaxFallSpeed,
+                fallDamageModifier = stats.m_fallDamageModifier,
+                jumpModifier = stats.m_jumpModifier,
+                jumpStaminaUseModifier = stats.m_jumpStaminaUseModifier,
+                attackStaminaUseModifier = stats.m_attackStaminaUseModifier,
+                blockStaminaUseModifier = stats.m_blockStaminaUseModifier,
+                blockStaminaUseFlatValue = stats.m_blockStaminaUseFlatValue,
+
+                adrenalineUpFront = stats.m_adrenalineUpFront,
+                adrenalineModifier = stats.m_adrenalineModifier,
+
+                staggerModifier = stats.m_staggerModifier,
+                timedBlockBonus = stats.m_timedBlockBonus,
+
+                dodgeStaminaUseModifier = stats.m_dodgeStaminaUseModifier,
+                swimStaminaUseModifier = stats.m_swimStaminaUseModifier,
+                homeItemStaminaUseModifier = stats.m_homeItemStaminaUseModifier,
+                sneakStaminaUseModifier = stats.m_sneakStaminaUseModifier,
+                runStaminaUseModifier = stats.m_runStaminaUseModifier,
+
+                skillLevel = stats.m_skillLevel.ToString(),
+                skillLevelModifier = stats.m_skillLevelModifier,
+                skillLevel2 = stats.m_skillLevel2.ToString(),
+                skillLevelModifier2 = stats.m_skillLevelModifier2,
+
+                mods = mods,
+
+                percentigeDamageModifiers = stats.m_percentigeDamageModifiers,
+
+                ttl = stats.m_ttl
+            };
+        }
+        else if (SE is SE_Wet wet)
+        {
+
+        }
+
+        return null;
+    }
+
     // ===== アイテム =====
     void DumpItems()
     {
-        var list = new List<object>();
+        var list = new Dictionary<string, object>();
         var iconDir = Path.Combine(Paths.BepInExRootPath, "icons");
         Directory.CreateDirectory(iconDir);
 
@@ -209,8 +342,8 @@ public class Plugin : BaseUnityPlugin
             {
                 ["id"] = prefab.name,
                 ["type"] = data.m_itemType.ToString(),
-                ["name"] = Localize(data.m_name),
-                ["description"] = Localize(data.m_description),
+                ["name"] = data.m_name,
+                ["description"] = data.m_description,
                 ["icon"] = $"icons/{prefab.name}.png",
                 ["maxStackSize"] = data.m_maxStackSize,
                 ["maxQuality"] = data.m_maxQuality,
@@ -227,7 +360,7 @@ public class Plugin : BaseUnityPlugin
                     if (p == null) continue;
 
                     var requirements = new Dictionary<string, object>();
-                    if (p.m_craftingStation) requirements.Add("craftingStation", Localize(p.m_craftingStation.m_name));
+                    if (p.m_craftingStation) requirements.Add("craftingStation", p.m_craftingStation.m_name);
 
                     var resources = new List<object>();
                     foreach (var r in p.m_resources)
@@ -247,7 +380,7 @@ public class Plugin : BaseUnityPlugin
                     buildPieces.Add(new
                     {
                         // Basic stuffs
-                        name = Localize(p.m_name),
+                        name = p.m_name,
                         description = p.m_description,
                         category = p.m_category.ToString(),
 
@@ -286,6 +419,12 @@ public class Plugin : BaseUnityPlugin
             if (data.m_perfectBlockStaminaRegen != 0) exportData.Add("perfectBlockStaminaRegen", data.m_perfectBlockStaminaRegen);
             //if (data.m_perfectBlockStaminaRegen != 0) exportData.Add("armor", data.m_perfectBlockStaminaRegen);
 
+            // Adrenaline
+            if (data.m_maxAdrenaline != 0) exportData.Add("maxAdrenaline", data.m_maxAdrenaline);
+            if (data.m_blockAdrenaline != 0) exportData.Add("blockAdrenaline", data.m_blockAdrenaline);
+            if (data.m_perfectBlockAdrenaline != 0) exportData.Add("perfectBlockAdrenaline", data.m_perfectBlockAdrenaline);
+            if (data.m_fullAdrenalineSE) exportData.Add("fullAdrenalineSE", DumpStatusEffect(data.m_fullAdrenalineSE));
+
             // Weapon
             if (itemDrop.m_itemData.IsWeapon())
             {
@@ -322,22 +461,30 @@ public class Plugin : BaseUnityPlugin
             if (damagesPerLevel.Count > 0) exportData.Add("damagesPerLevel", damagesPerLevel);
 
             // Ammo
-            if (data.m_ammoType != "") exportData.Add("ammoType", Localize(data.m_ammoType));
+            if (data.m_ammoType != "") exportData.Add("ammoType", data.m_ammoType);
 
             // Durability
-            if (data.m_useDurability) exportData.Add("maxDurability", data.m_maxDurability);
-            if (data.m_useDurability) exportData.Add("durabilityPerLevel", data.m_durabilityPerLevel);
+            if (data.m_useDurability)
+            {
+                exportData.Add("maxDurability", data.m_maxDurability);
+                exportData.Add("durabilityPerLevel", data.m_durabilityPerLevel);
+            }
 
-            list.Add(exportData);
+            // Consumable
+            if (data.m_consumeStatusEffect)
+            {
+                exportData.Add("consumeStatusEffect", DumpStatusEffect(data.m_consumeStatusEffect));
+            }
+
+            list.Add(prefab.name, exportData);
         }
 
         WriteJson("items.json", list);
     }
-    void DumpMobs()
+    
+    void DumpSpawnList()
     {
         var exportedSpawnList = new List<object>();
-        var mobList = new Dictionary<string, object>();
-
         var spawnSystem = Patch.SpawnSystemAwakePatch.CurrentInstance;
         if (spawnSystem != null)
         {
@@ -375,13 +522,12 @@ public class Plugin : BaseUnityPlugin
             Logger.LogError("SpawnSystem instance is null");
         }
 
-        /*foreach (var location in ZoneSystem.instance.m_locationLists)
-        {
-            var c = location.GetComponent<ZoneSystem.ZoneLocation>();
-            if (c == null) continue;
-        }*/
         WriteJson("spawnLocations.json", exportedSpawnList);
+    }
 
+    void DumpMobs()
+    {
+        var mobList = new Dictionary<string, object>();
         foreach (var prefab in ZNetScene.instance.m_prefabs)
         {
             var c = prefab.GetComponent<Character>();
@@ -404,7 +550,7 @@ public class Plugin : BaseUnityPlugin
             mobList.Add(prefab.name, new
             {
                 id = prefab.name,
-                name = Localize(c.m_name),
+                name = c.m_name,
                 faction = c.m_faction.ToString(),
                 boss = c.m_boss,
 
@@ -418,7 +564,6 @@ public class Plugin : BaseUnityPlugin
 
         WriteJson("mobs.json", mobList);
     }
-
 
     DropTable GetDropTable(UnityEngine.Component comp)
     {
@@ -474,6 +619,21 @@ public class Plugin : BaseUnityPlugin
         return null;
     }
 
+
+    void DumpCookingStationConversion(CookingStation cookingStation)
+    {
+        var list = new List<object>();
+        foreach (var conv in cookingStation.m_conversion)
+        {
+            list.Add(new
+            {
+                from = conv.m_from,
+                to = conv.m_to,
+                cookTime = conv.m_cookTime
+            });
+        }
+        WriteJson("cooking.json", list);
+    }
     // ===== レシピ =====
     void DumpRecipes()
     {
@@ -483,8 +643,13 @@ public class Plugin : BaseUnityPlugin
             return;
         }
 
-        var list = new List<object>();
+        var iconDir = Path.Combine(Paths.BepInExRootPath, "icons/craftingStation");
+        Directory.CreateDirectory(iconDir);
 
+        var list = new List<object>();
+        var traderList = new Dictionary<string, object>();
+
+        // Normal recipes
         foreach (var recipe in ObjectDB.instance.m_recipes)
         {
             if (recipe == null) continue;
@@ -514,75 +679,153 @@ public class Plugin : BaseUnityPlugin
             };
             if (recipe.m_craftingStation)
             {
-                var iconDir = Path.Combine(Paths.BepInExRootPath, "icons/craftingStation");
-                Directory.CreateDirectory(iconDir);
-
-                SaveIcon(recipe.m_craftingStation.m_icon, Path.Combine(iconDir, Localize(recipe.m_craftingStation.m_name) + ".png"));
-                exportData.Add("craftingStation", Localize(recipe.m_craftingStation.m_name));
+                SaveIcon(recipe.m_craftingStation.m_icon, Path.Combine(iconDir, recipe.m_craftingStation.m_name + ".png"));
+                exportData.Add("craftingStation", recipe.m_craftingStation.m_name);
             }
-            if (recipe.m_repairStation) exportData.Add("repairStation", Localize(recipe.m_repairStation.m_name));
+            if (recipe.m_repairStation) exportData.Add("repairStation", recipe.m_repairStation.m_name);
             if (recipe.m_minStationLevel != 0) exportData.Add("minStationLevel", recipe.m_minStationLevel);
 
             list.Add(exportData);
         }
 
-
-
-        // Smelter
+        // Trader, Smelter, CookingStation
+        // TODO: Incinerator, Charcoal kiln, Windmill, Spinning wheel, Incinerator, furnace?
+        // SapExtractor
+        Piece piece;
         foreach (var prefab in ZNetScene.instance.m_prefabs)
         {
+            var trader = prefab.GetComponent<Trader>();
+            var cookingStation = prefab.GetComponent<CookingStation>();
             var smelter = prefab.GetComponent<Smelter>();
-            if (smelter == null) continue;
+            var fermenter = prefab.GetComponent<Fermenter>();
 
-            if (smelter.m_conversion == null)
-                continue;
-
-            foreach (var conv in smelter.m_conversion)
+            if (trader != null)
             {
-                string from = conv.m_from ? conv.m_from.name : "null";
-                string to = conv.m_to ? conv.m_to.name : "null";
-
-                var resources = new List<object>();
-                resources.Add(from);
-
-                list.Add(new
+                var traderItemList = new List<object>();
+                foreach (Trader.TradeItem item in trader.m_items)
                 {
-                    result = to,
-                    amount = 1,
-                    requirements = resources
+                    traderItemList.Add(new
+                    {
+                        id = item.m_prefab.name,
+                        stack = item.m_stack,
+                        price = item.m_price,
+                        requiredGlobalKey = string.IsNullOrEmpty(item.m_requiredGlobalKey) ? "" : item.m_requiredGlobalKey,
+                    });
+                }
+                traderList.Add(prefab.name, new
+                {
+                    name = trader.m_name,
+                    items = traderItemList
                 });
+            }
+            else if (cookingStation != null)
+            {
+                piece = prefab.GetComponent<Piece>();
+                if (piece != null && piece.m_icon != null)
+                {
+                    // Do we have icon?
+                    SaveIcon(piece.m_icon, Path.Combine(iconDir, cookingStation.m_name + ".png"));
+                }
+
+                foreach (var conv in cookingStation.m_conversion)
+                {
+                    var resources = new List<object>();
+                    resources.Add(conv.m_from.name);
+
+                    list.Add(new
+                    {
+                        result = conv.m_to.name,
+                        amount = 1,
+                        requirements = resources,
+                        cookTime = conv.m_cookTime,
+                        craftingStation = cookingStation.m_name
+                    });
+                }
+            }
+            else if (smelter != null)
+            {
+                if (smelter.m_conversion == null)
+                    continue;
+
+                piece = prefab.GetComponent<Piece>();
+                if (piece != null && piece.m_icon != null)
+                {
+                    // Do we have icon?
+                    SaveIcon(piece.m_icon, Path.Combine(iconDir, smelter.m_name + ".png"));
+                }
+
+                foreach (var conv in smelter.m_conversion)
+                {
+                    string from = conv.m_from ? conv.m_from.name : "null";
+                    string to = conv.m_to ? conv.m_to.name : "null";
+
+                    var resources = new List<object>();
+                    resources.Add(from);
+
+                    list.Add(new
+                    {
+                        result = to,
+                        amount = 1,
+                        requirements = resources,
+                        craftingStation = smelter.m_name
+                    });
+                }
+            }
+            else if (fermenter != null)
+            {
+                if (fermenter.m_conversion == null)
+                    continue;
+
+                piece = prefab.GetComponent<Piece>();
+                if (piece != null && piece.m_icon != null)
+                {
+                    // Do we have icon?
+                    SaveIcon(piece.m_icon, Path.Combine(iconDir, fermenter.m_name + ".png"));
+                }
+
+                foreach (var conv in fermenter.m_conversion)
+                {
+                    string from = conv.m_from ? conv.m_from.name : "null";
+                    string to = conv.m_to ? conv.m_to.name : "null";
+
+                    var resources = new List<object>();
+                    resources.Add(from);
+
+                    list.Add(new
+                    {
+                        result = to,
+                        amount = conv.m_producedItems,
+                        requirements = resources,
+                        craftingStation = fermenter.m_name
+                    });
+                }
             }
         }
 
         WriteJson("recipes.json", list);
+        WriteJson("traders.json", traderList);
     }
 
     // ===== ドロップ =====
     void DumpDrops()
     {
-        var list = new List<object>();
+        var drops = new Dictionary<string, object>();
 
         foreach (var prefab in ZNetScene.instance.m_prefabs)
         {
             var cd = prefab.GetComponent<CharacterDrop>();
             if (cd == null) continue;
 
-            var drops = cd.m_drops.Select(d => new
+            drops.Add(prefab.name, cd.m_drops.Select(d => new
             {
                 item = d.m_prefab.name,
                 chance = d.m_chance,
                 min = d.m_amountMin,
                 max = d.m_amountMax
-            }).ToList();
-
-            list.Add(new
-            {
-                name = prefab.name,
-                drops = drops
-            });
+            }).ToList());
         }
 
-        WriteJson("drops.json", list);
+        WriteJson("drops.json", drops);
 
         // vegetation drops
         var vegetationDrops = new List<object>();
@@ -725,7 +968,7 @@ public class Plugin : BaseUnityPlugin
                 locationDrops.Add(new
                 {
                     id = name,
-                    name = Localize(name),
+                    name = name,
                     biome = biomes,
                     items = items
                 });
@@ -737,18 +980,153 @@ public class Plugin : BaseUnityPlugin
         }
         WriteJson("locationDrops.json", locationDrops);
     }
+    private List<List<string>> DoQuoteLineSplit(StringReader reader)
+    {
+        List<List<string>> list = new List<List<string>>();
+        List<string> list2 = new List<string>();
+        StringBuilder stringBuilder = new StringBuilder();
+        bool flag = false;
+        while (true)
+        {
+            int num = reader.Read();
+            switch (num)
+            {
+                case -1:
+                    list2.Add(stringBuilder.ToString());
+                    list.Add(list2);
+                    return list;
+                case 34:
+                    flag = !flag;
+                    continue;
+                case 44:
+                    if (!flag)
+                    {
+                        list2.Add(stringBuilder.ToString());
+                        stringBuilder.Length = 0;
+                        continue;
+                    }
+
+                    break;
+            }
+
+            if (num == 10 && !flag)
+            {
+                list2.Add(stringBuilder.ToString());
+                stringBuilder.Length = 0;
+                list.Add(list2);
+                list2 = new List<string>();
+            }
+            else
+            {
+                stringBuilder.Append((char)num);
+            }
+        }
+    }
+    private string StripCitations(string s)
+    {
+        if (Utils.CustomStartsWith(s, "\""))
+        {
+            s = s.Remove(0, 1);
+            if (Utils.CustomEndsWith(s, "\""))
+            {
+                s = s.Remove(s.Length - 1, 1);
+            }
+        }
+
+        return s;
+    }
+    void DumpLocalize()
+    {
+        if (Localization.instance == null)
+        {
+            Logger.LogError("Localization.instance is null");
+            return;
+        }
+
+        // LoadCSV
+        var localizationSettings = Resources.Load<LocalizationSettings>("LocalizationSettings");
+        if (!localizationSettings)
+        {
+            Logger.LogError("Failed to load LocalizationSettings.");
+            return;
+        }
+
+        var localizations = new Dictionary<string, Dictionary<string, string>>();
+        Directory.CreateDirectory(localizationDirectory);
+
+        foreach (var language in Localization.instance.GetLanguages())
+        {
+            for (int i = 0; i < localizationSettings.Localizations.Count; i++)
+            {
+                TextAsset file = localizationSettings.Localizations[i];
+                if (file == null)
+                {
+                    continue;
+                }
+
+                StringReader stringReader = new StringReader(file.text);
+                string[] array = stringReader.ReadLine().Split(',');
+                int num = -1;
+                for (int j = 0; j < array.Length; j++)
+                {
+                    if (StripCitations(array[j]) == language)
+                    {
+                        num = j;
+                        break;
+                    }
+                }
+
+                if (num == -1)
+                {
+                    Logger.LogWarning((object)("Failed to find language '" + language + "' in file '" + file.name + "'"));
+                    continue;
+                }
+
+                Dictionary<string, string> translations;
+                if (!localizations.TryGetValue(language, out translations))
+                {
+                    translations = new Dictionary<string, string>();
+                    localizations.Add(language, translations);
+                }
+
+                foreach (List<string> item in DoQuoteLineSplit(stringReader))
+                {
+                    if (item.Count == 0)
+                    {
+                        continue;
+                    }
+
+                    string text = item[0];
+                    if (!Utils.CustomStartsWith(text, "//") && text.Length != 0 && item.Count > num)
+                    {
+                        string text2 = item[num].Trim();
+                        if (string.IsNullOrEmpty(text2) || text2[0] == '\r')
+                        {
+                            text2 = item[1];
+                        }
+
+                        // this is default implementation of Localization.AddWord
+                        translations.Remove(text);
+                        translations.Add(text, text2);
+                    }
+                }
+            }
+        }
+
+        foreach (var pair in localizations) {
+            WriteJson(Path.Combine(localizationDirectory, pair.Key + ".json"), pair.Value);
+        }
+    }
 
     // ===== ユーティリティ =====
     void WriteJson(string name, object data)
     {
         var path = Path.Combine(Paths.BepInExRootPath, name);
-        File.WriteAllText(path, JsonConvert.SerializeObject(data, Newtonsoft.Json.Formatting.Indented));
+        File.WriteAllText(path, JsonConvert.SerializeObject(data, Newtonsoft.Json.Formatting.Indented, new JsonSerializerSettings
+        {
+            Converters = new List<JsonConverter> { new Vector3Converter() },
+            //ContractResolver = shapeResolver,
+        }));
         Logger.LogInfo($"Wrote {name}");
-    }
-
-    string Localize(string key)
-    {
-        if (Localization.instance == null) return key;
-        return Localization.instance.Localize(key);
     }
 }

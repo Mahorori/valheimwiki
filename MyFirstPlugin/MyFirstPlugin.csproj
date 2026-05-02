@@ -27,6 +27,9 @@
   </ItemGroup>
   
   <ItemGroup>
+    <Reference Include="assembly_utils">
+      <HintPath>..\..\..\Program Files (x86)\Steam\steamapps\common\Valheim\valheim_Data\Managed\assembly_utils.dll</HintPath>
+    </Reference>
     <Reference Include="netstandard">
       <HintPath>..\..\..\Program Files (x86)\Steam\steamapps\common\Valheim\valheim_Data\Managed\netstandard.dll</HintPath>
     </Reference>

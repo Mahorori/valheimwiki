@@ -1,0 +1,19 @@
+<h1>{{ mob.name }}</h1>
+
+<p>HP: {{ mob.hp }}</p>
+<p>Faction: {{ mob.faction }}</p>
+
+<h2>Drops</h2>
+{% if drops %}
+<table>
+<tr><th>Item</th><th>Amount</th></tr>
+{% for d in drops %}
+<tr>
+<td><a href="../items/{{ d.item }}.html">{{ d.item }}</a></td>
+<td>{{ d.min }} - {{ d.max }}</td>
+</tr>
+{% endfor %}
+</table>
+{% else %}
+<p>None</p>
+{% endif %}

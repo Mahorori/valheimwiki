@@ -1,0 +1,15 @@
+{% include "components/breadcrumb.html" %}
+
+<h1>Items</h1>
+
+{% for category, cat2 in grouped.items() %}
+  <h2 id="{{ category }}" style="width:100%;margin-top:24px;border-bottom:1px solid #444;padding-bottom:4px">{{ category }}</h2>
+  {% for subcategory, items in cat2.items() %}
+    <h3 id=""{{ subcategory }}"" style="width:100%;margin:18px 0 6px;color:#aaa;font-size:15px">{{ subcategory }}</h3>
+    <div style="display:flex;flex-wrap:wrap">
+      {% for id, item in items %}
+        {% include "components/item_card.html" %}
+      {% endfor %}
+    </div>
+  {% endfor %}
+{% endfor %}

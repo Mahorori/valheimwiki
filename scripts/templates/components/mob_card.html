@@ -1,0 +1,23 @@
+  <a href="{{ entry.mob.id }}.html" class="mob-card">
+
+    {% if entry.mob.boss %}
+      <div class="boss-tag">BOSS</div>
+    {% endif %}
+
+    <img src="{{ base_path }}static/icons/{{ entry.mob.id }}.png" class="mob-icon">
+
+    <div class="mob-name">
+      {{ entry.mob.name }}
+    </div>
+
+    <div class="mob-hp">
+      HP: {{ entry.mob.hp or "-" }}
+    </div>
+
+    <div class="spawn-tags">
+      {% for tag in spawn_time_tags(entry) %}
+        <span class="spawn-tag">{{ tag }}</span>
+      {% endfor %}
+    </div>
+
+  </a>

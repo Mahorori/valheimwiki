@@ -1,0 +1,15 @@
+<div class="breadcrumb">
+{% for b in breadcrumbs %}
+<span style="opacity:0.5">
+    {% if b.url %}
+        <a href={{ b.url }} style="color:#888">{{ b.name }}</a>
+    {% else %}
+        {{ b.name }}
+    {% endif %}
+
+    {% if not loop.last %}
+      <span style="opacity:0.5">›</span>
+    {% endif %}
+</span>
+{% endfor %}
+</div>

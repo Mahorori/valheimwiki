@@ -1,0 +1,52 @@
+{% include "components/breadcrumb.html" %}
+
+<h1 style="margin-bottom:8px">{{ item.name }}</h1>
+
+<div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
+{% if icon %}
+<img src="{{ icon }}" style="width:48px;height:48px;object-fit:contain;border-radius:6px">
+{% endif %}
+
+<div style="color:#aaa;font-size:14px;line-height:1.5">
+  <div><b style="color:#ddd">ID:</b> {{ item.id }}</div>
+  <div><b style="color:#ddd">Type:</b> {{ item.type }}</div>
+</div>
+</div>
+
+{% if item.description %}
+<h2>Description</h2>
+<p>{{ item.description }}</p>
+{% endif %}
+
+<h2>Recipe</h2>
+{% if recipes %}
+  {% for r in recipes %}
+    <div>
+      <b>{{ item.name }} × {{ r.amount }}</b>
+      <ul>
+        {% for req in r.requirements %}
+          <li>
+            {% if req is string %}
+              {{ req }}
+            {% else %}
+              {{ req.item }} × {{ req.amount or req.count }}
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endfor %}
+{% else %}
+  <p>No recipe</p>
+{% endif %}
+
+<h2>Dropped by</h2>
+{% if dropped_by %}
+  <ul>
+    {% for mob in dropped_by %}
+      <li><a href="../mobs/{{ mob }}.html">{{ mob }}</a></li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>None</p>
+{% endif %}

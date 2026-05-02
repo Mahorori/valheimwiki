@@ -1,0 +1,31 @@
+<h1>Mobs</h1>
+
+<h2>Normal</h2>
+{% for biome, entries in normal_mobs.items() %}
+<h3>{{ biome }}</h3>
+  <div class="mob-grid">
+  {% for entry in entries %}
+    {% if not entry.requiredGlobalKey and not entry.requiredEnvironments %}
+      {% include "components/mob_card.html" %}
+    {% endif %}
+  {% endfor %}
+  </div>
+  <h4>Conditional Spawn</h4>
+  <div class="mob-grid">
+  {% for entry in entries %}
+    {% if entry.requiredGlobalKey or entry.requiredEnvironments %}
+      {% include "components/mob_card.html" %}
+    {% endif %}
+  {% endfor %}
+  </div>
+{% endfor %}
+
+<h2>Bosses</h2>
+{% for biome, entries in bosses.items() %}
+<h3>{{ biome }}</h3>
+<div class="mob-grid">
+  {% for entry in entries %}
+    {% include "components/mob_card.html" %}
+  {% endfor %}
+</div>
+{% endfor %}

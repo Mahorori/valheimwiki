@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>{{ title }}</title>
+<link rel="stylesheet" href="{{ base_path }}static/style.css">
+</head>
+<body>
+
+{% include "components/sidebar.html" %}
+
+<div class="content {{ content_class }}">
+  {{ content | safe }}
+</div>
+
+</body>
+</html>

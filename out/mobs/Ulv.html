@@ -1,0 +1,239 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Ulv</title>
+<style>
+
+* {
+box-sizing: border-box;
+}
+
+body {
+margin: 0;
+display: flex;
+font-family: sans-serif;
+background: #111;
+color: #eee;
+}
+
+.sidebar {
+position: fixed;
+left: 0;
+top: 0;
+width: 220px;
+height: 100vh;
+background: #1a1a1a;
+padding: 12px;
+border-right: 1px solid #333;
+overflow-y: auto;
+}
+
+.breadcrumb {
+align-items: center;
+display: flex;
+flex-wrap: wrap;
+gap: 6px;
+font-size: 13px;
+color: #888;
+margin-bottom: 10px;
+line-height: 1;   /* ←これ重要 */
+}
+.breadcrumb a {
+display: inline;   /* ←これ超重要 */
+color: #888;
+text-decoration: none;
+}
+
+.content {
+flex: 1;
+padding: 16px;
+margin-left: 220px;
+}
+
+a {
+color: #ccc;
+text-decoration: none;
+display: block;
+padding: 6px 8px;
+border-radius: 6px;
+}
+
+a:hover {
+background: #2a2a2a;
+}
+
+.section-title {
+margin-top: 14px;
+font-size: 12px;
+color: #777;
+}
+
+.info-table, .resist-table {
+    border-collapse: collapse;
+    margin: 10px 0;
+    margin-left: 10px;
+}
+
+.drop-table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 10px;
+    margin-left: 10px;
+}
+
+.drop-table th, .drop-table td,
+.info-table th, .info-table td,
+.resist-table th, .resist-table td {
+    border: 1px solid #444;
+    padding: 6px 10px;
+}
+
+.info-table th {
+    background: #222;
+    text-align: left;
+}
+
+.resist-table th {
+    background: #333;
+}
+
+.drop-table th {
+    background: #222;
+}
+
+.item-icon {
+    height: 1.8em;
+    vertical-align: middle;
+    margin-right: 6px;
+}
+
+.drop-chance {
+    position: relative;
+    background: #222;
+    height: 14px;
+    border-radius: 4px;
+}
+
+.drop-chance .bar {
+    background: #4caf50;
+    height: 100%;
+    border-radius: 4px;
+}
+
+.drop-chance span {
+    position: absolute;
+    left: 6px;
+    top: -2px;
+    font-size: 12px;
+}
+
+.mob-grid {
+    display: flex;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.mob-card {
+    display: block;
+    background: #1b1b1b;
+    border: 1px solid #333;
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
+    text-decoration: none;
+    color: #ddd;
+    position: relative;
+    transition: 0.2s;
+}
+
+.mob-card:hover {
+    background: #2a2a2a;
+    transform: translateY(-2px);
+}
+
+.mob-icon {
+    height: 64px;
+    margin-bottom: 6px;
+}
+
+.mob-name {
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+.mob-hp {
+    font-size: 0.9em;
+    color: #aaa;
+}
+
+.boss-tag {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    background: #c33;
+    color: white;
+    font-size: 0.7em;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+
+</style>
+</head>
+<body>
+
+            <div class="sidebar">
+            <h3>Wiki</h3>
+            <a href="../index.html">🏠 Home</a>
+            <a href="../items/index.html">📦 Items</a>
+            <a href="../mobs/index.html">👹 Mobs</a>
+            <div class="section-title">Categories</div>
+            <a href="../items/index.html#Weapon">⚔ Weapon</a>
+            <a href="../items/index.html#Armor">🛡 Armor</a>
+            <a href="../items/index.html#Consumable">🍖 Consumable</a>
+            <a href="../items/index.html#Material">🪵 Material</a>
+            <div class="section-title">Search</div>
+            <input id="search" placeholder="Search..." style="
+            width:100%;
+            padding:5px 8px;
+            margin-top:6px;
+            border-radius:6px;
+            border:1px solid #2a2a2a;
+            background:#0f0f0f;
+            color:#ddd;
+            font-size:13px;
+            outline:none;
+            ">
+            </div>
+        <div class="content">
+            <div class="breadcrumb">
+            <a href="../index.html" style="color:#888">Home</a> <span style="opacity:0.5">›</span> <a href="index.html" style="color:#888">Mobs</a> <span style="opacity:0.5">›</span> Ulv
+            </div>
+        <h1>ウルヴ</h1><h2>基本情報</h2><table class="info-table"><tr><th>HP</th><td>50.0</td></tr><tr><th>派閥</th><td>MountainMonsters</td></tr><tr><th>ボス</th><td>No</td></tr><tr><th>テイム可能</th><td>No</td></tr></table><h2>耐性</h2><table class="resist-table"><tr><th>属性</th><th>効果</th></tr><tr><td>blunt</td><td>Normal</td></tr><tr><td>slash</td><td>Normal</td></tr><tr><td>pierce</td><td>Normal</td></tr><tr><td>chop</td><td>Ignore</td></tr><tr><td>pickaxe</td><td>Ignore</td></tr><tr><td>fire</td><td>VeryResistant</td></tr><tr><td>frost</td><td>Normal</td></tr><tr><td>lightning</td><td>Normal</td></tr><tr><td>poison</td><td>Weak</td></tr><tr><td>spirit</td><td>Normal</td></tr></table><h2>ドロップ</h2><table class="drop-table"><tr><th>アイテム</th><th>数量</th><th>確率</th></tr>
+                <tr>
+                    <td><img src="../../icons/WolfFang.png" class="item-icon"> <a href="../items/WolfFang.html">狼の牙</a></td>
+                    <td>1–2</td>
+                    <td>
+                        <div class="drop-chance">
+                            <div class="bar" style="width:50%"></div>
+                            <span>50%</span>
+                        </div>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td><img src="../../icons/TrophyUlv.png" class="item-icon"> <a href="../items/TrophyUlv.html">ウルヴのトロフィー</a></td>
+                    <td>1</td>
+                    <td>
+                        <div class="drop-chance">
+                            <div class="bar" style="width:10%"></div>
+                            <span>10%</span>
+                        </div>
+                    </td>
+                </tr>
+                </table></div>
+</body>
+</html>

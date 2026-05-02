@@ -1,0 +1,343 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>[item_turretboltbone]</title>
+<style>
+
+* {
+box-sizing: border-box;
+}
+
+body {
+margin: 0;
+display: flex;
+font-family: sans-serif;
+background: #111;
+color: #eee;
+}
+
+.sidebar {
+position: fixed;
+left: 0;
+top: 0;
+width: 220px;
+height: 100vh;
+background: #1a1a1a;
+padding: 12px;
+border-right: 1px solid #333;
+overflow-y: auto;
+}
+
+.breadcrumb {
+align-items: center;
+display: flex;
+flex-wrap: wrap;
+gap: 6px;
+font-size: 13px;
+color: #888;
+margin-bottom: 10px;
+line-height: 1;   /* ←これ重要 */
+}
+.breadcrumb a {
+display: inline;   /* ←これ超重要 */
+color: #888;
+text-decoration: none;
+}
+
+.content {
+flex: 1;
+padding: 16px;
+margin-left: 220px;
+}
+
+a {
+color: #ccc;
+text-decoration: none;
+display: block;
+padding: 6px 8px;
+border-radius: 6px;
+}
+
+a:hover {
+background: #2a2a2a;
+}
+
+.section-title {
+margin-top: 14px;
+font-size: 12px;
+color: #777;
+}
+
+.info-table, .resist-table {
+    border-collapse: collapse;
+    margin: 10px 0;
+    margin-left: 10px;
+}
+
+.drop-table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 10px;
+    margin-left: 10px;
+}
+
+.drop-table th, .drop-table td,
+.info-table th, .info-table td,
+.resist-table th, .resist-table td {
+    border: 1px solid #444;
+    padding: 6px 10px;
+}
+
+.info-table th {
+    background: #222;
+    text-align: left;
+}
+
+.resist-table th {
+    background: #333;
+}
+
+.drop-table th {
+    background: #222;
+}
+
+.item-icon {
+    height: 1.8em;
+    vertical-align: middle;
+    margin-right: 6px;
+}
+
+.drop-chance {
+    position: relative;
+    background: #222;
+    height: 14px;
+    border-radius: 4px;
+}
+
+.drop-chance .bar {
+    background: #4caf50;
+    height: 100%;
+    border-radius: 4px;
+}
+
+.drop-chance span {
+    position: absolute;
+    left: 6px;
+    top: -2px;
+    font-size: 12px;
+}
+
+.mob-grid {
+    display: flex;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.mob-card {
+    display: block;
+    background: #1b1b1b;
+    border: 1px solid #333;
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
+    text-decoration: none;
+    color: #ddd;
+    position: relative;
+    transition: 0.2s;
+}
+
+.mob-card:hover {
+    background: #2a2a2a;
+    transform: translateY(-2px);
+}
+
+.mob-icon {
+    height: 64px;
+    margin-bottom: 6px;
+}
+
+.mob-name {
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+.mob-hp {
+    font-size: 0.9em;
+    color: #aaa;
+}
+
+.boss-tag {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    background: #c33;
+    color: white;
+    font-size: 0.7em;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+
+</style>
+</head>
+<body>
+
+            <div class="sidebar">
+            <h3>Wiki</h3>
+            <a href="../index.html">🏠 Home</a>
+            <a href="../items/index.html">📦 Items</a>
+            <a href="../mobs/index.html">👹 Mobs</a>
+            <div class="section-title">Categories</div>
+            <a href="../items/index.html#Weapon">⚔ Weapon</a>
+            <a href="../items/index.html#Armor">🛡 Armor</a>
+            <a href="../items/index.html#Consumable">🍖 Consumable</a>
+            <a href="../items/index.html#Material">🪵 Material</a>
+            <div class="section-title">Search</div>
+            <input id="search" placeholder="Search..." style="
+            width:100%;
+            padding:5px 8px;
+            margin-top:6px;
+            border-radius:6px;
+            border:1px solid #2a2a2a;
+            background:#0f0f0f;
+            color:#ddd;
+            font-size:13px;
+            outline:none;
+            ">
+            </div>
+        <div class="content">
+            <div class="breadcrumb">
+            <a href="../index.html" style="color:#888">Home</a> <span style="opacity:0.5">›</span> <a href="index.html" style="color:#888">Items</a> <span style="opacity:0.5">›</span> <a href="index.html#AmmoNonEquipable" style="color:#888">AmmoNonEquipable</a> <span style="opacity:0.5">›</span> TurretBoltBone
+            </div>
+        
+    <h1 style="margin-bottom:8px">[item_turretboltbone]</h1>
+
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
+    <img src="../../icons/TurretBoltBone.png" style="width:48px;height:48px;object-fit:contain;border-radius:6px">
+    <div style="color:#aaa;font-size:14px;line-height:1.5">
+        <div><b style="color:#ddd">ID:</b> TurretBoltBone</div>
+        <div><b style="color:#ddd">Type:</b> AmmoNonEquipable</div>
+    </div>
+    </div>
+    
+    <div style="
+    margin-top:28px;
+    padding:12px;
+    border-radius:10px;
+    background:#1a1a1a;
+    border:1px solid #333;
+    ">
+    <h2 style="
+        margin:0 0 12px 0;
+        font-size:18px;
+        color:#ddd;
+        border-bottom:1px solid #333;
+        padding-bottom:6px;
+    ">Description</h2>
+    <div style='color:#ccc;line-height:1.5'>[item_turretboltbone_description]</div>
+    </div>
+    
+    <div style="
+    margin-top:28px;
+    padding:12px;
+    border-radius:10px;
+    background:#1a1a1a;
+    border:1px solid #333;
+    ">
+    <h2 style="
+        margin:0 0 12px 0;
+        font-size:18px;
+        color:#ddd;
+        border-bottom:1px solid #333;
+        padding-bottom:6px;
+    ">Recipe</h2>
+    <div style='color:#777'>No recipe</div>
+    </div>
+    
+    <div style="
+    margin-top:28px;
+    padding:12px;
+    border-radius:10px;
+    background:#1a1a1a;
+    border:1px solid #333;
+    ">
+    <h2 style="
+        margin:0 0 12px 0;
+        font-size:18px;
+        color:#ddd;
+        border-bottom:1px solid #333;
+        padding-bottom:6px;
+    ">Details</h2>
+    
+    <table class="info-table">
+    <tr><th>Internal ID</th><td>TurretBoltBone</td></tr>
+    <tr><th>Type</th><td>AmmoNonEquipable</td></tr>
+    <tr><th>Ammo Type</th><td>黒金属の矢弾</td></tr>
+    <tr><th>Source</th><td>None</td></tr>
+    
+    </table>
+    
+    <h3 style="margin:14px 0 6px;font-size:15px;color:#ddd">Weapon Damage</h3>
+    <table class="info-table">
+    <tr><th>Total</th><td>120</td></tr>
+    <tr><th>pierce</th><td>120</td></tr>
+    </table>
+    
+    </div>
+    
+    <div style="
+    margin-top:28px;
+    padding:12px;
+    border-radius:10px;
+    background:#1a1a1a;
+    border:1px solid #333;
+    ">
+    <h2 style="
+        margin:0 0 12px 0;
+        font-size:18px;
+        color:#ddd;
+        border-bottom:1px solid #333;
+        padding-bottom:6px;
+    ">Crafted into</h2>
+    <div style='color:#777'>None</div>
+    </div>
+    
+    <div style="
+    margin-top:28px;
+    padding:12px;
+    border-radius:10px;
+    background:#1a1a1a;
+    border:1px solid #333;
+    ">
+    <h2 style="
+        margin:0 0 12px 0;
+        font-size:18px;
+        color:#ddd;
+        border-bottom:1px solid #333;
+        padding-bottom:6px;
+    ">Dropped by</h2>
+    <div style='color:#777'>None</div>
+    </div>
+    
+    <div style="
+    margin-top:28px;
+    padding:12px;
+    border-radius:10px;
+    background:#1a1a1a;
+    border:1px solid #333;
+    ">
+    <h2 style="
+        margin:0 0 12px 0;
+        font-size:18px;
+        color:#ddd;
+        border-bottom:1px solid #333;
+        padding-bottom:6px;
+    ">Sold by</h2>
+    <div style='color:#777'>None</div>
+    </div>
+    </div>
+</body>
+</html>

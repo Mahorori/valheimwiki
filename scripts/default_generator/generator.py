@@ -924,7 +924,7 @@ color: #777;
 
     def render_equipment_details(self, item):
         item_type = item.type
-        if item_type not in WEAPON_TYPES and item_type not in ARMOR_TYPES and item_type not in AMMO_TYPES:
+        if item_type not in WEAPON_TYPES and item_type not in ARMOR_TYPES and item_type not in AMMO_TYPES and item_type != 'Shield':
             return ""
         
         weapon_type = None

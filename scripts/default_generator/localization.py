@@ -70,5 +70,30 @@ class Localization:
 
         out += text[num:]
         return out
+    
+    def localize_biome(self, biome):
+        if not biome:
+            return biome
         
+        d = 'biome_' + biome.lower()
+        if d not in self.translations[self.language]:
+            return biome
+        return self.localize('$' + d)
+        
+    def localize_damage_type(self, type):
+        if not type:
+            return type
+        
+        d = 'inventory_' + type
+        if d not in self.translations[self.language]:
+            return type
+        return self.localize('$' + d)
 
+    def localize_damage_modifier(self, modifier):
+        if not modifier:
+            return modifier
+
+        d = 'inventory_' + modifier.lower()
+        if d not in self.translations[self.language]:
+            return modifier
+        return self.localize('$' + d)

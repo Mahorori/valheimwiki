@@ -20,7 +20,6 @@ python3 ./scripts/main.py
 3. Profit
 
 ## TODO
-- Shield page details
 - tooltier
 - buildPieces
 - hp/stamina/eitr on card
@@ -32,3 +31,4 @@ python3 ./scripts/main.py
 - fish biome
 - comfort
 - use .css...
+- rename to valheimdb I think

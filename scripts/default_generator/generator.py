@@ -182,7 +182,6 @@ def fmt_number(value):
         return str(int(value))
     return str(value)
 
-
 class DefaultGenerator:
 
     def __init__(self, localization, database):
@@ -810,7 +809,7 @@ color: #777;
 
         base_damage = self.item_damage_at_quality(item, 1)
         rows = "".join(
-            f"<tr><th>{damage_type}</th><td>{fmt_number(base_damage[damage_type])}</td></tr>"
+            f"<tr><th>{self.localization.localize_damage_type(damage_type)}</th><td>{fmt_number(base_damage[damage_type])}</td></tr>"
             for damage_type in damage_types
         )
         total = sum(base_damage[damage_type] for damage_type in damage_types)
@@ -835,7 +834,7 @@ color: #777;
             if not damage_types:
                 return ""
 
-            header = "".join(f"<th>{damage_type}</th>" for damage_type in damage_types)
+            header = "".join(f"<th>{self.localization.localize_damage_type(damage_type)}</th>" for damage_type in damage_types)
             rows = ""
             for quality in range(1, max_quality + 1):
                 damages = self.item_damage_at_quality(item, quality)
@@ -851,7 +850,7 @@ color: #777;
             return f"""
     <h3 style="margin:14px 0 6px;font-size:15px;color:#ddd">Upgrade</h3>
     <table class="info-table">
-    <tr><th>Quality</th><th>Durability</th><th>Workbench Level</th><th>Total Damage</th>{header}</tr>
+    <tr><th>{self.localize('$item_quality')}</th><th>{self.localize('$item_durability')}</th><th>Workbench Level</th><th>Total Damage</th>{header}</tr>
     {rows}
     </table>
     """
@@ -871,7 +870,35 @@ color: #777;
             return f"""
     <h3 style="margin:14px 0 6px;font-size:15px;color:#ddd">Upgrade</h3>
     <table class="info-table">
-    <tr><th>Quality</th><th>Durability</th><th>Workbench Level</th><th>Armor</th></tr>
+    <tr><th>{self.localize('$item_quality')}</th><th>{self.localize('$item_durability')}</th><th>Workbench Level</th><th>Armor</th></tr>
+    {rows}
+    </table>
+    """
+        
+        if item_type in ('Shield'):
+            armor = item.blockPower
+            armor_per_level = item.blockPowerPerLevel
+            deflectionForce = item.deflectionForce
+            deflectionForcePerLevel = item.deflectionForcePerLevel
+            rows = ""
+            for quality in range(1, max_quality + 1):
+                rows += (
+                    f"<tr><th>{quality}</th>"
+                    f"<td>{fmt_number(self.item_durability_at_quality(item, quality))}</td>"
+                    f"<td>{fmt_number(self.recipe_station_level(recipe, quality))}</td>"
+                    f"<td>{fmt_number(armor + armor_per_level * (quality - 1))}</td>"
+                    f"<td>{fmt_number(deflectionForce + deflectionForcePerLevel * (quality - 1))}</td></tr>"
+                )
+
+            return f"""
+    <h3 style="margin:14px 0 6px;font-size:15px;color:#ddd">Upgrade</h3>
+    <table class="info-table">
+    <tr><th>{self.localize('$item_quality')}</th>
+    <th>{self.localize('$item_durability')}</th>
+    <th>Workbench Level</th>
+    <th>{self.localize('$item_blockpower')}</th>
+    <th>{self.localize('$item_deflection')}</th>
+    </tr>
     {rows}
     </table>
     """
@@ -917,7 +944,7 @@ color: #777;
     <h3 style="margin:14px 0 6px;font-size:15px;color:#ddd">Recipe</h3>
     {station_row}
     <table class="info-table">
-    <tr><th>Quality</th><th>Workbench Level</th>{header}</tr>
+    <tr><th>{self.localize('$item_quality')}</th><th>Workbench Level</th>{header}</tr>
     {rows}
     </table>
     """
@@ -927,7 +954,7 @@ color: #777;
         if item_type not in WEAPON_TYPES and item_type not in ARMOR_TYPES and item_type not in AMMO_TYPES and item_type != 'Shield':
             return ""
         
-        weapon_type = None
+        weapon_type = ''
         if item_type in WEAPON_TYPES:
             weapon_type = item.skillType
         elif item_type in AMMO_TYPES:
@@ -944,11 +971,21 @@ color: #777;
         
         if item.maxDurability:
             durability = f"""
-    <tr><th>Durability</th><td>{fmt_number(item.maxDurability)}</td></tr>
-    <tr><th>Durability Per Level</th><td>{fmt_number(item.durabilityPerLevel)}</td></tr>
+    <tr><th>{self.localize('$item_durability')}</th><td>{fmt_number(item.maxDurability)}</td></tr>
+    <tr><th>{self.localize('$item_durability')} Per Level</th><td>{fmt_number(item.durabilityPerLevel)}</td></tr>
     """
         else:
             durability = ""
+        
+        if item.movementModifier:
+            modifiers = f"""
+    <tr>
+    <th>{self.localize('$item_movement_modifier')}</th>
+    <td>{item.movementModifier*100:+.0f}%</td>
+    </tr>
+            """
+        else:
+            modifiers = ""
         
         details = f"""
     <table class="info-table">
@@ -957,6 +994,7 @@ color: #777;
     {weapon_type}
     <tr><th>Source</th><td>{crafting_station}</td></tr>
     {durability}
+    {modifiers}
     </table>
     """
 
@@ -964,11 +1002,22 @@ color: #777;
             details += self.render_damage_table(item)
         elif item_type in ARMOR_TYPES:
             details += f"""
-    <table class="info-table">
-    <tr><th>Armor</th><td>{fmt_number(item.armor)}</td></tr>
-    <tr><th>Armor Per Level</th><td>{fmt_number(item.armorPerLevel)}</td></tr>
-    </table>
-    """
+                        <table class="info-table">
+                        <tr><th>{self.localize('$item_armor')}</th><td>{fmt_number(item.armor)}</td></tr>
+                        <tr><th>{self.localize('$item_armor')} Per Level</th><td>{fmt_number(item.armorPerLevel)}</td></tr>
+                        </table>
+                        """
+        elif item_type == 'Shield':
+            details += f"""
+            <h3 style="margin:14px 0 6px;font-size:15px;color:#ddd">Shield</h3>
+                        <table class="info-table">
+                        <tr><th>{self.localize('$item_blockpower')}</th><td>{fmt_number(item.blockPower)}</td></tr>
+                        <tr><th>{self.localize('$item_blockpower')} per level</th><td>{fmt_number(item.blockPowerPerLevel)}</td></tr>
+                        <tr><th>{self.localize('$item_deflection')}</th><td>{fmt_number(item.deflectionForce)}</td></tr>
+                        <tr><th>{self.localize('$item_deflection')} per level</th><td>{fmt_number(item.deflectionForcePerLevel)}</td></tr>
+                        <tr><th>{self.localize('$item_parrybonus')}</th><td>{fmt_number(item.timedBlockBonus)}x</td></tr>
+                        </table>
+                        """
 
         details += self.render_upgrade_table(item)
         details += self.render_recipe_upgrade_table(item)
@@ -1098,7 +1147,7 @@ color: #777;
 
         biomes = self.database.get_mob_biomes(mob['id'])
         if biomes:
-            html += f"<tr><th>バイオーム</th><td>{', '.join(biomes)}</td></tr>"
+            html += f"<tr><th>バイオーム</th><td>{', '.join(self.localization.localize_biome(entry) for entry in biomes)}</td></tr>"
         else:
             pass
         html += f"<tr><th>HP</th><td>{mob.get('hp','-')}</td></tr>"
@@ -1112,12 +1161,16 @@ color: #777;
         # 耐性
         # ========================
         if "damageModifiers" in mob:
-            html += "<h2>耐性</h2>"
+            html += "<h2>Resistances</h2>"
             html += '<table class="resist-table">'
             html += "<tr><th>属性</th><th>効果</th></tr>"
 
             for dmg, val in mob["damageModifiers"].items():
-                html += f"<tr><td>{dmg}</td><td>{val}</td></tr>"
+                html += f"""
+                <tr>
+                    <td>{self.localization.localize_damage_type(dmg)}</td>
+                    <td>{self.localization.localize_damage_modifier(val)}</td>
+                </tr>"""
 
             html += "</table>"
 
@@ -1386,7 +1439,7 @@ color: #777;
         for biome in BIOME_ORDER:
             if biome not in groups:
                 continue
-            out += f"<h3>{biome}</h3>"
+            out += f"<h3>{self.localization.localize_biome(biome)}</h3>"
             out += self.render_conditioned_mobs(groups[biome])
 
         return out

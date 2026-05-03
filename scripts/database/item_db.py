@@ -21,6 +21,18 @@ class ItemDrop:
     teleportable: bool = True
     buildPieces: list = None
 
+    eitrRegenModifier: float = 0.0
+    movementModifier: float = 0.0
+    homeItemsStaminaModifier: float = 0.0
+    heatResistanceModifier: float = 0.0
+    jumpStaminaModifier: float = 0.0
+    attackStaminaModifier: float = 0.0
+    blockStaminaModifier: float = 0.0
+    dodgeStaminaModifier: float = 0.0
+    swimStaminaModifier: float = 0.0
+    sneakStaminaModifier: float = 0.0
+    runStaminaModifier: float = 0.0
+
     # food
     food: float = 0.0
     foodStamina: float = 0.0
@@ -35,7 +47,7 @@ class ItemDrop:
     blockPower: float = 10.0
     blockPowerPerLevel: float = None
     deflectionForce: float = None
-    deflectionForcePerLevel: float = None
+    deflectionForcePerLevel: float = 0.0
     timedBlockBonus: float = 1.5
     perfectBlockStaminaRegen: float = None
 

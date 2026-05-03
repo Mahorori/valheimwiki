@@ -396,7 +396,18 @@ public class Plugin : BaseUnityPlugin
 
                 exportData.Add("buildPieces", buildPieces);
             }
-            
+            // Stat modifiers
+            exportData.Add("eitrRegenModifier", data.m_eitrRegenModifier);
+            exportData.Add("movementModifier", data.m_movementModifier);
+            exportData.Add("homeItemsStaminaModifier", data.m_homeItemsStaminaModifier);
+            exportData.Add("heatResistanceModifier", data.m_heatResistanceModifier);
+            exportData.Add("jumpStaminaModifier", data.m_jumpStaminaModifier);
+            exportData.Add("attackStaminaModifier", data.m_attackStaminaModifier);
+            exportData.Add("blockStaminaModifier", data.m_blockStaminaModifier);
+            exportData.Add("dodgeStaminaModifier", data.m_dodgeStaminaModifier);
+            exportData.Add("swimStaminaModifier", data.m_swimStaminaModifier);
+            exportData.Add("sneakStaminaModifier", data.m_sneakStaminaModifier);
+            exportData.Add("runStaminaModifier", data.m_runStaminaModifier);
             // food
             if (data.m_food > 0f) exportData.Add("food", data.m_food);
             if (data.m_foodStamina > 0f) exportData.Add("foodStamina", data.m_foodStamina);

@@ -1616,14 +1616,36 @@ color: #777;
     </div>
     </div>
     """
+        
+        coin_icon = self.icon_path('Coins')
+        coin_img = f'<img src="{coin_icon}" style="height:2.2em;vertical-align:middle;border-radius:4px;">' if coin_icon else ""
 
+        html += '<div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap:8px;">'
         for trader_item in trader['items']:
             item = self.database.get_item(trader_item['id'])
             if item:
-                html += f"""<p>{self.localize(item.name)} {trader_item['price']} {trader_item['requiredGlobalKey']}</p><br>"""
+                if trader_item['requiredGlobalKey']:
+                    flag = f"""<div style="font-size:0.8em; opacity:0.6;">{trader_item['requiredGlobalKey']}</div>"""
+                else:
+                    flag = ""
+                html += self.link_item(
+                    f'../items/{trader_item['id']}.html',
+                    self.icon_path(trader_item['id']),
+                    f"""
+                    <div style="display:flex; flex-direction:column; line-height:1.2;">
+                        <div style="font-weight:600;">
+                            {self.localize(item.name)}
+                        </div>
+                        <div style="font-size:0.9em; opacity:0.8;">
+                            {coin_img}{trader_item['price']}
+                        </div>
+                        { flag }
+                    </div>
+                    """
+                )
 
         # end of content
-        html += r"""</div>"""
+        html += r"""</div></div>"""
 
         with open(f"{outdir}/traders/{trader_id}.html", "w", encoding="utf-8") as f:
             f.write(self.page_template(name, html))

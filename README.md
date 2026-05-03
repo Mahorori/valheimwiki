@@ -31,4 +31,3 @@ python3 ./scripts/main.py
     - ...
 - fish biome
 - comfort
-- npc pages

@@ -511,6 +511,12 @@ public class Plugin : BaseUnityPlugin
                         if (spawnData.m_biome.HasFlag(biome)) biomes.Add(biome.ToString());
                     }
 
+                    // check prefab
+                    foreach (var comp in spawnData.m_prefab.GetComponents<UnityEngine.Component>())
+                    {
+                        Logger.LogInfo($"{spawnData.m_prefab.name} {comp.GetType().FullName}");
+                    }
+
                     exportedSpawnList.Add(new
                     {
                         name = spawnData.m_prefab.name,
@@ -542,36 +548,53 @@ public class Plugin : BaseUnityPlugin
         var mobList = new Dictionary<string, object>();
         foreach (var prefab in ZNetScene.instance.m_prefabs)
         {
-            var c = prefab.GetComponent<Character>();
-            if (c == null) continue;
-
-            var drop = prefab.GetComponent<CharacterDrop>();
-            var tame = prefab.GetComponent<Tameable>();
-
-            Dictionary<string, string> mods = new Dictionary<string, string>();
-            mods.Add("blunt", c.m_damageModifiers.m_blunt.ToString());
-            mods.Add("slash", c.m_damageModifiers.m_slash.ToString());
-            mods.Add("pierce", c.m_damageModifiers.m_pierce.ToString());
-            mods.Add("chop", c.m_damageModifiers.m_chop.ToString());
-            mods.Add("pickaxe", c.m_damageModifiers.m_pickaxe.ToString());
-            mods.Add("fire", c.m_damageModifiers.m_fire.ToString());
-            mods.Add("frost", c.m_damageModifiers.m_frost.ToString());
-            mods.Add("lightning", c.m_damageModifiers.m_lightning.ToString());
-            mods.Add("poison", c.m_damageModifiers.m_poison.ToString());
-            mods.Add("spirit", c.m_damageModifiers.m_spirit.ToString());
-            mobList.Add(prefab.name, new
+            if (prefab.GetComponent<RandomFlyingBird>() is RandomFlyingBird bird)
             {
-                id = prefab.name,
-                name = c.m_name,
-                faction = c.m_faction.ToString(),
-                boss = c.m_boss,
+                float health = 1f;
+                if (bird.GetComponent<Destructible>() is Destructible destructible)
+                {
+                    health = destructible.m_health;
+                }
+                if (bird.GetComponent<DropOnDestroyed>() is DropOnDestroyed dropOnDestroyed)
+                {
+                }
 
-                // health & damage
-                hp = c.m_health,
-                damageModifiers = mods,
-                tameable = tame != null
+                mobList.Add(prefab.name, new
+                {
+                    id = prefab.name,
+                    name = bird.name,
+                    hp = health
+                });
+            }
+            else if (prefab.GetComponent<Character>() is Character c)
+            {
+                var tame = prefab.GetComponent<Tameable>();
 
-            });
+                Dictionary<string, string> mods = new Dictionary<string, string>();
+                mods.Add("blunt", c.m_damageModifiers.m_blunt.ToString());
+                mods.Add("slash", c.m_damageModifiers.m_slash.ToString());
+                mods.Add("pierce", c.m_damageModifiers.m_pierce.ToString());
+                mods.Add("chop", c.m_damageModifiers.m_chop.ToString());
+                mods.Add("pickaxe", c.m_damageModifiers.m_pickaxe.ToString());
+                mods.Add("fire", c.m_damageModifiers.m_fire.ToString());
+                mods.Add("frost", c.m_damageModifiers.m_frost.ToString());
+                mods.Add("lightning", c.m_damageModifiers.m_lightning.ToString());
+                mods.Add("poison", c.m_damageModifiers.m_poison.ToString());
+                mods.Add("spirit", c.m_damageModifiers.m_spirit.ToString());
+                mobList.Add(prefab.name, new
+                {
+                    id = prefab.name,
+                    name = c.m_name,
+                    faction = c.m_faction.ToString(),
+                    boss = c.m_boss,
+
+                    // health & damage
+                    hp = c.m_health,
+                    damageModifiers = mods,
+                    tameable = tame != null
+
+                });
+            }
         }
 
         WriteJson("mobs.json", mobList);
@@ -655,12 +678,14 @@ public class Plugin : BaseUnityPlugin
                 return GetDropTable(destructible.m_spawnWhenDestroyed);
         }
 
+        /*
         foreach (var comp in prefab.GetComponents<UnityEngine.Component>())
         {
             Logger.LogInfo(comp.GetType().FullName);
         }
+        */
 
-        return null;
+            return null;
     }
 
 
@@ -860,16 +885,29 @@ public class Plugin : BaseUnityPlugin
 
         foreach (var prefab in ZNetScene.instance.m_prefabs)
         {
-            var cd = prefab.GetComponent<CharacterDrop>();
-            if (cd == null) continue;
-
-            drops.Add(prefab.name, cd.m_drops.Select(d => new
+            if (prefab.GetComponent<CharacterDrop>() is CharacterDrop cd)
             {
-                item = d.m_prefab.name,
-                chance = d.m_chance,
-                min = d.m_amountMin,
-                max = d.m_amountMax
-            }).ToList());
+                drops.Add(prefab.name, cd.m_drops.Select(d => new
+                {
+                    item = d.m_prefab.name,
+                    chance = d.m_chance,
+                    min = d.m_amountMin,
+                    max = d.m_amountMax
+                }).ToList());
+            }
+            else if (prefab.GetComponent<RandomFlyingBird>() is RandomFlyingBird bird)
+            {
+                if (bird.GetComponent<DropOnDestroyed>() is DropOnDestroyed dropOnDestroyed)
+                {
+                    drops.Add(prefab.name, dropOnDestroyed.m_dropWhenDestroyed.m_drops.Select(d => new
+                    {
+                        item = d.m_item.name,
+                        chance = dropOnDestroyed.m_dropWhenDestroyed.m_dropChance,
+                        min = d.m_stackMin,
+                        max = d.m_stackMax
+                    }).ToList());
+                }
+            }
         }
 
         WriteJson("drops.json", drops);
@@ -941,22 +979,15 @@ public class Plugin : BaseUnityPlugin
             {
                 //ZNetScene.instance.GetPrefab(location.m_prefab.GetHashCode());
                 var refPrefab = location.m_prefab;
-                if (!refPrefab.IsLoaded)
-                {
-                    if (refPrefab.IsLoading)
-                    {
-                        refPrefab.WaitForLoadToComplete();
-                    }
-                    else if (refPrefab.Load() != LoadResult.Succeeded)
-                    {
-                        Logger.LogError($"Failed to load asset {location.m_name}");
-                        continue;
-                    }
-                }
+
+                Logger.LogInfo($"Loading prefab {location.m_name} {location.m_prefabName}");
+                refPrefab.LoadAsync();
+                refPrefab.WaitForLoadToComplete();
+                //Logger.LogInfo($"");
+
                 var prefab = refPrefab.Asset;
                 var name = prefab.name;
                 var log = location.m_biome.HasFlag(Heightmap.Biome.BlackForest);
-                log = false;
 
                 var biomes = new List<string>();
                 foreach (Heightmap.Biome biome in Enum.GetValues(typeof(Heightmap.Biome)))
@@ -993,8 +1024,8 @@ public class Plugin : BaseUnityPlugin
                         items.Add(new
                         {
                             id = component.name,
-                            stackMin = 1,
-                            stackMax = 1
+                            stackMin = pickable.m_amount, // scales?
+                            stackMax = pickable.m_amount // scales?
                         });
                     }
 
@@ -1030,6 +1061,8 @@ public class Plugin : BaseUnityPlugin
                     biome = biomes,
                     items = items
                 });
+
+                refPrefab.Release();
             }
             catch (Exception ex)
             {

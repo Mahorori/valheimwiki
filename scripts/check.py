@@ -1,5 +1,5 @@
 import json
-import os
+import os, sys
 
 # ===== paths =====
 BepInExPath = r"C:\Program Files (x86)\Steam\steamapps\common\Valheim\BepInEx"
@@ -15,11 +15,13 @@ with open(os.path.join(BepInExPath, "locations.json"), "r", encoding="utf-8") as
     items = json.load(f)
     for id, loc in items.items():
         if 'BlackForest' in loc['biome']:
+            print(id)
             for i in loc["items"]:
                 if i['id'] in printed:
                     continue
-                #printed.add(i['id'])
-                #print(i['id'])
+                printed.add(i['id'])
+                print(' ', i['id'])
+sys.exit(0)
 
 printed = set()
 with open(os.path.join(BepInExPath, "vegetations.json"), "r", encoding="utf-8") as f:

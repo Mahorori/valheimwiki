@@ -1055,6 +1055,26 @@ color: #777;
     {self.localize(mob['name'])}
     </a>
     """
+        
+        # xx...
+        veg_visit = set()
+        for veg in self.database.iter_vegetations_dropping(item.id):
+            veg_id = veg['id']
+            if veg_id in veg_visit:
+                continue
+            veg_visit.add(veg_id)
+            drops_body += f"""
+    <a style="
+    display:block;
+    padding:6px 8px;
+    border-radius:6px;
+    color:#eee;
+    text-decoration:none;
+    " onmouseover="this.style.background='#2a2a2a'" onmouseout="this.style.background='transparent'">
+    {self.localize(veg['name'])}
+    </a>
+    """
+
         return self._section("Dropped by", drops_body or "<div style='color:#777'>None</div>")
 
     def render_sold_by(self, item):

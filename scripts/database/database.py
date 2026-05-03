@@ -42,6 +42,10 @@ class ValheimDatabase:
         with open(path, "r", encoding="utf-8") as f:
             self.locations = json.load(f)
 
+        path = self.directory_path / 'vegetations.json'
+        with open(path, "r", encoding="utf-8") as f:
+            self.vegetations = json.load(f)
+
     def _load_spawns(self):
         path = self.directory_path / 'spawnLocations.json'
         with open(path, "r", encoding="utf-8") as f:
@@ -62,7 +66,7 @@ class ValheimDatabase:
         self._load_recipes()
         self._load_drops()
         self._load_mobs()
-        #self._load_locations()
+        self._load_locations()
         self._load_spawns()
         self._load_traders()
 
@@ -155,3 +159,9 @@ class ValheimDatabase:
 
     def get_traders(self):
         return self._traders
+    
+    def iter_vegetations_dropping(self, item_id):
+        for veg in self.vegetations:
+            for drop in veg['drops']:
+                if drop['name'] == item_id:
+                    yield veg

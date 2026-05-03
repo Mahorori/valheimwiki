@@ -586,6 +586,11 @@ public class Plugin : BaseUnityPlugin
         if (comp is DropOnDestroyed dropOnDestroyed) return dropOnDestroyed.m_dropWhenDestroyed;
         if (comp is Pickable pickable) return pickable.m_extraDrops;
         if (comp is Container container) return container.m_defaultItems;
+        if (comp is Destructible destructible)
+        {
+            if (destructible.m_spawnWhenDestroyed)
+                return GetDropTable(destructible.m_spawnWhenDestroyed);
+        }
 
         // do not log those
         if (comp.GetType() == typeof(UnityEngine.MeshFilter)) return null;
@@ -595,6 +600,26 @@ public class Plugin : BaseUnityPlugin
         //Logger.LogInfo($"  GetDropTable {comp.GetType().FullName} returns null.");
 
         return null;
+    }
+    string GetPrefabString(GameObject prefab)
+    {
+        // rock
+        var rock = prefab.GetComponent<MineRock>();
+        if (rock != null) return rock.m_name;
+
+        var rock5 = prefab.GetComponent<MineRock5>();
+        if (rock5 != null) return rock5.m_name;
+
+        var pickable = prefab.GetComponent<Pickable>();
+        if (pickable != null) return pickable.GetHoverName();
+
+        var hoverText = prefab.GetComponent<HoverText>();
+        if (hoverText)
+        {
+            return hoverText.m_text;
+        }
+
+        return prefab.name;
     }
     DropTable GetDropTable(GameObject prefab)
     {
@@ -622,6 +647,13 @@ public class Plugin : BaseUnityPlugin
 
         var lootSpawner = prefab.GetComponent<LootSpawner>();
         if (lootSpawner != null) return lootSpawner.m_items;
+
+        var destructible = prefab.GetComponent<Destructible>();
+        if (destructible != null)
+        {
+            if (destructible.m_spawnWhenDestroyed)
+                return GetDropTable(destructible.m_spawnWhenDestroyed);
+        }
 
         foreach (var comp in prefab.GetComponents<UnityEngine.Component>())
         {
@@ -843,9 +875,10 @@ public class Plugin : BaseUnityPlugin
         WriteJson("drops.json", drops);
 
         // vegetation drops
-        var vegetationDrops = new List<object>();
+        var vegetations = new List<object>();
         foreach (var vegetation in ZoneSystem.instance.m_vegetation)
         {
+            var vegetationDrops = new List<object>();
             var prefab = vegetation.m_prefab;
             var name = prefab.name;
 
@@ -886,12 +919,21 @@ public class Plugin : BaseUnityPlugin
             }
             else
             {
-                //Logger.LogWarning($"{name} does not have DropTable");
+                Logger.LogWarning($"{name} does not have DropTable");
             }
+
+            vegetations.Add(new
+            {
+                id = name,
+                name = GetPrefabString(prefab),
+                biome = biomes,
+                drops = vegetationDrops
+            });
         }
-        WriteJson("vegetationDrops.json", vegetationDrops);
+        WriteJson("vegetations.json", vegetations);
 
         // location drops
+        var locations = new Dictionary<string, object>();
         var locationDrops = new List<object>();
         foreach (var location in ZoneSystem.instance.m_locations)
         {
@@ -914,6 +956,7 @@ public class Plugin : BaseUnityPlugin
                 var prefab = refPrefab.Asset;
                 var name = prefab.name;
                 var log = location.m_biome.HasFlag(Heightmap.Biome.BlackForest);
+                log = false;
 
                 var biomes = new List<string>();
                 foreach (Heightmap.Biome biome in Enum.GetValues(typeof(Heightmap.Biome)))
@@ -980,10 +1023,10 @@ public class Plugin : BaseUnityPlugin
                     }
                 }
 
-                locationDrops.Add(new
+                locations.Add(prefab.name, new
                 {
-                    id = name,
-                    name = name,
+                    id = location.m_prefabName,
+                    name = location.m_name,
                     biome = biomes,
                     items = items
                 });
@@ -993,7 +1036,7 @@ public class Plugin : BaseUnityPlugin
                 Logger.LogError("LOCATION DUMP FAILED: " + ex);
             }
         }
-        WriteJson("locationDrops.json", locationDrops);
+        WriteJson("locations.json", locations);
     }
     private List<List<string>> DoQuoteLineSplit(StringReader reader)
     {

@@ -15,7 +15,7 @@ def main():
     database.load(BepInExPath)
 
     generator = DefaultGenerator(localization, database)
-    generator.generate('out')
+    generator.generate('dist')
 
 if __name__ == "__main__":
     main()

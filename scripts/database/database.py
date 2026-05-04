@@ -14,6 +14,7 @@ class ValheimDatabase:
         self.spawns = dict()
         self._dropped_by = dict()
         self._traders = dict()
+        self._crafting_stations = dict()
 
     def _load_items(self):
         path = self.directory_path / 'items.json'
@@ -56,6 +57,11 @@ class ValheimDatabase:
         with open(path, "r", encoding="utf-8") as f:
             self._traders = json.load(f)
 
+    def _load_crafting_stations(self):
+        path = self.directory_path / 'craftingStations.json'
+        with open(path, "r", encoding="utf-8") as f:
+            self._crafting_stations = json.load(f)
+
     def load(self, directory_path: Path):
         if isinstance(directory_path, str):
             self.directory_path = Path(directory_path)
@@ -69,6 +75,7 @@ class ValheimDatabase:
         self._load_locations()
         self._load_spawns()
         self._load_traders()
+        self._load_crafting_stations()
 
         # ===== reverse index =====
         self._crafted_from = {}
@@ -128,6 +135,9 @@ class ValheimDatabase:
     
     def item_recipe(self, item_id):
         for recipe in self.recipes:
+            if not recipe['enabled']:
+                continue
+
             if recipe.get("result") == item_id:
                 return recipe
         return None
@@ -165,3 +175,6 @@ class ValheimDatabase:
             for drop in veg['drops']:
                 if drop['name'] == item_id:
                     yield veg
+
+    def get_crafting_station(self, id):
+        return self._crafting_stations.get(id, None)

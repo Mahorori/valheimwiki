@@ -813,7 +813,7 @@ color: #777;
         if not station:
             return ""
 
-        station_text = self.localize(station)
+        station_text = self.localize(self.database.get_crafting_station(station)['name'])
         station_icon = self.crafting_station_icon(station, 22)
         level_text = f"Lv {fmt_number(min_level)}" if min_level is not None else ""
 
@@ -847,6 +847,8 @@ color: #777;
         recipe_body = ""
 
         for recipe in self.database.recipes:
+            if not recipe['enabled']:
+                continue
             if recipe["result"] != item_id:
                 continue
 
@@ -1051,18 +1053,8 @@ color: #777;
                 f"{cells}</tr>"
             )
 
-        station = recipe.get("craftingStation", "")
-        station_row = ""
-        if station:
-            station_row = f"""
-    <table class="info-table">
-    <tr><th>Crafting Station</th><td>{self.localize(station)}</td></tr>
-    </table>
-    """
-
         return f"""
     <h3 style="margin:14px 0 6px;font-size:15px;color:#ddd">Recipe</h3>
-    {station_row}
     <table class="info-table">
     <tr><th>{self.localize('$item_quality')}</th><th>Workbench Level</th>{header}</tr>
     {rows}
@@ -1085,7 +1077,7 @@ color: #777;
         
         recipe = self.database.item_recipe(item.id)
         if recipe and 'craftingStation' in recipe:
-            crafting_station = self.localize(recipe.get('craftingStation', 'None'))
+            crafting_station = self.localize(self.database.get_crafting_station(recipe.get('craftingStation', 'None'))['name'])
         else:
             crafting_station = 'None'
         

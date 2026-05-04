@@ -26,6 +26,10 @@ public class Plugin : BaseUnityPlugin
 
     private static String localizationDirectory = Path.Combine(Paths.BepInExRootPath, "localization");
 
+    private Dictionary<string, object> birdList = new Dictionary<string, object>();
+    private Dictionary<string, object> fishList = new Dictionary<string, object>();
+    private Dictionary<string, object> mobList = new Dictionary<string, object>();
+
     void Start()
     {
         StartCoroutine(WaitAndDump());
@@ -75,6 +79,64 @@ public class Plugin : BaseUnityPlugin
         DumpAll();
     }
 
+    void DumpBird(RandomFlyingBird bird)
+    {
+        float health = 1f;
+        if (bird.GetComponent<Destructible>() is Destructible destructible)
+        {
+            health = destructible.m_health;
+        }
+        birdList.Add(bird.name, new
+        {
+            id = bird.name,
+            name = bird.name, // bird has no name?
+            hp = health
+        });
+    }
+
+    void DumpFish(Fish fish)
+    {
+        float health = 1f;
+        if (fish.GetComponent<Destructible>() is Destructible destructible)
+        {
+            health = destructible.m_health;
+        }
+        fishList.Add(fish.name, new
+        {
+            id = fish.name,
+            name = fish.m_name,
+            hp = health
+        });
+    }
+
+    void DumpCharacter(Character c)
+    {
+        Dictionary<string, string> mods = new Dictionary<string, string>();
+        mods.Add("blunt", c.m_damageModifiers.m_blunt.ToString());
+        mods.Add("slash", c.m_damageModifiers.m_slash.ToString());
+        mods.Add("pierce", c.m_damageModifiers.m_pierce.ToString());
+        mods.Add("chop", c.m_damageModifiers.m_chop.ToString());
+        mods.Add("pickaxe", c.m_damageModifiers.m_pickaxe.ToString());
+        mods.Add("fire", c.m_damageModifiers.m_fire.ToString());
+        mods.Add("frost", c.m_damageModifiers.m_frost.ToString());
+        mods.Add("lightning", c.m_damageModifiers.m_lightning.ToString());
+        mods.Add("poison", c.m_damageModifiers.m_poison.ToString());
+        mods.Add("spirit", c.m_damageModifiers.m_spirit.ToString());
+        mobList.Add(c.name, new
+        {
+            id = c.name,
+            name = c.m_name,
+            faction = c.m_faction.ToString(),
+            boss = c.m_boss,
+
+            // health & damage
+            hp = c.m_health,
+            damageModifiers = mods,
+            tameable = c.GetComponent<Tameable>() != null
+
+        });
+    }
+
     void DumpAll()
     {
         try
@@ -83,9 +145,6 @@ public class Plugin : BaseUnityPlugin
 
             DumpItems();
             Logger.LogInfo("Items OK");
-
-            DumpMobs();
-            Logger.LogInfo("Mobs OK");
 
             DumpRecipes();
             Logger.LogInfo("Recipes OK");
@@ -97,6 +156,99 @@ public class Plugin : BaseUnityPlugin
             Logger.LogInfo("SpawnList OK");
 
             DumpLocalize();
+
+            //
+            var craftingStationIconDir = Path.Combine(Paths.BepInExRootPath, "icons/craftingStation");
+            Directory.CreateDirectory(craftingStationIconDir);
+
+            // Dump
+            var craftingStations = new Dictionary<string, object>();
+            foreach (var prefab in ZNetScene.instance.m_prefabs)
+            {
+                if (prefab.GetComponent<RandomFlyingBird>() is RandomFlyingBird bird)
+                {
+                    DumpBird(bird);
+                }
+                else if (prefab.GetComponent<Fish>() is Fish fish)
+                {
+                    DumpFish(fish);
+                }
+                else if (prefab.GetComponent<Character>() is Character c)
+                {
+                    DumpCharacter(c);
+                }
+                else if (prefab.GetComponent<CraftingStation>() is CraftingStation craftingStation)
+                {
+                    SaveIcon(craftingStation.m_icon, Path.Combine(craftingStationIconDir, craftingStation.name + ".png"));
+
+                    craftingStations.Add(craftingStation.name, new
+                    {
+                        id = craftingStation.name,
+                        name = craftingStation.m_name,
+                        discoverRange = craftingStation.m_discoverRange,
+                        rangeBuild = craftingStation.m_rangeBuild,
+                        extraRangePerLevel = craftingStation.m_extraRangePerLevel,
+                        craftRequireRoof = craftingStation.m_craftRequireRoof,
+                        craftRequireFire = craftingStation.m_craftRequireFire,
+                    });
+                }
+                else if (prefab.GetComponent<CookingStation>() is CookingStation cookingStation)
+                {
+                    var piece = prefab.GetComponent<Piece>();
+                    if (piece != null && piece.m_icon != null)
+                    {
+                        // Do we have icon?
+                        SaveIcon(piece.m_icon, Path.Combine(craftingStationIconDir, cookingStation.name + ".png"));
+                    }
+
+                    craftingStations.Add(cookingStation.name, new
+                    {
+                        id = cookingStation.name,
+                        name = cookingStation.m_name
+                    });
+                }
+                else if (prefab.GetComponent<Smelter>() is Smelter smelter)
+                {
+                    if (smelter.m_conversion == null)
+                        continue;
+
+                    var piece = prefab.GetComponent<Piece>();
+                    if (piece != null && piece.m_icon != null)
+                    {
+                        // Do we have icon?
+                        SaveIcon(piece.m_icon, Path.Combine(craftingStationIconDir, smelter.name + ".png"));
+                    }
+
+                    craftingStations.Add(smelter.name, new
+                    {
+                        id = smelter.name,
+                        name = smelter.m_name
+                    });
+                }
+                else if (prefab.GetComponent<Fermenter>() is Fermenter fermenter)
+                {
+                    if (fermenter.m_conversion == null)
+                        continue;
+
+                    var piece = prefab.GetComponent<Piece>();
+                    if (piece != null && piece.m_icon != null)
+                    {
+                        // Do we have icon?
+                        SaveIcon(piece.m_icon, Path.Combine(craftingStationIconDir, fermenter.name + ".png"));
+                    }
+
+                    craftingStations.Add(fermenter.name, new
+                    {
+                        id = fermenter.name,
+                        name = fermenter.m_name
+                    });
+                }
+            }
+
+            WriteJson("birds.json", birdList);
+            WriteJson("fish.json", fishList);
+            WriteJson("mobs.json", mobList);
+            WriteJson("craftingStations.json", craftingStations);
 
             Logger.LogInfo("=== DUMP COMPLETE ===");
         }
@@ -354,7 +506,7 @@ public class Plugin : BaseUnityPlugin
                     if (p == null) continue;
 
                     var requirements = new Dictionary<string, object>();
-                    if (p.m_craftingStation) requirements.Add("craftingStation", p.m_craftingStation.m_name);
+                    if (p.m_craftingStation) requirements.Add("craftingStation", p.m_craftingStation.name);
 
                     var resources = new List<object>();
                     foreach (var r in p.m_resources)
@@ -374,6 +526,7 @@ public class Plugin : BaseUnityPlugin
                     buildPieces.Add(new
                     {
                         // Basic stuffs
+                        id = p.name,
                         name = p.m_name,
                         description = p.m_description,
                         category = p.m_category.ToString(),
@@ -533,73 +686,6 @@ public class Plugin : BaseUnityPlugin
         WriteJson("spawnLocations.json", exportedSpawnList);
     }
 
-    void DumpMobs()
-    {
-        var mobList = new Dictionary<string, object>();
-        foreach (var prefab in ZNetScene.instance.m_prefabs)
-        {
-            if (prefab.GetComponent<RandomFlyingBird>() is RandomFlyingBird bird)
-            {
-                float health = 1f;
-                if (bird.GetComponent<Destructible>() is Destructible destructible)
-                {
-                    health = destructible.m_health;
-                }
-                mobList.Add(prefab.name, new
-                {
-                    id = prefab.name,
-                    name = bird.name,
-                    hp = health
-                });
-            }
-            else if (prefab.GetComponent<Fish>() is Fish fish)
-            {
-                float health = 1f;
-                if (fish.GetComponent<Destructible>() is Destructible destructible)
-                {
-                    health = destructible.m_health;
-                }
-                mobList.Add(prefab.name, new
-                {
-                    id = prefab.name,
-                    name = fish.m_name,
-                    hp = health
-                });
-            }
-            else if (prefab.GetComponent<Character>() is Character c)
-            {
-                var tame = prefab.GetComponent<Tameable>();
-
-                Dictionary<string, string> mods = new Dictionary<string, string>();
-                mods.Add("blunt", c.m_damageModifiers.m_blunt.ToString());
-                mods.Add("slash", c.m_damageModifiers.m_slash.ToString());
-                mods.Add("pierce", c.m_damageModifiers.m_pierce.ToString());
-                mods.Add("chop", c.m_damageModifiers.m_chop.ToString());
-                mods.Add("pickaxe", c.m_damageModifiers.m_pickaxe.ToString());
-                mods.Add("fire", c.m_damageModifiers.m_fire.ToString());
-                mods.Add("frost", c.m_damageModifiers.m_frost.ToString());
-                mods.Add("lightning", c.m_damageModifiers.m_lightning.ToString());
-                mods.Add("poison", c.m_damageModifiers.m_poison.ToString());
-                mods.Add("spirit", c.m_damageModifiers.m_spirit.ToString());
-                mobList.Add(prefab.name, new
-                {
-                    id = prefab.name,
-                    name = c.m_name,
-                    faction = c.m_faction.ToString(),
-                    boss = c.m_boss,
-
-                    // health & damage
-                    hp = c.m_health,
-                    damageModifiers = mods,
-                    tameable = tame != null
-
-                });
-            }
-        }
-
-        WriteJson("mobs.json", mobList);
-    }
-
     DropTable GetDropTable(UnityEngine.Component comp)
     {
         if (comp is MineRock rock) return rock.m_dropItems;
@@ -744,17 +830,19 @@ public class Plugin : BaseUnityPlugin
             {
                 ["result"] = recipe.m_item.name,
                 ["amount"] = recipe.m_amount,
+                ["enabled"] = recipe.m_enabled,
+                ["qualityResultAmountMultiplier"] = recipe.m_qualityResultAmountMultiplier,
+                ["listSortWeight"] = recipe.m_listSortWeight,
                 ["requirements"] = resources
             };
             if (recipe.m_craftingStation)
             {
-                SaveIcon(recipe.m_craftingStation.m_icon, Path.Combine(iconDir, recipe.m_craftingStation.m_name + ".png"));
-                exportData.Add("craftingStation", recipe.m_craftingStation.m_name);
-
-                GameObject craftingStationPrefab = recipe.m_craftingStation.gameObject;
-                exportData.Add("craftingStationId", craftingStationPrefab.name);
+                exportData.Add("craftingStation", recipe.m_craftingStation.name);
             }
-            if (recipe.m_repairStation) exportData.Add("repairStation", recipe.m_repairStation.m_name);
+            if (recipe.m_repairStation)
+            {
+                exportData.Add("repairStation", recipe.m_repairStation.name);
+            }
             if (recipe.m_minStationLevel != 0) exportData.Add("minStationLevel", recipe.m_minStationLevel);
 
             list.Add(exportData);
@@ -763,7 +851,6 @@ public class Plugin : BaseUnityPlugin
         // Trader, Smelter, CookingStation
         // TODO: Incinerator, Charcoal kiln, Windmill, Spinning wheel, Incinerator, furnace?
         // SapExtractor
-        Piece piece;
         foreach (var prefab in ZNetScene.instance.m_prefabs)
         {
             var trader = prefab.GetComponent<Trader>();
@@ -792,13 +879,6 @@ public class Plugin : BaseUnityPlugin
             }
             else if (cookingStation != null)
             {
-                piece = prefab.GetComponent<Piece>();
-                if (piece != null && piece.m_icon != null)
-                {
-                    // Do we have icon?
-                    SaveIcon(piece.m_icon, Path.Combine(iconDir, cookingStation.m_name + ".png"));
-                }
-
                 foreach (var conv in cookingStation.m_conversion)
                 {
                     var resources = new List<object>();
@@ -806,11 +886,12 @@ public class Plugin : BaseUnityPlugin
 
                     list.Add(new
                     {
+                        enabled = true,
                         result = conv.m_to.name,
                         amount = 1,
                         requirements = resources,
                         cookTime = conv.m_cookTime,
-                        craftingStation = cookingStation.m_name
+                        craftingStation = cookingStation.name
                     });
                 }
             }
@@ -818,13 +899,6 @@ public class Plugin : BaseUnityPlugin
             {
                 if (smelter.m_conversion == null)
                     continue;
-
-                piece = prefab.GetComponent<Piece>();
-                if (piece != null && piece.m_icon != null)
-                {
-                    // Do we have icon?
-                    SaveIcon(piece.m_icon, Path.Combine(iconDir, smelter.m_name + ".png"));
-                }
 
                 foreach (var conv in smelter.m_conversion)
                 {
@@ -836,10 +910,11 @@ public class Plugin : BaseUnityPlugin
 
                     list.Add(new
                     {
+                        enabled = true,
                         result = to,
                         amount = 1,
                         requirements = resources,
-                        craftingStation = smelter.m_name
+                        craftingStation = smelter.name
                     });
                 }
             }
@@ -847,13 +922,6 @@ public class Plugin : BaseUnityPlugin
             {
                 if (fermenter.m_conversion == null)
                     continue;
-
-                piece = prefab.GetComponent<Piece>();
-                if (piece != null && piece.m_icon != null)
-                {
-                    // Do we have icon?
-                    SaveIcon(piece.m_icon, Path.Combine(iconDir, fermenter.m_name + ".png"));
-                }
 
                 foreach (var conv in fermenter.m_conversion)
                 {
@@ -865,10 +933,11 @@ public class Plugin : BaseUnityPlugin
 
                     list.Add(new
                     {
+                        enabled = true,
                         result = to,
                         amount = conv.m_producedItems,
                         requirements = resources,
-                        craftingStation = fermenter.m_name
+                        craftingStation = fermenter.name
                     });
                 }
             }
@@ -896,7 +965,7 @@ public class Plugin : BaseUnityPlugin
                         if (log && !container.GetType().FullName.Contains("Unity") && !container.GetType().FullName.Contains("ZNetView") && !container.GetType().FullName.Contains("SimpleMeshCombine")
                             && !container.GetType().FullName.Contains("WearNTear"))
                         {
-                            Logger.LogInfo($"    Room has {container.GetType().FullName}");
+                            //Logger.LogInfo($"    Room has {container.GetType().FullName}");
                         }
                         var serializedRoom = SerializeComponent(container, log);
                         if (serializedRoom != null)
@@ -1214,7 +1283,7 @@ public class Plugin : BaseUnityPlugin
                             {
                                 if (!comp.GetType().FullName.Contains("UnityEngine"))
                                 {
-                                    Logger.LogInfo($"  BlackForest {name} has Component {comp.name} {comp.GetType().FullName}");
+                                    //Logger.LogInfo($"  BlackForest {name} has Component {comp.name} {comp.GetType().FullName}");
                                 }
                             }
                         }

@@ -1,4 +1,4 @@
-import os
+import os, math
 from collections import defaultdict
 
 BIOME_ORDER = [
@@ -32,6 +32,7 @@ WEAPON_TYPES = {
     "OneHandedWeapon",
     "TwoHandedWeapon",
     "TwoHandedWeaponLeft",
+    "Torch",
 }
 
 ARMOR_TYPES = {
@@ -181,6 +182,12 @@ def fmt_number(value):
     if isinstance(value, (int, float)) and float(value).is_integer():
         return str(int(value))
     return str(value)
+
+def pct(v):
+    return f"{v*100:+.0f}%"
+
+def flat(v):
+    return f"{v:+.0f}"
 
 class DefaultGenerator:
 
@@ -474,204 +481,310 @@ color: #777;
             return ""
         description = self.localization.localize(description)
         return self._section("Description", f"<div style='color:#ccc;line-height:1.5'>{description}</div>")
+    
+    def render_damage_modifiers(self, item, mods):
+        dmg_lines = []
 
-    def render_status_effect(self, item):
+        if item.movementModifier:
+            dmg_lines.append(f"{self.localize('$item_movement_modifier')}: <span style='color:orange'>{pct(item.movementModifier)}</span>")
+        if item.homeItemsStaminaModifier:
+            dmg_lines.append(f"{self.localize('$base_item_modifier')}: <span style='color:orange'>{pct(item.homeItemsStaminaModifier)}</span>")
+        if item.heatResistanceModifier:
+            dmg_lines.append(f"{self.localize('$item_heat_modifier')}: <span style='color:orange'>{pct(item.heatResistanceModifier)}</span>")
+        if item.jumpStaminaModifier:
+            dmg_lines.append(f"{self.localize('$se_jumpstamina')}: <span style='color:orange'>{pct(item.jumpStaminaModifier)}</span>")
+        if item.attackStaminaModifier:
+            dmg_lines.append(f"{self.localize('$se_attackstamina')}: <span style='color:orange'>{pct(item.attackStaminaModifier)}</span>")
+        if item.blockStaminaModifier:
+            dmg_lines.append(f"{self.localize('$se_blockstamina')}: <span style='color:orange'>{pct(item.blockStaminaModifier)}</span>")
+        if item.dodgeStaminaModifier:
+            dmg_lines.append(f"{self.localize('$se_dodgestamina')}: <span style='color:orange'>{pct(item.dodgeStaminaModifier)}</span>")
+        if item.swimStaminaModifier:
+            dmg_lines.append(f"{self.localize('$se_swimstamina')}: <span style='color:orange'>{pct(item.swimStaminaModifier)}</span>")
+        if item.sneakStaminaModifier:
+            dmg_lines.append(f"{self.localize('$se_sneakstamina')}: <span style='color:orange'>{pct(item.sneakStaminaModifier)}</span>")
+        if item.runStaminaModifier:
+            dmg_lines.append(f"{self.localize('$se_runstamina')}: <span style='color:orange'>{pct(item.runStaminaModifier)}</span>")
+
+        for mod in mods:
+            modifier = mod['m_modifier']
+            if modifier == 'Resistant':
+                modifier = '$inventory_resistant'
+            elif modifier == 'Weak':
+                modifier = '$inventory_weak'
+            elif modifier == 'Immune':
+                modifier = '$inventory_immune'
+            elif modifier == 'VeryResistant':
+                modifier = '$inventory_veryresistant'
+            elif modifier == 'VeryWeak':
+                modifier = '$inventory_veryweak'
+            elif modifier == 'SlightlyResistant':
+                modifier = '$inventory_slightlyresistant'
+            elif modifier == 'SlightlyWeak':
+                modifier = '$inventory_slightlyweak'
+            else:
+                pass
+
+            modifier_types = {
+                'Blunt': '$inventory_blunt',
+                'Slash': '$inventory_slash',
+                'Pierce': '$inventory_pierce',
+                'Chop': '$inventory_chop',
+                'Pickaxe': '$inventory_pickaxe',
+                'Fire': '$inventory_fire',
+                'Frost': '$inventory_frost',
+                'Lightning': '$inventory_lightning',
+                'Poison': '$inventory_poison',
+                'Spirit': '$inventory_spirit',
+            }
+            modifier_type = modifier_types.get(mod['m_type'], mod['m_type'])
+            dmg_lines.append(f"{self.localize('$inventory_dmgmod')}: <span style='color:orange'>{self.localize(modifier)}</span> VS {self.localize(modifier_type)}")
+
+        if dmg_lines:
+            return f"<div style='margin-bottom:10px'>{'<br>'.join(dmg_lines)}</div>"
+        return ''
+
+    def render_status_effect(self, item, effect):
         html = ""
-        effect = item.fullAdrenalineSE
-        if not effect:
-            effect = item.consumeStatusEffect
-        if not effect:
-            return ""
-
-        def pct(v):
-            return f"{v*100:+.0f}%"
-
-        def flat(v):
-            return f"{v:+.0f}"
+        if not item or not effect or not isinstance(effect, dict):
+            return html
 
         # ===== Duration =====
-        if effect.get("ttl", 0) > 0:
-            if item.maxAdrenaline:
-                html += f'''
-                <div style="color:#aaa;margin-bottom:10px">
-                    Adrenaline: <span style="color:orange">{item.maxAdrenaline:.0f}</span>
-                </div>
-                '''
+        # TODO: move this somewhere else
+        if item.maxAdrenaline:
             html += f'''
             <div style="color:#aaa;margin-bottom:10px">
-                Duration: <span style="color:orange">{effect["ttl"]:.0f}s</span>
+                {self.localize('$item_maxadrenaline')}: <span style="color:orange">{item.maxAdrenaline:.0f}</span>
             </div>
             '''
 
-            # ===== Health =====
-            health_lines = []
-            if effect["healthUpFront"] != 0:
-                health_lines.append(f"Health: <span style='color:orange'>{flat(effect['healthUpFront'])}</span>")
-            if effect["healthOverTime"] != 0:
-                health_lines.append(f"Health (over time): <span style='color:orange'>{flat(effect['healthOverTime'])}</span>")
-            if effect["healthRegenMultiplier"] != 1:
-                health_lines.append(f"Health Regen: <span style='color:orange'>{pct(effect['healthRegenMultiplier']-1)}</span>")
+        # ===== Health =====
+        health_lines = []
+        if effect["healthUpFront"] != 0:
+            health_lines.append(f"{self.localize('$se_health_upfront')}: <span style='color:orange'>{flat(effect['healthUpFront'])}</span>")
+        if effect["healthOverTime"] != 0:
+            health_lines.append(f"{self.localize('$se_healthregen')}: <span style='color:orange'>{flat(effect['healthOverTime'])}</span>")
+        if effect["healthRegenMultiplier"] != 1:
+            health_lines.append(f"{self.localize('$se_healthregen')}: <span style='color:orange'>{pct(effect['healthRegenMultiplier']-1)}</span>")
 
-            if health_lines:
-                html += f"<div style='margin-bottom:10px'>{'<br>'.join(health_lines)}</div>"
+        if health_lines:
+            html += f"<div style='margin-bottom:10px'>{'<br>'.join(health_lines)}</div>"
 
-            # ===== Stamina =====
-            stamina_lines = []
-            if effect["staminaUpFront"] != 0:
-                stamina_lines.append(f"Stamina: <span style='color:orange'>{flat(effect['staminaUpFront'])}</span>")
-            if effect["staminaOverTime"] != 0:
-                stamina_lines.append(f"Stamina (over time): <span style='color:orange'>{flat(effect['staminaOverTime'])}</span>")
-            if effect["staminaRegenMultiplier"] != 1:
-                stamina_lines.append(f"Stamina Regen: <span style='color:orange'>{pct(effect['staminaRegenMultiplier']-1)}</span>")
+        # ===== Stamina =====
+        stamina_lines = []
+        if effect["staminaUpFront"] != 0:
+            stamina_lines.append(f"{self.localize('$se_stamina_upfront')}: <span style='color:orange'>{flat(effect['staminaUpFront'])}</span>")
+        if effect["staminaOverTime"] != 0:
+            stamina_lines.append(f"{self.localize('$se_stamina')}: <span style='color:orange'>{flat(effect['staminaOverTime'])}</span>")
+        if effect["staminaRegenMultiplier"] != 1:
+            stamina_lines.append(f"{self.localize('$se_staminaregen')}: <span style='color:orange'>{pct(effect['staminaRegenMultiplier']-1)}</span>")
 
-            if stamina_lines:
-                html += f"<div style='margin-bottom:10px'>{'<br>'.join(stamina_lines)}</div>"
+        if stamina_lines:
+            html += f"<div style='margin-bottom:10px'>{'<br>'.join(stamina_lines)}</div>"
 
-            # ===== Eitr =====
-            eitr_lines = []
-            if effect["eitrUpFront"] != 0:
-                eitr_lines.append(f"Eitr: <span style='color:orange'>{flat(effect['eitrUpFront'])}</span>")
-            if effect["eitrOverTime"] != 0:
-                eitr_lines.append(f"Eitr (over time): <span style='color:orange'>{flat(effect['eitrOverTime'])}</span>")
-            if effect["eitrRegenMultiplier"] != 1:
-                eitr_lines.append(f"Eitr Regen: <span style='color:orange'>{pct(effect['eitrRegenMultiplier']-1)}</span>")
+        # ===== Eitr =====
+        eitr_lines = []
+        if effect["eitrUpFront"] != 0:
+            eitr_lines.append(f"{self.localize('$se_eitr_upfront')}: <span style='color:orange'>{flat(effect['eitrUpFront'])}</span>")
+        if effect["eitrOverTime"] != 0:
+            eitr_lines.append(f"{self.localize('$se_eitr')}: <span style='color:orange'>{flat(effect['eitrOverTime'])}</span>")
+        if effect["eitrRegenMultiplier"] != 1:
+            eitr_lines.append(f"{self.localize('$se_eitrregen')}: <span style='color:orange'>{pct(effect['eitrRegenMultiplier']-1)}</span>")
 
-            if eitr_lines:
-                html += f"<div style='margin-bottom:10px'>{'<br>'.join(eitr_lines)}</div>"
+        if eitr_lines:
+            html += f"<div style='margin-bottom:10px'>{'<br>'.join(eitr_lines)}</div>"
 
-            # ===== Combat / Defense =====
-            combat_lines = []
-            if effect["addArmor"] != 0:
-                combat_lines.append(f"Armor: <span style='color:orange'>{flat(effect['addArmor'])}</span>")
-            if effect["armorMultiplier"] != 0:
-                combat_lines.append(f"Armor Multiplier: <span style='color:orange'>{pct(effect['armorMultiplier'])}</span>")
-            if effect["staggerModifier"] != 0:
-                combat_lines.append(f"Stagger: <span style='color:orange'>{pct(-effect['staggerModifier'])}</span>")
-            if effect["timedBlockBonus"] != 0:
-                combat_lines.append(f"Parry Bonus: <span style='color:orange'>{pct(effect['timedBlockBonus'])}</span>")
+        # ===== Combat / Defense =====
+        combat_lines = []
+        if effect["addArmor"] != 0:
+            combat_lines.append(f"{self.localize('$item_armor')}: <span style='color:orange'>{flat(effect['addArmor'])}</span>")
+        if effect["armorMultiplier"] != 0:
+            combat_lines.append(f"{self.localize('$item_armor')}: <span style='color:orange'>{pct(effect['armorMultiplier'])}</span>")
+        if effect["staggerModifier"] != 0:
+            combat_lines.append(f"{self.localize('$se_stagger')}: <span style='color:orange'>{pct(-effect['staggerModifier'])}</span>")
+        if effect["timedBlockBonus"] != 0:
+            combat_lines.append(f"{self.localize('$item_parrybonus')}: <span style='color:orange'>{pct(effect['timedBlockBonus'])}</span>")
 
-            if combat_lines:
-                html += f"<div style='margin-bottom:10px'>{'<br>'.join(combat_lines)}</div>"
+        if combat_lines:
+            html += f"<div style='margin-bottom:10px'>{'<br>'.join(combat_lines)}</div>"
 
-            # ===== Movement =====
-            move_lines = []
-            if effect["speedModifier"] != 0:
-                move_lines.append(f"Speed: <span style='color:orange'>{pct(effect['speedModifier'])}</span>")
-            if effect["swimSpeedModifier"] != 0:
-                move_lines.append(f"Swim Speed: <span style='color:orange'>{pct(effect['swimSpeedModifier'])}</span>")
-            if effect["runStaminaDrainModifier"] != 0:
-                move_lines.append(f"Run Stamina Drain: <span style='color:orange'>{pct(effect['runStaminaDrainModifier'])}</span>")
+        # ===== Movement =====
+        move_lines = []
+        if effect["speedModifier"] != 0:
+            move_lines.append(f"{self.localize('$item_movement_modifier')}: <span style='color:orange'>{pct(effect['speedModifier'])}</span>")
+        if effect["swimSpeedModifier"] != 0:
+            move_lines.append(f"{self.localize('$item_swimspeed_modifier')}: <span style='color:orange'>{pct(effect['swimSpeedModifier'])}</span>")
+        if effect["runStaminaDrainModifier"] != 0:
+            move_lines.append(f"{self.localize('$se_runstamina')}: <span style='color:orange'>{pct(effect['runStaminaDrainModifier'])}</span>")
 
-            # jump
-            j = effect["jumpModifier"]
-            if j["y"] not in (0, 1):
-                move_lines.append(f"Jump Height: <span style='color:orange'>{pct(j['y'])}</span>")
-            if max(j["x"], j["z"]) != 0:
-                move_lines.append(f"Jump Distance: <span style='color:orange'>{pct(max(j['x'], j['z']))}</span>")
+        # jump
+        j = effect["jumpModifier"]
+        if j["y"] not in (0, 1):
+            move_lines.append(f"{self.localize('$se_jumpheight')}: <span style='color:orange'>{pct(j['y'])}</span>")
+        if max(j["x"], j["z"]) != 0:
+            move_lines.append(f"{self.localize('$se_jumplength')}: <span style='color:orange'>{pct(max(j['x'], j['z']))}</span>")
 
-            if move_lines:
-                html += f"<div style='margin-bottom:10px'>{'<br>'.join(move_lines)}</div>"
+        if move_lines:
+            html += f"<div style='margin-bottom:10px'>{'<br>'.join(move_lines)}</div>"
 
-            # ===== Stamina Usage =====
-            usage_lines = []
-            if effect["attackStaminaUseModifier"] != 0:
-                usage_lines.append(f"Attack Stamina: <span style='color:orange'>{pct(effect['attackStaminaUseModifier'])}</span>")
-            if effect["blockStaminaUseModifier"] != 0:
-                usage_lines.append(f"Block Stamina: <span style='color:orange'>{pct(effect['blockStaminaUseModifier'])}</span>")
-            if effect["blockStaminaUseFlatValue"] != 0:
-                usage_lines.append(f"Block Stamina (flat): <span style='color:orange'>{flat(effect['blockStaminaUseFlatValue'])}</span>")
-            if effect["dodgeStaminaUseModifier"] != 0:
-                usage_lines.append(f"Dodge Stamina: <span style='color:orange'>{pct(effect['dodgeStaminaUseModifier'])}</span>")
-            if effect["runStaminaUseModifier"] != 0:
-                usage_lines.append(f"Run Stamina: <span style='color:orange'>{pct(effect['runStaminaUseModifier'])}</span>")
-            if effect["jumpStaminaUseModifier"] != 0:
-                usage_lines.append(f"Jump Stamina: <span style='color:orange'>{pct(effect['jumpStaminaUseModifier'])}</span>")
-            if effect["swimStaminaUseModifier"] != 0:
-                usage_lines.append(f"Swim Stamina: <span style='color:orange'>{pct(effect['swimStaminaUseModifier'])}</span>")
-            if effect["sneakStaminaUseModifier"] != 0:
-                usage_lines.append(f"Sneak Stamina: <span style='color:orange'>{pct(effect['sneakStaminaUseModifier'])}</span>")
+        # ===== Stamina Usage =====
+        usage_lines = []
+        if effect["attackStaminaUseModifier"] != 0:
+            usage_lines.append(f"{self.localize('$se_attackstamina')}: <span style='color:orange'>{pct(effect['attackStaminaUseModifier'])}</span>")
+        if effect["blockStaminaUseModifier"] != 0:
+            usage_lines.append(f"{self.localize('$se_blockstamina')}: <span style='color:orange'>{pct(effect['blockStaminaUseModifier'])}</span>")
+        if effect["blockStaminaUseFlatValue"] != 0:
+            usage_lines.append(f"{self.localize('$se_blockstamina')} (flat): <span style='color:orange'>{flat(effect['blockStaminaUseFlatValue'])}</span>")
+        if effect["dodgeStaminaUseModifier"] != 0:
+            usage_lines.append(f"{self.localize('$se_dodgestamina')}: <span style='color:orange'>{pct(effect['dodgeStaminaUseModifier'])}</span>")
+        if effect["runStaminaUseModifier"] != 0:
+            usage_lines.append(f"{self.localize('$se_runstamina')}: <span style='color:orange'>{pct(effect['runStaminaUseModifier'])}</span>")
+        if effect["jumpStaminaUseModifier"] != 0:
+            usage_lines.append(f"{self.localize('$se_jumpstamina')}: <span style='color:orange'>{pct(effect['jumpStaminaUseModifier'])}</span>")
+        if effect["swimStaminaUseModifier"] != 0:
+            usage_lines.append(f"{self.localize('$se_swimstamina')}: <span style='color:orange'>{pct(effect['swimStaminaUseModifier'])}</span>")
+        if effect["sneakStaminaUseModifier"] != 0:
+            usage_lines.append(f"{self.localize('$se_sneakstamina')}: <span style='color:orange'>{pct(effect['sneakStaminaUseModifier'])}</span>")
 
-            if usage_lines:
-                html += f"<div style='margin-bottom:10px'>{'<br>'.join(usage_lines)}</div>"
+        if usage_lines:
+            html += f"<div style='margin-bottom:10px'>{'<br>'.join(usage_lines)}</div>"
 
-            # ===== Utility =====
-            util_lines = []
-            if effect["noiseModifier"] != 0:
-                util_lines.append(f"Noise: <span style='color:orange'>{pct(effect['noiseModifier'])}</span>")
-            if effect["stealthModifier"] != 0:
-                util_lines.append(f"Stealth: <span style='color:orange'>{pct(effect['stealthModifier'])}</span>")
-            if effect["fallDamageModifier"] != 0:
-                util_lines.append(f"Fall Damage: <span style='color:orange'>{pct(effect['fallDamageModifier'])}</span>")
-            if effect["maxMaxFallSpeed"] != 0:
-                util_lines.append(f"Max Fall Speed: <span style='color:orange'>{flat(effect['maxMaxFallSpeed'])}</span>")
-            if effect["addMaxCarryWeight"] != 0:
-                util_lines.append(f"Carry Weight: <span style='color:orange'>{flat(effect['addMaxCarryWeight'])}</span>")
+        # ===== Utility =====
+        util_lines = []
+        if effect["noiseModifier"] != 0:
+            util_lines.append(f"{self.localize('$se_noisemod')}: <span style='color:orange'>{pct(effect['noiseModifier'])}</span>")
+        if effect["stealthModifier"] != 0:
+            util_lines.append(f"{self.localize('$se_sneakmod')}: <span style='color:orange'>{pct(effect['stealthModifier'])}</span>")
+        if effect["fallDamageModifier"] != 0:
+            util_lines.append(f"{self.localize('$item_falldamage')}: <span style='color:orange'>{pct(effect['fallDamageModifier'])}</span>")
+        if effect["maxMaxFallSpeed"] != 0:
+            util_lines.append(f"{self.localize('$item_limitfallspeed')}: <span style='color:orange'>{flat(effect['maxMaxFallSpeed'])}</span>")
+        if effect["addMaxCarryWeight"] != 0:
+            util_lines.append(f"{self.localize('$se_max_carryweight')}: <span style='color:orange'>{flat(effect['addMaxCarryWeight'])}</span>")
 
-            if util_lines:
-                html += f"<div style='margin-bottom:10px'>{'<br>'.join(util_lines)}</div>"
+        if util_lines:
+            html += f"<div style='margin-bottom:10px'>{'<br>'.join(util_lines)}</div>"
 
-            # ===== Adrenaline =====
-            adr_lines = []
-            if effect["adrenalineUpFront"] != 0:
-                adr_lines.append(f"Adrenaline: <span style='color:orange'>{flat(effect['adrenalineUpFront'])}</span>")
-            if effect["adrenalineModifier"] != 0:
-                adr_lines.append(f"Adrenaline Gain: <span style='color:orange'>{pct(effect['adrenalineModifier'])}</span>")
+        # ===== Adrenaline =====
+        adr_lines = []
+        if effect["adrenalineUpFront"] != 0:
+            adr_lines.append(f"{self.localize('$se_adrenaline_upfront')}: <span style='color:orange'>{flat(effect['adrenalineUpFront'])}</span>")
+        if effect["adrenalineModifier"] != 0:
+            adr_lines.append(f"{self.localize('$se_adrenaline')}: <span style='color:orange'>{pct(effect['adrenalineModifier'])}</span>")
 
-            if adr_lines:
-                html += f"<div style='margin-bottom:10px'>{'<br>'.join(adr_lines)}</div>"
+        if adr_lines:
+            html += f"<div style='margin-bottom:10px'>{'<br>'.join(adr_lines)}</div>"
 
-            # ===== Skills =====
-            if effect["skillLevel"] and effect["skillLevelModifier"] != 0:
-                html += f"""
-                <div style="margin-bottom:10px">
-                    <div>{effect["skillLevel"]} Skill: <span style="color:orange">{flat(effect["skillLevelModifier"])}</span></div>
-                </div>
-                """
-
-            # ===== Damage Modifiers(Take) =====
-            dmg_lines = []
-            for mod in effect["mods"]:
-                dmg_lines.append(f"{mod['type']}: <span style='color:orange'>{mod['modifier']}</span>")
-
-            # ===== Damage Modifiers =====
-            for k, v in effect["percentigeDamageModifiers"].items():
-                if v != 0:
-                    name = k.replace("m_", "").capitalize()
-                    dmg_lines.append(f"{name}: <span style='color:orange'>{pct(v)}</span>")
-
-            if dmg_lines:
-                html += f"<div style='margin-bottom:10px'>{'<br>'.join(dmg_lines)}</div>"
-
-            return self._section('Status Effect', f"""
-            <div style='color:#ccc;line-height:1.5'>
-                {html if html else "<div style='color:#777'>No effects</div>"}
+        # ===== Skills =====
+        if effect["skillLevel"] and effect["skillLevelModifier"] != 0:
+            skill_name = self.localize('$skill_' + effect["skillLevel"].lower())
+            html += f"""
+            <div style="margin-bottom:10px">
+                <div>{skill_name}: <span style="color:orange">{flat(effect["skillLevelModifier"])}</span></div>
             </div>
-            """)
+            """
+        if effect["skillLevel2"] and effect["skillLevelModifier2"] != 0:
+            skill_name = self.localize('$skill_' + effect["skillLevel2"].lower())
+            html += f"""
+            <div style="margin-bottom:10px">
+                <div>{skill_name}: <span style="color:orange">{flat(effect["skillLevelModifier2"])}</span></div>
+            </div>
+            """
+
+        # ===== Damage Modifiers(Take) =====
+        dmg_lines = []
+        for mod in effect["mods"]:
+            modifier = mod['m_modifier']
+            if modifier == 'Resistant':
+                modifier = '$inventory_resistant'
+            elif modifier == 'Weak':
+                modifier = '$inventory_weak'
+            elif modifier == 'Immune':
+                modifier = '$inventory_immune'
+            elif modifier == 'VeryResistant':
+                modifier = '$inventory_veryresistant'
+            elif modifier == 'VeryWeak':
+                modifier = '$inventory_veryweak'
+            elif modifier == 'SlightlyResistant':
+                modifier = '$inventory_slightlyresistant'
+            elif modifier == 'SlightlyWeak':
+                modifier = '$inventory_slightlyweak'
+            else:
+                pass
+
+            modifier_types = {
+                'Blunt': '$inventory_blunt',
+                'Slash': '$inventory_slash',
+                'Pierce': '$inventory_pierce',
+                'Chop': '$inventory_chop',
+                'Pickaxe': '$inventory_pickaxe',
+                'Fire': '$inventory_fire',
+                'Frost': '$inventory_frost',
+                'Lightning': '$inventory_lightning',
+                'Poison': '$inventory_poison',
+                'Spirit': '$inventory_spirit',
+            }
+            modifier_type = modifier_types.get(mod['m_type'], mod['m_type'])
+            dmg_lines.append(f"{self.localize('$inventory_dmgmod')}: <span style='color:orange'>{self.localize(modifier)}</span> VS {self.localize(modifier_type)}")
+
+        # ===== Damage Modifiers =====
+        for k, v in effect["percentigeDamageModifiers"].items():
+            if v != 0:
+                name = '$inventory_' + k.replace("m_", "")
+                dmg_lines.append(f"{self.localize(name)}: <span style='color:orange'>{pct(v)}</span>")
+
+        if dmg_lines:
+            html += f"<div style='margin-bottom:10px'>{'<br>'.join(dmg_lines)}</div>"
+
+        if effect['ttl'] > 0.0:
+            html += f'''
+            <div style="color:#aaa;margin-bottom:10px">
+                {self.localize('$se_ttl')}: <span style="color:orange">{effect["ttl"]:.0f}s</span>
+            </div>
+            '''
+
+        return self._section('Status Effect', f"""
+        <div style='color:#ccc;line-height:1.5'>
+            {html if html else "<div style='color:#777'>No effects</div>"}
+        </div>
+        """)
 
     def render_food_details(self, item):
-        food_keys = [
-            ("Health", item.food),
-            ("Stamina", item.foodStamina),
-            ("Eitr", item.foodEitr),
-            ("Duration", item.foodBurnTime),
-            ("Regen", item.foodRegen),
-        ]
+        # item.m_shared.m_food > 0f || item.m_shared.m_foodStamina > 0f || item.m_shared.m_foodEitr > 0f
+        if item.food <= 0 and item.foodStamina <= 0 and item.foodEitr <= 0:
+            return ''
+        
+        def get_duration_string(time: float) -> str:
+            num = math.ceil(time)
+            num2 = int(num / 60)
+            num3 = max(0, num - num2 * 60)
 
-        rows = ""
-        for label, value in food_keys:
-            if value:
-                rows += f"<tr><th>{label}</th><td>{fmt_number(value)}</td></tr>"
+            if num2 > 0 and num3 > 0:
+                return f"{num2}m {num3}s"
+            if num2 > 0:
+                return f"{num2}m "
+            return f"{num3}s"
 
-        if not rows:
-            return ""
-
-        #if "isDrink" in item:
-        #    rows += f"<tr><th>Drink</th><td>{'Yes' if item.get('isDrink') else 'No'}</td></tr>"
+        rows = []
+        if item.food > 0.0:
+            rows.append(f"{self.localize('$item_food_health')}: <span style='color:#ff8080ff'>{fmt_number(item.food)}</span>")
+        if item.foodStamina > 0.0:
+            rows.append(f"{self.localize('$item_food_stamina')}: <span style='color:#ffff80ff'>{fmt_number(item.foodStamina)}</span>")
+        if item.foodEitr > 0.0:
+            rows.append(f"{self.localize('$item_food_eitr')}: <span style='color:#9090ffff'>{fmt_number(item.foodEitr)}</span>")
+        rows.append(f"{self.localize('$item_food_duration')}: <span style='color:orange'>{get_duration_string(item.foodBurnTime)}</span>")
+        if item.foodRegen > 0.0:
+            rows.append(f"{self.localize('$item_food_regen')}: <span style='color:orange'>{fmt_number(item.foodRegen)} hp/tick</span>")
+        
+        if rows:
+            html = f"<div style='margin-bottom:10px'>{'<br>'.join(rows)}</div>"
+        else:
+            html = ''
 
         return self._section("Food", f"""
-    <table class="info-table">
-    {rows}
-    </table>
+        <div style='color:#ccc;line-height:1.5'>
+            {html if html else "<div style='color:#777'>No effects</div>"}
+        </div>
     """)
 
     def crafting_station_icon_path(self, station):
@@ -875,7 +988,7 @@ color: #777;
     </table>
     """
         
-        if item_type in ('Shield'):
+        if item_type in ('Shield') or item_type in WEAPON_TYPES:
             armor = item.blockPower
             armor_per_level = item.blockPowerPerLevel
             deflectionForce = item.deflectionForce
@@ -896,8 +1009,8 @@ color: #777;
     <tr><th>{self.localize('$item_quality')}</th>
     <th>{self.localize('$item_durability')}</th>
     <th>Workbench Level</th>
-    <th>{self.localize('$item_blockpower')}</th>
-    <th>{self.localize('$item_deflection')}</th>
+    <th>{self.localize('$item_blockarmor')}</th>
+    <th>{self.localize('$item_blockforce')}</th>
     </tr>
     {rows}
     </table>
@@ -971,8 +1084,8 @@ color: #777;
         
         if item.maxDurability:
             durability = f"""
-    <tr><th>{self.localize('$item_durability')}</th><td>{fmt_number(item.maxDurability)}</td></tr>
-    <tr><th>{self.localize('$item_durability')} Per Level</th><td>{fmt_number(item.durabilityPerLevel)}</td></tr>
+    {f"""<tr><th>{self.localize('$item_durability')}</th><td>{fmt_number(item.maxDurability)}</td></tr>""" if True else ''}
+    {f"""<tr><th>{self.localize('$item_durability')} Per Level</th><td>{fmt_number(item.durabilityPerLevel)}</td></tr>""" if False else ''}
     """
         else:
             durability = ""
@@ -987,14 +1100,18 @@ color: #777;
         else:
             modifiers = ""
         
+        # TODO: move teleportable
         details = f"""
     <table class="info-table">
     <tr><th>Internal ID</th><td>{item.id}</td></tr>
     <tr><th>Type</th><td>{item_type}</td></tr>
     {weapon_type}
+    {f"""<tr><th>Hand</th><td>{self.localize('$item_onehanded')}</td>""" if item.type in ('OneHandedWeapon', 'Shield', 'Torch') else ''}
+    {f"""<tr><th>Hand</th><td>{self.localize('$item_twohanded')}</td>""" if item.type in ('Bow', 'TwoHandedWeapon', 'Tool', 'TwoHandedWeaponLeft') else ''}
     <tr><th>Source</th><td>{crafting_station}</td></tr>
     {durability}
     {modifiers}
+    {f"""<tr><th>Teleportable</th><td>{self.localize('$item_noteleport')}</td>""" if not item.teleportable else ''}
     </table>
     """
 
@@ -1007,17 +1124,28 @@ color: #777;
                         <tr><th>{self.localize('$item_armor')} Per Level</th><td>{fmt_number(item.armorPerLevel)}</td></tr>
                         </table>
                         """
-        elif item_type == 'Shield':
+        if item_type in WEAPON_TYPES or item_type in ('Shield'):
+            if item.timedBlockBonus > 1.0:
+                parry_bonus = f"""<tr><th>{self.localize('$item_parrybonus')}</th><td>{fmt_number(item.timedBlockBonus)}x</td></tr>"""
+            else:
+                parry_bonus = ''
+            if item.perfectBlockAdrenaline > 0.0:
+                parryadrenaline = f"""<tr><th>{self.localize('$item_parryadrenaline')}</th><td>{fmt_number(item.perfectBlockAdrenaline)}</td></tr>"""
+            else:
+                parryadrenaline = ''
             details += f"""
             <h3 style="margin:14px 0 6px;font-size:15px;color:#ddd">Shield</h3>
                         <table class="info-table">
-                        <tr><th>{self.localize('$item_blockpower')}</th><td>{fmt_number(item.blockPower)}</td></tr>
-                        <tr><th>{self.localize('$item_blockpower')} per level</th><td>{fmt_number(item.blockPowerPerLevel)}</td></tr>
-                        <tr><th>{self.localize('$item_deflection')}</th><td>{fmt_number(item.deflectionForce)}</td></tr>
-                        <tr><th>{self.localize('$item_deflection')} per level</th><td>{fmt_number(item.deflectionForcePerLevel)}</td></tr>
-                        <tr><th>{self.localize('$item_parrybonus')}</th><td>{fmt_number(item.timedBlockBonus)}x</td></tr>
+                        <tr><th>{self.localize('$item_blockarmor')}</th><td>{fmt_number(item.blockPower)}</td></tr>
+                        <tr><th>{self.localize('$item_blockarmor')} per level</th><td>{fmt_number(item.blockPowerPerLevel)}</td></tr>
+                        <tr><th>{self.localize('$item_blockforce')}</th><td>{fmt_number(item.deflectionForce)}</td></tr>
+                        <tr><th>{self.localize('$item_blockforce')} per level</th><td>{fmt_number(item.deflectionForcePerLevel)}</td></tr>
+                        {parry_bonus}
+                        {parryadrenaline}
                         </table>
                         """
+        # block
+        details += self.render_damage_modifiers(item, item.damageModifiers)
 
         details += self.render_upgrade_table(item)
         details += self.render_recipe_upgrade_table(item)
@@ -1133,7 +1261,13 @@ color: #777;
     """
 
         html += self.render_item_description(item)
-        html += self.render_status_effect(item)
+
+        # GetStatusEffectTooltip
+        html += self.render_status_effect(item, item.attackStatusEffect)
+        html += self.render_status_effect(item, item.consumeStatusEffect)
+        html += self.render_status_effect(item, item.equipStatusEffect)
+        html += self.render_status_effect(item, item.fullAdrenalineSE)
+
         html += self.render_food_details(item)
         html += self.render_recipes(item)
         html += self.render_equipment_details(item)

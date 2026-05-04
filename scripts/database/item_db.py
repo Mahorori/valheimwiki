@@ -20,6 +20,8 @@ class ItemDrop:
     weight: float = 1.0
     teleportable: bool = True
     buildPieces: list = None
+    setStatusEffect: dict = field(default_factory=dict)
+    equipStatusEffect: dict = field(default_factory=dict)
 
     eitrRegenModifier: float = 0.0
     movementModifier: float = 0.0
@@ -44,22 +46,28 @@ class ItemDrop:
 
     armor: float = 10.0
     armorPerLevel: float = 1.0
-    blockPower: float = 10.0
+    damageModifiers: list = field(default_factory=list)
+
+    blockPower: float = 0.0
     blockPowerPerLevel: float = None
     deflectionForce: float = None
     deflectionForcePerLevel: float = 0.0
-    timedBlockBonus: float = 1.5
+    timedBlockBonus: float = 0.0
     perfectBlockStaminaRegen: float = None
 
     maxAdrenaline: float = None
     blockAdrenaline: float = None
-    perfectBlockAdrenaline: float = None
+    perfectBlockAdrenaline: float = 0.0
     fullAdrenalineSE: dict[str, float] = field(default_factory=dict)
 
+    # Weapon
     skillType: str = '' # default Swords btw
     toolTier: int = None
     damages: dict[str, float] = field(default_factory=dict)
     damagesPerLevel: dict[str, float] = field(default_factory=dict)
+    attackStatusEffect: dict = field(default_factory=dict)
+    attackStatusEffectChance: float = 1.0
+
     ammoType: str = ''
     maxDurability: float = 0.0 # ...
     durabilityPerLevel: float = 0.0 # ...

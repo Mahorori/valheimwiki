@@ -32,3 +32,4 @@ python3 ./scripts/main.py
 - comfort
 - use .css...
 - rename to valheimdb I think
+- armor resistance

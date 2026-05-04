@@ -21,6 +21,15 @@ with open(os.path.join(BepInExPath, "locations.json"), "r", encoding="utf-8") as
                     continue
                 printed.add(i['id'])
                 print(' ', i['id'])
+            for i in loc["spawners"]:
+                if i['id'] in printed:
+                    continue
+                printed.add(i['id'])
+                print(' ', i['id'], i['mob_id'])
+            if loc['rooms']:
+                for i in loc["rooms"]:
+                    if i:
+                        print(' ', i)
 sys.exit(0)
 
 printed = set()

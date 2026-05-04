@@ -12,6 +12,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using static DungeonDB;
+using static DungeonGenerator;
 
 namespace MyFirstPlugin;
 
@@ -176,14 +178,16 @@ public class Plugin : BaseUnityPlugin
 
     public object DumpStatusEffect(StatusEffect SE)
     {
+        if (SE == null) return null;
+
         if (SE is SE_Burning burning)
         {
 
         }
-        else if (SE is SE_Cozy cozy)
+        /*else if (SE is SE_Cozy cozy)
         {
 
-        }
+        }*/
         else if (SE is SE_Demister demister)
         {
 
@@ -208,14 +212,14 @@ public class Plugin : BaseUnityPlugin
         {
 
         }
-        else if (SE is SE_Puke puke)
+        /*else if (SE is SE_Puke puke)
         {
 
-        }
-        else if (SE is SE_Rested rested)
+        }*/
+        /*else if (SE is SE_Rested rested)
         {
 
-        }
+        }*/
         else if (SE is SE_Shield shield)
         {
 
@@ -230,19 +234,6 @@ public class Plugin : BaseUnityPlugin
         }
         else if (SE is SE_Stats stats)
         {
-            var mods = new List<object>();
-            if (stats.m_mods.Count > 0)
-            {
-                foreach (HitData.DamageModPair modPair in stats.m_mods)
-                {
-                    mods.Add(new
-                    {
-                        type = modPair.m_type.ToString(),
-                        modifier = modPair.m_modifier.ToString()
-                    });
-                }
-            }
-
             return new
             {
                 runStaminaDrainModifier = stats.m_runStaminaDrainModifier,
@@ -289,19 +280,19 @@ public class Plugin : BaseUnityPlugin
                 skillLevel2 = stats.m_skillLevel2.ToString(),
                 skillLevelModifier2 = stats.m_skillLevelModifier2,
 
-                mods = mods,
+                mods = stats.m_mods,
 
                 percentigeDamageModifiers = stats.m_percentigeDamageModifiers,
 
                 ttl = stats.m_ttl
             };
         }
-        else if (SE is SE_Wet wet)
+        /*else if (SE is SE_Wet wet)
         {
 
-        }
+        }*/
 
-        return null;
+        return SE.GetType().FullName;
     }
 
     // ===== アイテム =====
@@ -350,6 +341,8 @@ public class Plugin : BaseUnityPlugin
                 ["maxQuality"] = data.m_maxQuality,
                 ["weight"] = data.m_weight,
                 ["teleportable"] = data.m_teleportable, // maybe useful
+                ["setStatusEffect"] = DumpStatusEffect(data.m_setStatusEffect),
+                ["equipStatusEffect"] = DumpStatusEffect(data.m_equipStatusEffect),
             };
 
             var buildPieces = new List<object>();
@@ -422,6 +415,7 @@ public class Plugin : BaseUnityPlugin
             // armor
             if (data.m_armor != 0) exportData.Add("armor", data.m_armor);
             if (data.m_armorPerLevel != 0) exportData.Add("armorPerLevel", data.m_armorPerLevel);
+            if (data.m_damageModifiers != null) exportData.Add("damageModifiers", data.m_damageModifiers);
             // shield
             if (data.m_blockPower != 0) exportData.Add("blockPower", data.m_blockPower);
             if (data.m_blockPowerPerLevel != 0) exportData.Add("blockPowerPerLevel", data.m_blockPowerPerLevel);
@@ -442,6 +436,8 @@ public class Plugin : BaseUnityPlugin
             {
                 exportData.Add("skillType", data.m_skillType.ToString());
                 exportData.Add("toolTier", data.m_toolTier);
+                exportData.Add("attackStatusEffect", DumpStatusEffect(data.m_attackStatusEffect));
+                exportData.Add("attackStatusEffectChance", data.m_attackStatusEffectChance);
             }
 
             Dictionary<string, float> damages = new();
@@ -511,12 +507,6 @@ public class Plugin : BaseUnityPlugin
                         if (spawnData.m_biome.HasFlag(biome)) biomes.Add(biome.ToString());
                     }
 
-                    // check prefab
-                    foreach (var comp in spawnData.m_prefab.GetComponents<UnityEngine.Component>())
-                    {
-                        Logger.LogInfo($"{spawnData.m_prefab.name} {comp.GetType().FullName}");
-                    }
-
                     exportedSpawnList.Add(new
                     {
                         name = spawnData.m_prefab.name,
@@ -555,14 +545,24 @@ public class Plugin : BaseUnityPlugin
                 {
                     health = destructible.m_health;
                 }
-                if (bird.GetComponent<DropOnDestroyed>() is DropOnDestroyed dropOnDestroyed)
-                {
-                }
-
                 mobList.Add(prefab.name, new
                 {
                     id = prefab.name,
                     name = bird.name,
+                    hp = health
+                });
+            }
+            else if (prefab.GetComponent<Fish>() is Fish fish)
+            {
+                float health = 1f;
+                if (fish.GetComponent<Destructible>() is Destructible destructible)
+                {
+                    health = destructible.m_health;
+                }
+                mobList.Add(prefab.name, new
+                {
+                    id = prefab.name,
+                    name = fish.m_name,
                     hp = health
                 });
             }
@@ -878,6 +878,130 @@ public class Plugin : BaseUnityPlugin
         WriteJson("traders.json", traderList);
     }
 
+    object SerializeComponent(UnityEngine.Component component, bool log = false)
+    {
+        if (component is DungeonGenerator dg)
+        {
+            var rooms = new List<object>();
+            foreach (DungeonDB.RoomData roomData in DungeonDB.GetRooms())
+            {
+                if ((roomData.m_theme & dg.m_themes) != 0 && roomData.m_enabled)
+                {
+                    roomData.m_prefab.Load();
+                    Room room = roomData.m_prefab.Asset.GetComponent<Room>();
+
+                    UnityEngine.Component[] containers = room.GetComponentsInChildren<UnityEngine.Component>(true);
+                    foreach (var container in containers)
+                    {
+                        if (log && !container.GetType().FullName.Contains("Unity") && !container.GetType().FullName.Contains("ZNetView") && !container.GetType().FullName.Contains("SimpleMeshCombine")
+                            && !container.GetType().FullName.Contains("WearNTear"))
+                        {
+                            Logger.LogInfo($"    Room has {container.GetType().FullName}");
+                        }
+                        var serializedRoom = SerializeComponent(container, log);
+                        if (serializedRoom != null)
+                            rooms.Add(serializedRoom);
+                    }
+                    roomData.m_prefab.Release();
+                }
+            }
+            return rooms;
+        }
+        else if (component is CreatureSpawner spawner)
+        {
+            return new
+            {
+                id = spawner.name,
+                mob_id = spawner.m_creaturePrefab.name,
+                maxLevel = spawner.m_maxLevel,
+                minLevel = spawner.m_minLevel,
+                levelupChance = spawner.m_levelupChance,
+                spawnAtNight = spawner.m_spawnAtNight,
+                spawnAtDay = spawner.m_spawnAtDay,
+                spawnInterval = spawner.m_spawnInterval,
+                requiredGlobalKey = spawner.m_requiredGlobalKey,
+                blockingGlobalKey = spawner.m_blockingGlobalKey,
+            };
+        }
+        else if (component is Location location)
+        {
+            if (location.m_generator)
+            {
+                var rooms = new List<object>();
+                foreach (DungeonDB.RoomData roomData in DungeonDB.GetRooms())
+                {
+                    if ((roomData.m_theme & location.m_generator.m_themes) != 0 && roomData.m_enabled)
+                    {
+                        roomData.m_prefab.Load();
+                        Room room = roomData.m_prefab.Asset.GetComponent<Room>();
+
+                        UnityEngine.Component[] containers = room.GetComponentsInChildren<UnityEngine.Component>(true);
+                        foreach (var container in containers)
+                        {
+                            if (log && !container.GetType().FullName.Contains("Unity") && !container.GetType().FullName.Contains("ZNetView") && !container.GetType().FullName.Contains("SimpleMeshCombine")
+                                && !container.GetType().FullName.Contains("WearNTear"))
+                            {
+                                Logger.LogInfo($"    Room has {container.GetType().FullName}");
+                            }
+                            var serializedRoom = SerializeComponent(container, log);
+                            if (serializedRoom != null)
+                                rooms.Add(serializedRoom);
+                        }
+                        roomData.m_prefab.Release();
+                    }
+                }
+                return rooms;
+            }
+        }
+        else if (component is Piece piece)
+        {
+        }
+        else if (component is Pickable pickable)
+        {
+            // TODO: add item + x
+            return new
+            {
+                id = component.name,
+                stackMin = pickable.m_amount, // scales?
+                stackMax = pickable.m_amount // scales?
+            };
+        }
+        else if (component is RandomSpawn randomSpawn)
+        {
+        }
+        else if (component is Destructible destructible)
+        {
+            if (destructible.m_spawnWhenDestroyed)
+            {
+                var l = new List<object>();
+                foreach (var childComponent in destructible.m_spawnWhenDestroyed.GetComponents<UnityEngine.Component>())
+                {
+                    l.Add(SerializeComponent(childComponent));
+                }
+                return l;
+            }
+        }
+        else
+        {
+            var items = new List<object>();
+            var dropTable = GetDropTable(component);
+            if (dropTable != null)
+            {
+                foreach (var drop in dropTable.m_drops)
+                {
+                    items.Add(new
+                    {
+                        id = drop.m_item.name,
+                        stackMin = drop.m_stackMin,
+                        stackMax = drop.m_stackMax
+                    });
+                }
+                return items;
+            }
+        }
+        return null;
+    }
+
     // ===== ドロップ =====
     void DumpDrops()
     {
@@ -906,6 +1030,33 @@ public class Plugin : BaseUnityPlugin
                         min = d.m_stackMin,
                         max = d.m_stackMax
                     }).ToList());
+                }
+            }
+            else if (prefab.GetComponent<Fish>() is Fish fish)
+            {
+                var fishDrops = new List<object>();
+                if (fish.GetComponent<ItemDrop>() is ItemDrop d)
+                {
+                    fishDrops.Add(new
+                    {
+                        item = d.name,
+                        chance = 1f,
+                        min = 1, // maybe not correct
+                        max = 1 // maybe not correct
+                    });
+                }
+                if (fish.m_extraDrops != null)
+                {
+                    foreach (var extraDrop in fish.m_extraDrops.m_drops)
+                    {
+                        fishDrops.Add(new
+                        {
+                            item = extraDrop.m_item.name,
+                            chance = fish.m_extraDrops.m_dropChance,
+                            min = extraDrop.m_stackMin,
+                            max = extraDrop.m_stackMax
+                        });
+                    }
                 }
             }
         }
@@ -973,52 +1124,65 @@ public class Plugin : BaseUnityPlugin
         // location drops
         var locations = new Dictionary<string, object>();
         var locationDrops = new List<object>();
-        foreach (var location in ZoneSystem.instance.m_locations)
+        foreach (var zoneLocation in ZoneSystem.instance.m_locations)
         {
             try
             {
                 //ZNetScene.instance.GetPrefab(location.m_prefab.GetHashCode());
-                var refPrefab = location.m_prefab;
+                var refPrefab = zoneLocation.m_prefab;
 
-                Logger.LogInfo($"Loading prefab {location.m_name} {location.m_prefabName}");
+                //Logger.LogInfo($"Loading prefab {location.m_name} {location.m_prefabName}");
                 refPrefab.LoadAsync();
                 refPrefab.WaitForLoadToComplete();
                 //Logger.LogInfo($"");
 
                 var prefab = refPrefab.Asset;
                 var name = prefab.name;
-                var log = location.m_biome.HasFlag(Heightmap.Biome.BlackForest);
+                var log = zoneLocation.m_biome.HasFlag(Heightmap.Biome.BlackForest);
 
                 var biomes = new List<string>();
                 foreach (Heightmap.Biome biome in Enum.GetValues(typeof(Heightmap.Biome)))
                 {
                     if (biome == Heightmap.Biome.None) continue;
-                    if (location.m_biome.HasFlag(biome)) biomes.Add(biome.ToString());
+                    if (zoneLocation.m_biome.HasFlag(biome)) biomes.Add(biome.ToString());
                 }
 
                 var items = new List<object>();
+                var spawners = new List<object>();
+                object rooms = null;
                 foreach (var comp in prefab.GetComponentsInChildren<UnityEngine.Component>(true))
                 {
-                    if (log)
+                    if (comp is CreatureSpawner spawner)
                     {
-                        Logger.LogInfo($"  BlackForest {name} has Component {comp.name} {comp.GetType().FullName}");
+                        spawners.Add(new
+                        {
+                            id = spawner.name,
+                            mob_id = spawner.m_creaturePrefab.name,
+                            maxLevel = spawner.m_maxLevel,
+                            minLevel = spawner.m_minLevel,
+                            levelupChance = spawner.m_levelupChance,
+                            spawnAtNight = spawner.m_spawnAtNight,
+                            spawnAtDay = spawner.m_spawnAtDay,
+                            spawnInterval = spawner.m_spawnInterval,
+                            requiredGlobalKey = spawner.m_requiredGlobalKey,
+                            blockingGlobalKey = spawner.m_blockingGlobalKey,
+                        });
                     }
-
-                    // does Piece drop items?
-                    var piece = comp.GetComponent<Piece>();
-                    if (piece != null)
+                    else if (comp is Location location)
+                    {
+                        rooms = SerializeComponent(location, log);
+                    }
+                    else if (comp is DungeonGenerator dungeon)
+                    {
+                        rooms = SerializeComponent(dungeon, log);
+                    }
+                    else if (comp is Piece piece)
                     {
                     }
-
-                    // still need to figure out what RandomSpawn is
-                    var randomSpawn = comp.GetComponent<RandomSpawn>();
-                    if (randomSpawn != null)
+                    else if (comp is RandomSpawn randomSpawn)
                     {
                     }
-
-                    // pickable.itemPrefab + extra
-                    var pickable = comp.GetComponent<Pickable>();
-                    if (pickable != null)
+                    else if (comp is Pickable pickable)
                     {
                         ItemDrop component = pickable.m_itemPrefab.GetComponent<ItemDrop>();
                         items.Add(new
@@ -1028,38 +1192,43 @@ public class Plugin : BaseUnityPlugin
                             stackMax = pickable.m_amount // scales?
                         });
                     }
-
-                    var dropTable = GetDropTable(comp);
-                    if (dropTable != null)
-                    {
-                        foreach (var drop in dropTable.m_drops)
-                        {
-                            items.Add(new
-                            {
-                                id = drop.m_item.name,
-                                stackMin = drop.m_stackMin,
-                                stackMax = drop.m_stackMax
-                            });
-                        }
-                    }
                     else
                     {
-                        //Logger.LogWarning($"{name} does not have DropTable");
-                    }
-
-                    if (comp is Character)
-                    {
-                        // 敵（スポーン込み）
-                        // We can skip this I think?
+                        var dropTable = GetDropTable(comp);
+                        if (dropTable != null)
+                        {
+                            foreach (var drop in dropTable.m_drops)
+                            {
+                                items.Add(new
+                                {
+                                    id = drop.m_item.name,
+                                    stackMin = drop.m_stackMin,
+                                    stackMax = drop.m_stackMax
+                                });
+                            }
+                        }
+                        else
+                        {
+                            //Logger.LogWarning($"{name} does not have DropTable");
+                            if (log)
+                            {
+                                if (!comp.GetType().FullName.Contains("UnityEngine"))
+                                {
+                                    Logger.LogInfo($"  BlackForest {name} has Component {comp.name} {comp.GetType().FullName}");
+                                }
+                            }
+                        }
                     }
                 }
 
                 locations.Add(prefab.name, new
                 {
-                    id = location.m_prefabName,
-                    name = location.m_name,
+                    id = zoneLocation.m_prefabName,
+                    name = zoneLocation.m_name,
                     biome = biomes,
-                    items = items
+                    items = items,
+                    spawners = spawners,
+                    rooms = rooms
                 });
 
                 refPrefab.Release();
@@ -1215,7 +1384,7 @@ public class Plugin : BaseUnityPlugin
         var path = Path.Combine(Paths.BepInExRootPath, name);
         File.WriteAllText(path, JsonConvert.SerializeObject(data, Newtonsoft.Json.Formatting.Indented, new JsonSerializerSettings
         {
-            Converters = new List<JsonConverter> { new Vector3Converter() },
+            Converters = new List<JsonConverter> { new Vector3Converter(), new DamageModifierConverter(), new DamageTypeConverter() },
             //ContractResolver = shapeResolver,
         }));
         Logger.LogInfo($"Wrote {name}");

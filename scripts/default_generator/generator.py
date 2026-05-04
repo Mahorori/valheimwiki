@@ -89,6 +89,13 @@ def food_group(item):
         return "Food"
     return "Stamina"
 
+def shield_group(item):
+    if item.timedBlockBonus >= 2.5:
+        return 'Bucklers'
+    if not item.timedBlockBonus:
+        return 'Tower Shields'
+    return 'Round Shields'
+
 def material_group(database, item):
     # if smelter...
     if database.is_ore(item.id):
@@ -1137,9 +1144,7 @@ color: #777;
             <h3 style="margin:14px 0 6px;font-size:15px;color:#ddd">Shield</h3>
                         <table class="info-table">
                         <tr><th>{self.localize('$item_blockarmor')}</th><td>{fmt_number(item.blockPower)}</td></tr>
-                        <tr><th>{self.localize('$item_blockarmor')} per level</th><td>{fmt_number(item.blockPowerPerLevel)}</td></tr>
                         <tr><th>{self.localize('$item_blockforce')}</th><td>{fmt_number(item.deflectionForce)}</td></tr>
-                        <tr><th>{self.localize('$item_blockforce')} per level</th><td>{fmt_number(item.deflectionForcePerLevel)}</td></tr>
                         {parry_bonus}
                         {parryadrenaline}
                         </table>
@@ -1445,6 +1450,12 @@ color: #777;
                 for item_id, item in category_items:
                     sub_category_items[weapon_group(item)].append((item_id, item))
                 sub_category_items_sorted = sorted(sub_category_items.keys(), key=skill_type_sort_key)
+
+            elif category == 'Shield':
+                sub_category_items = defaultdict(list)
+                for item_id, item in category_items:
+                    sub_category_items[shield_group(item)].append((item_id, item))
+                sub_category_items_sorted = sorted(sub_category_items.keys()) # B => R => T
 
             elif category == 'Material':
                 sub_category_items = defaultdict(list)

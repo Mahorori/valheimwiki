@@ -1,7 +1,7 @@
 # Valheim Wiki Generator
 
 ## Deploy
-https://mahorori.github.io/valheimwiki/out/
+https://mahorori.github.io/valheimwiki
 
 ## How to use
 1. Install BepInEx5

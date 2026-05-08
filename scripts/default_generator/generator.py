@@ -1,5 +1,6 @@
 import os, math
 from collections import defaultdict
+from functools import cache
 
 BIOME_ORDER = [
     "Meadows", "BlackForest", "Swamp",
@@ -106,7 +107,11 @@ def material_group(database, item):
         return "Consumable"
     elif item.food or item.foodStamina or item.foodEitr:
         return food_group(item)
-    return "Drops"
+    
+    biome = find_easiest_biome_for_item(database, item.id)
+    if not biome:
+        biome = 'Unknown'
+    return biome + "-Material"
 
 def consumable_group(item):
     if item.isDrink is True:
@@ -114,13 +119,8 @@ def consumable_group(item):
     return food_group(item)
 
 def trophy_group(item, database):
-    for mob in database.dropped_by(item.id):
-        biomes = database.get_mob_biomes(mob['id'])
-        for i, b1 in enumerate(BIOME_ORDER):
-            for b2 in biomes:
-                if b1 == b2:
-                    return b1
-    return 'Unknown'
+    biome = find_easiest_biome_for_item(database, item.id)
+    return biome if biome else 'Unknown' # maybe BOSS?
 
 # sort key
 def skill_type_sort_key(skill_type):
@@ -146,10 +146,15 @@ def skill_type_sort_key(skill_type):
     return (len(preferred), str(skill_type))
 
 def material_group_sort_key(group):
-    preferred = ["Ore", "Ingot", "Food", "Stamina", "Eitr", "Consumable", "Drops"]
+    preferred = ["Ore", "Ingot", "Food", "Stamina", "Eitr", "Consumable"]
     if group in preferred:
         return (preferred.index(group), group)
-    return (len(preferred), group)
+    
+    for b in BIOME_ORDER:
+        if b in group:
+            return (len(preferred) + BIOME_ORDER.index(b), group)
+
+    return (len(preferred) + len(BIOME_ORDER), group)
 
 def consumable_group_sort_key(group):
     preferred = ["Drink", "Food", "Stamina", "Eitr"]
@@ -181,6 +186,126 @@ def get_total_damage(item: dict):
         damages.get("poison", 0) +
         damages.get("spirit", 0)
     )
+
+def biome_to_id(biome):
+    for i, b1 in enumerate(BIOME_ORDER):
+        if b1 == biome:
+            return i
+    return 99
+
+def get_easiest_biome(biomes):
+    if biomes:
+        for b1 in BIOME_ORDER:
+            for b2 in biomes:
+                if b1 == b2:
+                    return b1
+    return ''
+
+def get_hardest_biome(biomes):
+    # if any biome is unknown, fail
+    if any(b not in BIOME_ORDER for b in biomes):
+        return ''
+
+    for b1 in reversed(BIOME_ORDER):
+        if b1 in biomes:
+            return b1
+
+    return ''
+
+@cache
+def find_easiest_biome_for_item(database, item_id):
+
+    # from drops
+    easiest_biome = ''
+    for mob in database.dropped_by(item_id):
+        biomes = database.get_mob_biomes(mob['id'])
+        if biomes:
+            easiest_biome = get_easiest_biome([*biomes, easiest_biome])
+
+    # from vegetations
+    def find_easier_biome_from_vegetation(end):
+        end_index = BIOME_ORDER.index(end) if end in BIOME_ORDER else len(BIOME_ORDER)
+        for i, b1 in enumerate(BIOME_ORDER):
+            if end_index <= i:
+                break
+
+            for veg in database.get_vegetations_by_biome(b1):
+                for drop in veg['drops']:
+                    if drop['name'] == item_id:
+                        return b1
+        return end
+
+    easiest_biome = find_easier_biome_from_vegetation(easiest_biome)
+
+    # find from locations
+    def do_work(entity, biomes):
+        for component_type, component in entity.items():
+            if component_type == 'OfferingBowl':
+                boss = component['bossPrefab']
+                if boss:
+                    for drop in database.get_drops(boss):
+                        if drop['item'] == item_id:
+                            return get_easiest_biome(biomes)
+
+            elif component_type == 'ItemDrop':
+                if component['id'] == item_id:
+                    return get_easiest_biome(biomes)
+            elif component_type == 'Pickable' or component_type == 'Drop' or component_type == 'Container':
+                for drop in component['drops']:
+                    if item_id == drop['id']:
+                        return get_easiest_biome(biomes)
+
+            elif component_type == 'CreatureSpawner':
+                if not component['requiredGlobalKey'] and not component['blockingGlobalKey']:
+                    for drop in database.get_drops(component['mob_id']):
+                        if item_id == drop['item']:
+                            return get_easiest_biome(biomes)
+
+            elif component_type == 'Destructible':
+                spawnWhenDestroyed = component.get('spawnWhenDestroyed', None)
+                if spawnWhenDestroyed:
+                    return do_work(spawnWhenDestroyed, biomes)
+                
+            elif component_type == 'Trader':
+                trader = database.get_trader(component['id'])
+                if trader:
+                    for item in trader.get('items'):
+                        if item['id'] == item_id:
+                            return get_easiest_biome(biomes)
+
+        return ''
+
+    for biome in BIOME_ORDER:
+        if easiest_biome == biome:
+            break
+
+        for loc in database.get_locations_by_biome(biome):
+            for exterior in loc['exteriors']:
+                # from entities
+                b = do_work(exterior, loc['biomes'])
+                if b:
+                    return b
+
+            for room in loc['rooms']:
+                for entity in room["components"]:
+                    b = do_work(entity, loc['biomes'])
+                    if b:
+                        return b
+
+    # find from recipe
+    biomes_by_recipe = []
+    for recipe in database.item_recipes(item_id):
+        recipe_item_biomes = []
+        for req in recipe['requirements']:
+            req_item = req if isinstance(req, str) else req['item']
+            b = find_easiest_biome_for_item(database, req_item)
+            recipe_item_biomes.append(b)
+        biomes_by_recipe.append(get_hardest_biome(recipe_item_biomes))
+    easiest_biome = get_easiest_biome([*biomes_by_recipe, easiest_biome])
+
+    return easiest_biome
+
+
 
 # helper (format)
 def fmt_number(value):
@@ -1426,10 +1551,16 @@ color: #777;
                     for mob in self.database.dropped_by(item.id):
                         return (item.type, mob['hp'])
                     return (item.type, 99999999.0)
+                
+                easy_one = find_easiest_biome_for_item(self.database, item.id)
+                if item.type == 'Material' and easy_one == 'Unknown':
+                    print(item.id, easy_one)
+                
+                return (item.type, biome_to_id(easy_one), item.id)
 
                 # TODO: sort by biome
                 return (item.type, item.id)
-
+            
             category_items = grouped[category]
             if category == 'Ammo':
                 sub_category_items = defaultdict(list)
@@ -1454,8 +1585,6 @@ color: #777;
                 for item_id, item in category_items:
                     sub_category_items[material_group(self.database, item)].append((item_id, item))
                 sub_category_items_sorted = sorted(sub_category_items.keys(), key=material_group_sort_key)
-
-                # sort food
 
             elif category == 'Consumable':
                 sub_category_items = defaultdict(list)
@@ -1485,6 +1614,9 @@ color: #777;
 {sub_category_text}
 </h3>
                     """
+
+                # header 4!
+                #html += f"""<h4 id="{sub_category_text}" style="width:100%;margin:14px 0 4px;color:#aaa;font-size:14px">{sub_category_text}</h4>"""
 
                 html += """<div style="display:flex;flex-wrap:wrap">"""
                 for item_id, item in sorted(sub_category_items.get(sub_category), key=items_sort_key):
@@ -1628,7 +1760,7 @@ color: #777;
             if not mob:
                 continue
 
-            biomes = loc.get("biome") or ["Unknown"]
+            biomes = loc.get("biome") or []
             global_key = loc.get("requiredGlobalKey", "")
             environments = loc.get("requiredEnvironments", [])
             environment_key = tuple(environments) if isinstance(environments, list) else (environments,)
@@ -1649,7 +1781,7 @@ color: #777;
                     "spawnAtNight": spawn_at_night,
                 }
                 if mob.get("boss"):
-                    boss_groups[b].append(entry)
+                    mob_groups[b].append(entry)
                 else:
                     mob_groups[b].append(entry)
 
@@ -1661,6 +1793,11 @@ color: #777;
             if any(key[0] == mob["id"] for key in grouped_spawns):
                 continue
 
+            biomes = self.database.find_location_by_mobid(mob['id'])
+            biome = get_easiest_biome(biomes)
+            if not biome:
+                biome = 'Unknown'
+
             entry = {
                 "mob": mob,
                 "requiredGlobalKey": "",
@@ -1669,12 +1806,12 @@ color: #777;
                 "spawnAtNight": None,
             }
             if mob.get("boss"):
-                boss_groups["Unknown"].append(entry)
+                mob_groups[biome].append(entry)
             else:
-                mob_groups["Unknown"].append(entry)
+                mob_groups[biome].append(entry)
 
         html += self.render_group("Mobs", mob_groups)
-        html += self.render_group("Bosses", boss_groups)
+        #html += self.render_group("Bosses", boss_groups)
         html += "</div>"
 
         html += "</div>"

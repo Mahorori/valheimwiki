@@ -16,6 +16,9 @@ class ValheimDatabase:
         self._traders = dict()
         self._crafting_stations = dict()
 
+        # cache
+        self._biome_locations = dict()
+
     def _load_items(self):
         path = self.directory_path / 'items.json'
         with open(path, "r", encoding="utf-8") as f:
@@ -43,9 +46,35 @@ class ValheimDatabase:
         with open(path, "r", encoding="utf-8") as f:
             self.locations = json.load(f)
 
-        path = self.directory_path / 'vegetations.json'
-        with open(path, "r", encoding="utf-8") as f:
-            self.vegetations = json.load(f)
+        # link entries
+        entities = self.locations["entities"]
+        for loc in self.locations["locations"].values():
+
+            # link exteriors
+            loc["exteriors"] = [
+                entities.get(entity_id, {"id": entity_id})
+                for entity_id in loc.get("exteriors", [])
+            ]
+
+            # link rooms
+            for i, room in enumerate(loc.get("rooms", [])):
+                remove_indexes = []
+                for j, component in enumerate(room['components']):
+                    c = entities.get(component)
+                    if not c:
+                        # probably this is useless so remove from list
+                        remove_indexes.append(j)
+                    else:
+                        loc["rooms"][i]['components'][j] = c
+                for j in reversed(remove_indexes):
+                    room['components'].pop(j)
+
+        # link entities
+        for entity in self.locations["entities"].values():
+            for component in entity.values():
+                spawnWhenDestroyed = component.get('spawnWhenDestroyed', None)
+                if spawnWhenDestroyed:
+                    component["spawnWhenDestroyed"] = entities.get(spawnWhenDestroyed, {})
 
     def _load_spawns(self):
         path = self.directory_path / 'spawnLocations.json'
@@ -62,6 +91,11 @@ class ValheimDatabase:
         with open(path, "r", encoding="utf-8") as f:
             self._crafting_stations = json.load(f)
 
+    def _load_vegetations(self):
+        path = self.directory_path / 'vegetations.json'
+        with open(path, "r", encoding="utf-8") as f:
+            self.vegetations = json.load(f)
+
     def load(self, directory_path: Path):
         if isinstance(directory_path, str):
             self.directory_path = Path(directory_path)
@@ -76,6 +110,7 @@ class ValheimDatabase:
         self._load_spawns()
         self._load_traders()
         self._load_crafting_stations()
+        self._load_vegetations()
 
         # ===== reverse index =====
         self._crafted_from = {}
@@ -142,6 +177,16 @@ class ValheimDatabase:
                 return recipe
         return None
     
+    def item_recipes(self, item_id):
+        result = []
+        for recipe in self.recipes:
+            if not recipe['enabled']:
+                continue
+
+            if recipe.get("result") == item_id:
+                result.append(recipe)
+        return result
+    
     def is_ore(self, item_id):
         for recipe in self.recipes:
             if len(recipe['requirements']) == 1:
@@ -170,11 +215,78 @@ class ValheimDatabase:
     def get_traders(self):
         return self._traders
     
+    def get_trader(self, id):
+        return self._traders.get(id, None)
+    
     def iter_vegetations_dropping(self, item_id):
-        for veg in self.vegetations:
+        for id, veg in self.vegetations.items():
             for drop in veg['drops']:
                 if drop['name'] == item_id:
                     yield veg
 
+    def get_vegetations_by_biome(self, biome: str):
+        result = []
+        visited = set()
+
+        def add_vegetation(veg: dict):
+            veg_id = veg["id"]
+
+            if veg_id in visited:
+                return
+
+            visited.add(veg_id)
+
+            # add vegetation DATA itself
+            result.append(veg)
+
+            # recursively add spawned objects
+            for child_id in veg.get("spawnWhenDestroyed", []):
+                child = self.vegetations.get(child_id)
+
+                if child:
+                    add_vegetation(child)
+
+        # start from biome matches
+        for veg in self.vegetations.values():
+            if biome in veg.get("biomes", []):
+                add_vegetation(veg)
+
+        return result
+
     def get_crafting_station(self, id):
         return self._crafting_stations.get(id, None)
+    
+    def get_locations_by_biome(self, biome):
+
+        if biome in self._biome_locations:
+            return self._biome_locations.get(biome)
+
+        result = []
+        for loc_id, loc in self.locations['locations'].items():
+            if biome in loc['biomes']:
+                result.append(loc)
+
+        # cache locations
+        self._biome_locations[biome] = result
+        return result
+    
+    def find_location_by_mobid(self, mob_id):
+        for loc in self.locations['locations'].values():
+            for exterior in loc.get('exteriors', []):
+                if 'OfferingBowl' in exterior:
+                    if exterior['OfferingBowl'].get('bossPrefab', '') == mob_id:
+                        return loc['biomes']
+                    
+                if 'CreatureSpawner' in exterior:
+                    if exterior['CreatureSpawner'].get('mob_id', '') == mob_id:
+                        return loc['biomes']
+                    
+            for room in loc.get('rooms', []):
+                for component in room.get('components', []):
+                    if 'OfferingBowl' in component:
+                        if component['OfferingBowl'].get('bossPrefab', '') == mob_id:
+                            return loc['biomes']
+                        
+                    if 'CreatureSpawner' in component:
+                        if component['CreatureSpawner'].get('mob_id', '') == mob_id:
+                            return loc['biomes']

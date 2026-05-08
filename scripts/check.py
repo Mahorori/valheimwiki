@@ -14,22 +14,24 @@ printed = set()
 with open(os.path.join(BepInExPath, "locations.json"), "r", encoding="utf-8") as f:
     items = json.load(f)
     for id, loc in items.items():
-        if 'BlackForest' in loc['biome']:
+        if 'BlackForest' in loc['biomes']:
             print(id)
-            for i in loc["items"]:
-                if i['id'] in printed:
-                    continue
-                printed.add(i['id'])
-                print(' ', i['id'])
-            for i in loc["spawners"]:
-                if i['id'] in printed:
-                    continue
-                printed.add(i['id'])
-                print(' ', i['id'], i['mob_id'])
+            for id, entity in loc["entities"].items():
+                if 'name' in entity:
+                    print(' ', entity.get('name', 'noname'))
+                if 'id' in entity:
+                    print(' ', entity.get('id', 'noid'))
+            print(' rooms')
             if loc['rooms']:
-                for i in loc["rooms"]:
-                    if i:
-                        print(' ', i)
+                if loc["rooms"]:
+                    for room_id, rooms in loc["rooms"].items():
+                        print('  ', room_id)
+                        for room in rooms:
+                            if 'name' in room:
+                                print('    ', room['name'])
+                            elif 'id' in room:
+                                print('    ', room['id'])
+
 sys.exit(0)
 
 printed = set()
